@@ -18,7 +18,18 @@ namespace Assets
 		[DefaultValue(true)]
 		public bool fov { get; set; }
 
-		public ApplyItems(bool position, bool rotation, bool fov)
+		[DefaultValue(true)]
+		public bool LookAt { get; set; }
+
+        public ControlPoint ControlPoint
+        {
+            get => default;
+            set
+            {
+            }
+        }
+
+        public ApplyItems(bool position, bool rotation, bool fov)
 		{
 			this.position = position;
 			this.rotation = rotation;

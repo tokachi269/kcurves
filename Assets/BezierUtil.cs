@@ -15,17 +15,16 @@ namespace Assets
             return (1 - t) * (1 - t) * P1 + 2 * (1 - t) * t * P2 + t * t * P3;
         }
 
-
         /** 2次ベジェ曲線の弧長を媒介変数tで積分して求める */
-        public static float CalcBezierLength(Vector3 P1, Vector3 P2, Vector3 P3, double t)
+        public static float CalcLength(Vector3 P1, Vector3 P2, Vector3 P3, double t)
         {
             //TODO P3が Vector3.zeroのときNaNになる
-            // ASSERT:  C[0], C[1], and C[2] are distinct points.    
+            // ASSERT:  P1, P2, and P3 are distinct points.    
             // The position is the following vector-valued function for 0 <= t <= 1.    
-            //   P(t) = (1-t)^2*C[0] + 2*(1-t)*t*C[1] + t^2*C[2].    
+            //   P(t) = (1-t)^2*P1 + 2*(1-t)*t*P2 + t^2*P3.    
             // The derivative is    
-            //   P'(t) = (-2*(1-t)*C[0]) + (2*(1-2*t)*C[1]) + (2*t*C[2])    
-            //         = 2*(C[0] - 2*C[1] + C[2])*t + 2*(C[1] - C[0])   
+            //   P'(t) = (-2*(1-t)*P1) + (2*(1-2*t)*P2) + (2*t*P3)    
+            //         = 2*(P1 - 2*P2 + P3)*t + 2*(P2 - P1)   
             //         = 2*A[1]*t + 2*A[0]    
             // The squared length of the derivative is    
             //   f(t) = 4*Dot(A[1],A[1])*t^2 + 8*Dot(A[0],A[1])*t + 4*Dot(A[0],A[0])    
@@ -50,22 +49,34 @@ namespace Assets
                 // F(t) = (2*c*t + b)*sqrt(c*t^2 + b*t + a)/(4*c)        
                 //   + (q/(8*c^{3/2}))*log(2*sqrt(c*(c*t^2 + b*t + a)) + 2*c*t + b)        
                 // Integral is F(1) - F(0).
-                if (t==0)
+                if (t == 0)
                 {
                     double twoCpB = 2.0f * c + b;
                     length = ((0.25f / c) * (twoCpB * Math.Sqrt(c + b + a) - b * Math.Sqrt(a))
                              + (q / (8.0f * c * (Math.Sqrt(c)))) * (Math.Log(2.0f * Math.Sqrt(c * c + b + a) + twoCpB) - Math.Log(2.0f * Math.Sqrt(c * a) + b)));
-                }else
-                { 
+                }
+                else
+                {
                     length = (2d * c * t + b) * Math.Sqrt(c * t * t + b * t + a) / (4d * c)
                             + (q / (8d * Math.Pow(c, 1.5d))) * Math.Log(2d * Math.Sqrt(c * (c * t * t + b * t + a)) + 2d * c * t + b);
                 }
-            }else 
+            }
+            else
             {
                 length = 2.0f * A[0].magnitude;
             }
             return (float)length;
-            //return sqrt((2 * (1 - t) * t * B + t ^ 2 * C)'^2 + (2*(1-t)*t*E)' ^ 2);
+        }
+
+        public static Vector3[] Divide(Vector3 P1, Vector3 P2, Vector3 P3, float t)
+        {
+            Vector3[] Points = { P1,
+                                 (1 - t) * P1 + t * P2 ,
+                                 (1 - t) * (1 - t) * P1 + 2 * (1 - t) * t * P2 + t *t * P3 ,
+                                 (1 - t) * P2 + t * P3 ,
+                                 P3
+                               };
+            return Points;
         }
     }
 }

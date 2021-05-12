@@ -5,28 +5,19 @@ using UnityEngine;
 
 namespace Assets
 {
-    public class KCurves : MonoBehaviour
+    public static class KCurves
     {
         //イテレーション回数
         private static readonly int iteration = 10;
 
-        public Vector3[] Input { get; set; }
-
         private static CalcSpace cSpace;
 
-        private void Start()
+        public static BezierControls CalcBezier(List<ControlPoint> Knots, bool isLoop)
         {
-
-        }
-
-        public BezierControls CalcBezier(List<Knot> Knots, bool isLoop)
-        {
-            this.Input = Knots.Where(data => data.applyItems.position == true).Select(data => data.position).ToArray();
+            var Input = Knots.Where(data => data.applyItems.position == true).Select(data => data.position).ToArray();
             Debug.Log(Input.Length);
             cSpace = new KCurves.CalcSpace(Input.Length, isLoop);
-        
-            return  CalcBezierControls(this.Input, cSpace, iteration, isLoop);
-            
+            return CalcBezierControls(Input, cSpace, iteration, isLoop);
         }
 
         private static BezierControls CalcBezierControls(Vector3[] points, CalcSpace space, int iteration, bool isLoop)
@@ -76,13 +67,12 @@ namespace Assets
         {
             double[] ts = new double[spaceT.Length];
             ts[0]= 0d;
-            ts[ts.Length-1] = ts.Length + 1;
+
             for (int i = 1; i < ts.Length - 1; i++)
             {
-
-                ts[i] += i + spaceT[i];
+                ts[i] += spaceT[i];
             }
-            ts[ts.Length-1] = ts.Length;
+            ts[ts.Length - 1] = ts.Length - 1;
             cs.Ts = ts;
         }
 
@@ -291,7 +281,7 @@ namespace Assets
         {
             public int N { get; private set; }              //制御点数
             internal float[] L { get; private set; }        //λ
-            internal BezierControls C { get; private set; } //ベジェ制御点（出力）
+            internal ExtendBezierControls C { get; private set; } //ベジェ制御点（出力）
             internal double[] T { get; private set; }       //t
             internal double[] A { get; private set; }       //Step4の行列計算用メモリ
 
@@ -299,7 +289,7 @@ namespace Assets
             {
                 N = n;
                 L = new float[n];
-                C = new BezierControls(n, isLoop);
+                C = new ExtendBezierControls(n, isLoop);
                 T = new double[n];
                 A = new double[(n + 2) * 3];
             }

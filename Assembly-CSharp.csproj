@@ -60,6 +60,7 @@
     <Compile Include="Assets\Knots.cs" />
     <Compile Include="Assets\ExtendedPlayerControls.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\MonitorTransform.cs" />
+    <Compile Include="Assets\Path.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Monitor.cs" />
     <Compile Include="Assets\KCurves.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\MonitorAudioSource.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Assets\Perlin.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Monitors.cs" />
     <Compile Include="Assets\Monitor Components\Examples\JumperMan\JumperMan.cs" />
+    <Compile Include="Assets\ExtendBezierControls.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

@@ -1,3 +1,4 @@
+using Assets;
 using UnityEngine;
 
 struct ExtendedPlayerControls
@@ -24,6 +25,9 @@ struct ExtendedPlayerControls
         bottom = cs[0, 1];
     }
 }
+
+
+
 struct ExtendedBezierControls
 {
     Vector3 top;

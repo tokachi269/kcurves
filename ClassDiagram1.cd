@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" GroupingSetting="Alphabetical" MembersFormat="NameAndType">
+  <Class Name="Assets.BezierControls">
+    <Position X="8.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgABACAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\BezierControls.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.BezierUtil" Collapsed="true">
+    <Position X="6.25" Y="8.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAgEAAAAAAAAA=</HashCode>
+      <FileName>Assets\BezierUtil.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.CameraDirector">
+    <Position X="0.5" Y="1" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AkADBABABCAAIgYAAAECAggBAAChADCAAAAAIEAQAAA=</HashCode>
+      <FileName>Assets\CameraDirector.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.JitterMotion" Collapsed="true">
+    <Position X="12.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AcQAAACAAAJAAAAAQAAAAAAAYAAAAACDAAABEAAAAEA=</HashCode>
+      <FileName>Assets\JitterMotion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.KCurves">
+    <Position X="6.75" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Class Name="Assets.KCurves.CalcSpace" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Assets\KCurves.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAABAAAABAAACAAAAAAABAIAAAEAAAEAAEEAAAAIAQA=</HashCode>
+      <FileName>Assets\KCurves.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Assets.ControlPoint">
+    <Position X="3.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAQAAICgIAhAABAAAAAACAQAAAAAAAA=</HashCode>
+      <FileName>Assets\Knots.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraMover" Collapsed="true">
+    <Position X="12.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEYAEAAQCCAAACAAAAAAAAAAAAhAgAABIACgBAAQAIA=</HashCode>
+      <FileName>Assets\CameraMover.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Path">
+    <Position X="3.25" Y="5.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AFAAAAAAAAAAAAAEAkEIAAAAAIAFAAAAgAABAAAAAAA=</HashCode>
+      <FileName>Assets\Path.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="JumperMan" Collapsed="true">
+    <Position X="12.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQIAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAABAAEA=</HashCode>
+      <FileName>Assets\Monitor Components\Examples\JumperMan\JumperMan.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitorComponents.Monitor" Collapsed="true">
+    <Position X="12.5" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACIIEAABAJAQAACAEAAABAQAAAEEABIAAgAAAEOACAA=</HashCode>
+      <FileName>Assets\Monitor Components\Scripts\Monitor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MonitorComponents.MonitorInput" Collapsed="true">
+    <Position X="12.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABAAAgAAAAIAAAAABAgiABAECAAAAAgQCAAAA=</HashCode>
+      <FileName>Assets\Monitor Components\Scripts\MonitorInput.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="System.Object" Collapsed="true">
+    <Position X="11.25" Y="7" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Struct Name="ExtendedPlayerControls">
+    <Position X="9" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAACAAAAAgAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\ExtendedPlayerControls.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="ExtendedBezierControls" Collapsed="true">
+    <Position X="9" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAACAAAAAgAAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Assets\ExtendedPlayerControls.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Yu Gothic UI" Size="9" />
+</ClassDiagram>

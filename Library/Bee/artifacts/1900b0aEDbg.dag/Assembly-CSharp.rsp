@@ -323,6 +323,7 @@
 "Assets/CameraDirector.cs"
 "Assets/CameraMover.cs"
 "Assets/Constant.cs"
+"Assets/ExtendBezierControls.cs"
 "Assets/ExtendedPlayerControls.cs"
 "Assets/JitterMotion.cs"
 "Assets/KCurves.cs"
@@ -341,6 +342,7 @@
 "Assets/Monitor Components/Scripts/Monitors.cs"
 "Assets/Monitor Components/Scripts/MonitorTransform.cs"
 "Assets/Monitor Components/Scripts/TypeInspectors.cs"
+"Assets/Path.cs"
 "Assets/Perlin.cs"
 -langversion:8.0
 

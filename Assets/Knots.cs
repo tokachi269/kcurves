@@ -8,7 +8,7 @@ using System.ComponentModel;
 
 namespace Assets
 {
-    public class Knot
+    public class ControlPoint
     {
 		public Vector3 position;
 
@@ -32,13 +32,16 @@ namespace Assets
 		public float fov;
 
 		public ApplyItems applyItems = new ApplyItems(true, true, true);
+		
+		public bool isLookAt { get; set; }
 
-		public Knot( Vector3 position,Quaternion rotation,float fov)
+        public ControlPoint( Vector3 position,Quaternion rotation,float fov,bool isLookAt)
 		{
 			this.position = position;
 			this.rotation = rotation;
 			this.fov = fov;
 			//this.CaptureCamera();
+			this.isLookAt = isLookAt;
 		}
 
 

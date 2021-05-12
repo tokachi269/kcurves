@@ -8,14 +8,13 @@ namespace Assets
 {
     public class CameraDirector : MonoBehaviour
     {
-        public static KCurves kCurves;
-        BezierControls bezierResult;
+        public Path path;
 
         public bool isLoop = true;
         public bool iscameraShake = false;
         public bool isGaze = false;
         public bool isEquallySpaced = false;
-        
+        public bool isStart = false;
         [DefaultValue(4)]
         public  int iteration = 4;
         [SerializeField]
@@ -23,20 +22,13 @@ namespace Assets
         public float currentTime = 0;
 
         //セグメントごとの分割数
-        public static int step = 100;
+        public static int step = 10;
         public static GameObject[] inputCube;
         public static GameObject moveCameraCube;
         public static LineRenderer render;
-
-        [SerializeField]
-        //ユーザー制御点群
-        public List<Knot> Knots = new List<Knot>();
-
-        public void AddKnot(Vector3 position, Quaternion rotation, float fov)
-        {
-            this.Knots.Add(new Knot(position, rotation, fov));
-        }
-
+        private int segIndex = 0;
+        private float inputL = 0f;
+        private float maxSpeed = 0f;
 
         public float dist = 0;
         public float distall = 0;
@@ -46,25 +38,33 @@ namespace Assets
 
         void Start()
         {
-            
-            this.AddKnot(new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0), 60);
-            this.AddKnot(new Vector3(1, 1, 1), new Quaternion(0, 0, 0, 0), 60);
-            this.AddKnot(new Vector3(0, 2, 0), new Quaternion(1, 1, 1, 0), 60);
-            this.AddKnot(new Vector3(0, -2, 1), new Quaternion(0, 0, 0, 0), 60);
-            this.AddKnot(new Vector3(0, 1, 4), new Quaternion(0, 0, 0, 0), 60);
-            
+            path = new Path();
+
+            this.AddKnot(new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0), 60, false);
+            this.AddKnot(new Vector3(1, 2, 1), new Quaternion(0, 0, 0, 0), 60, false);
+            this.AddKnot(new Vector3(0, 2, 5), new Quaternion(0, 0, 0, 0), 60, true);
+            this.AddKnot(new Vector3(0, -2, 1), new Quaternion(0, 0, 0, 0), 60, false);
+            this.AddKnot(new Vector3(0, 1, 4), new Quaternion(0, 0, 0, 0), 60, false);
+            this.AddLookAt(new Vector3(0, 4, 0), new Quaternion(0, 0, 0, 0), 60);
+
             render = this.gameObject.AddComponent<LineRenderer>();
-            
-            kCurves = this.gameObject.AddComponent<KCurves>();
-            xx();
+
+            path.SetBezierFromKnots();
             moveCameraCube = new GameObject();
             moveCameraCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             moveCameraCube.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
             moveCameraCube.GetComponent<Renderer>().material.color = Color.blue;
-            moveCameraCube.transform.position = Knots[0].position;
+            moveCameraCube.transform.position = path.Knots[0].position;
             moveCameraCube.transform.parent = this.transform;
             // moveCameraCube.AddComponent(typeof(JitterMotion));
+            renderObject();
         }
+
+        void OnValidate()
+        {
+            renderObject();
+        }
+
         void Update()
         {
             //var mainCamObj = GameObject.FindGameObjectWithTag("MainCamera");
@@ -72,60 +72,62 @@ namespace Assets
             //Quaternion rotation = GameObject.Find("Main Camera").transform.localRotation;
             //rotation.z = +90.0f;
             //GameObject.FindGameObjectWithTag("MainCamera").transform.localRotation = rotation;
+            if (isStart)
+            {
+                path.extendBezierControls.CalcTotalKnotsLength();
+                    //var mainCamObj = GameObject.FindGameObjectWithTag("MainCamera");
+                    //Debug.Log(mainCamObj.transform.localRotation.z);
+                    //Quaternion rotation = GameObject.Find("Main Camera").transform.localRotation;
+                    //rotation.z = +90.0f;
+                    //GameObject.FindGameObjectWithTag("MainCamera").transform.localRotation = rotation;
 
-            if (bezierResult.Knots.Count > 1 && moveCameraCube != null)
-            {   
-                float t = bezierResult.GetT(currentTime / time * bezierResult.TotalLength);
+                if (path.Knots.Count > 1 && moveCameraCube != null)
+                    {
+                        maxSpeed = path.TotalLength / time * 0.01f;
+                        float t = path.extendBezierControls.GetT(ref segIndex, ref inputL);
 
-                {
-                    diffT = t - befT;
-                    Debug.Log("t:" + diffT);
-                    befT = t;
-                    Vector3 now = bezierResult.CalcPosition(isLoop, t);
+                        //inputL += currentTime / time / bezierResult.TotalLength;
+                        Debug.Log("seg:" + segIndex + "  inputL:" + inputL + "maxS" + maxSpeed);
+                        {
+                            diffT = t - befT;
+                            //Debug.Log("t:" + diffT);
+                            befT = t;
+                            Vector3 now = path.CalcPosition(isLoop, t);
 
-                    distall += dist;
-                    dist = Vector3.Distance(bef, now);
-                    bef = now;
-                    Debug.Log("dist:" + dist);
-                }
+                            distall += dist;
+                            dist = Vector3.Distance(bef, now);
+                            bef = now;
+                            //Debug.Log("dist:" + dist);
+                        }
+
+                        moveCameraCube.transform.position = path.CalcPosition(isLoop, t);
+                        //moveCameraCube.transform.rotation = path.CalcRotation(segIndex, inputL);
+
+                        int i = (int)Math.Floor(currentTime / time * path.extendBezierControls.SegmentCount);
+
+                        float dt = Time.deltaTime;
+                        inputL += maxSpeed * dt;
+
+                        currentTime += (0.01f / time);
+
+                        if (currentTime > time) currentTime = 0f;
+                    }
+
                 
-                moveCameraCube.transform.position = bezierResult.CalcPosition(isLoop, t);
 
-                int i = (int)Math.Floor(currentTime / time * bezierResult.SegmentCount);
-
-                float dt = Time.deltaTime;
-                currentTime += (0.01f / time);
-                    
-                    if (currentTime > time) currentTime = 0f;
             }
 
         }
-        void OnValidate()
+
+        public void renderObject()
         {
-            xx();
-        }
-        public void xx()
-        {
-            if (CameraDirector.kCurves != null)
+            if (!(path is null))
             {
-               
-                bezierResult = CameraDirector.kCurves.CalcBezier(Knots, isLoop);
-                bezierResult.Knots = this.Knots;
-
-                // plotsを計算
-                bezierResult.CalcPlots(step, isLoop, isEquallySpaced);
-                bezierResult.CalcArcLengthWithT(isLoop);
-                bezierResult.CalcKnotsLength(isLoop);
-                bezierResult.CalcTotalKnotsLength();
-
-                //tの移動距離を計算し、パラメータ化する
-                bezierResult.CalcArcLengthWithT(isLoop);
-
                 //TODO output出力
-                var output = bezierResult.CalcPlots(step, isLoop, isEquallySpaced);
+                var output = path.Output(step, isLoop);
 
                 if (render != null)
-                {
+                {                     
                     //cube = new GameObject[output.Length];
 
                     render.material = new Material(Shader.Find("Sprites/Default"));
@@ -140,50 +142,52 @@ namespace Assets
                     }
                 }
 
-
-                if (inputCube != null && inputCube.Length != 0)
-                {
-                    for (int i = 0; i < inputCube.Length; i++)
+                    if (inputCube != null && inputCube.Length != 0)
                     {
-                        inputCube[i].transform.position = Knots[i].position;
+                        for (int i = 0; i < inputCube.Length; i++)
+                        {
+                            inputCube[i].transform.position = path.Knots[i].position;
+                            inputCube[i].transform.rotation = path.Knots[i].rotation;
+                        }
                     }
-                }else
-                {
-                    inputCube = new GameObject[Knots.Count];
-
-                    for (int i = 0; i < Knots.Count; i++)
+                    else
                     {
-                        GameObject.Destroy(inputCube[i]);
-                        inputCube[i] = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        inputCube[i].transform.position = Knots[i].position;
-                        inputCube[i].transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-                        inputCube[i].transform.parent = this.transform;
+                        inputCube = new GameObject[path.Knots.Count];
 
-                        inputCube[i].GetComponent<Renderer>().material.color = Color.blue;
+                        for (int i = 0; i < path.Knots.Count; i++)
+                        {
+                            GameObject.Destroy(inputCube[i]);
+                            inputCube[i] = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                            inputCube[i].transform.position = path.Knots[i].position;
+                            inputCube[i].transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                            inputCube[i].transform.parent = this.transform;
 
+                            inputCube[i].GetComponent<Renderer>().material.color = Color.blue;
+
+                        }
                     }
-                }
+                
             }
+
+            
 
         }
 
-
-
-        public static float[] CalcIntegralBezierLength(BezierControls cs, bool isLoop)
+        public void AddKnot(Vector3 position, Quaternion rotation, float fov, bool lookAt)
         {
-            float[] length = new float[cs.SegmentCount];
-            int  k;
-            int segCnt = isLoop || cs.SegmentCount < 3 ? cs.SegmentCount : cs.SegmentCount - 2;
-            for (k = 0; k < segCnt; k++)
-            {
-                length[k] = BezierUtil.CalcBezierLength(cs[k, 0], cs[k, 1], cs[k, 2],1);
-            }
-            var last = isLoop || cs.SegmentCount < 3 ? 0 : k;
-            length[last] = BezierUtil.CalcBezierLength(cs[last, 0], cs[last, 1], cs[last, 2],1);
-            return length;
+            path.Knots.Add(new ControlPoint(position, rotation, fov, lookAt));
+        }
+
+        public void AddLookAt(Vector3 position, Quaternion rotation, float fov)
+        {
+            path.LookAts.Add(new ControlPoint(position, rotation, fov, false));
         }
 
 
+        public static float EaseInOutSine(float t){
+            return (float)(-(Math.Cos(Math.PI * t) - 1) / 2);
 
-    }
+        }
+
+}
 }

@@ -401,7 +401,7 @@ MonoBehaviour:
   isGaze: 0
   isEquallySpaced: 0
   iteration: 4
-  time: 10
+  time: 1
   currentTime: 0
   dist: 0
   distall: 0
