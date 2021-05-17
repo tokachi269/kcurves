@@ -10,13 +10,11 @@ namespace Assets
         //イテレーション回数
         private static readonly int iteration = 10;
 
-        private static CalcSpace cSpace;
-
         public static BezierControls CalcBezier(List<ControlPoint> Knots, bool isLoop)
         {
             var Input = Knots.Where(data => data.applyItems.position == true).Select(data => data.position).ToArray();
             Debug.Log(Input.Length);
-            cSpace = new KCurves.CalcSpace(Input.Length, isLoop);
+            CalcSpace cSpace = new KCurves.CalcSpace(Input.Length, isLoop);
             return CalcBezierControls(Input, cSpace, iteration, isLoop);
         }
 

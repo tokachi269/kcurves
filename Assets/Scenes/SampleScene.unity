@@ -396,10 +396,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfee7e127cd448d48a60596cd46be3d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  path: {fileID: 0}
   isLoop: 0
   iscameraShake: 0
   isGaze: 0
   isEquallySpaced: 0
+  isStart: 0
   iteration: 4
   time: 1
   currentTime: 0

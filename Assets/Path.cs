@@ -5,32 +5,21 @@ using UnityEngine;
 
 namespace Assets
 {
-    public class Path
+    public class Path : MonoBehaviour
     {
-        public string name { get; private set; }
+        public string Name { get; private set; }
         //ユーザー制御点
         public List<ControlPoint> Knots = new List<ControlPoint>();
         //ユーザー制御注視点
         public List<ControlPoint> LookAts = new List<ControlPoint>();
         //Bezier計算結果
         public ExtendBezierControls extendBezierControls;
-        //パラメータtの弧長
-        public float[,] Lengths { get; internal set; }
-        public float TotalLength { get; private set; }
         public int ArcLengthWithTStep { get; private set; } = 10;
-
-        public bool IsCalcArcLengthWithT { get; private set; }
         public bool isLoop { get; private set; }
 
         public void SetBezierFromKnots()
         {
-            //TODO コンストラクタでcastするように変更
-            extendBezierControls = (ExtendBezierControls)KCurves.CalcBezier( Knots, isLoop);
-
-            if (!(extendBezierControls is null))
-            {
-                extendBezierControls.CalcArcLengthWithT(isLoop);
-            }
+            extendBezierControls = KCurves.CalcBezier( Knots, isLoop) as ExtendBezierControls;
             // plotsを計算
             //extendBezierControls.CalcPlots(step, isLoop, isEquallySpaced);
             //bezierResult.CalcKnotsLength(isLoop);
@@ -43,16 +32,13 @@ namespace Assets
 
         public Vector3[] Output(int step, bool isLoop)
         {
-
-                SetBezierFromKnots();
-                return extendBezierControls.CalcPlots(step, isLoop);
-            
-
+            if (extendBezierControls is null) SetBezierFromKnots();
+            return extendBezierControls.CalcPlots(step, isLoop);
         }
 
 
         public Vector3 CalcPosition(bool isLoop, float t)
-        {
+        {            
             int segIndex = (int)Math.Truncate((t + 1) % extendBezierControls.SegmentCount);
             if (segIndex > extendBezierControls.SegmentCount)
             {
@@ -65,7 +51,7 @@ namespace Assets
 
         public Quaternion CalcRotation(int segIndex, float inputL)
         {
-            float t = inputL / Lengths[segIndex, ArcLengthWithTStep - 1];
+            float t = inputL / extendBezierControls.Lengths[segIndex, ArcLengthWithTStep - 1];
             int nextSegIndex = (segIndex < extendBezierControls.SegmentCount ? segIndex + 1 : segIndex);
 
             Quaternion rotation;
@@ -87,7 +73,35 @@ namespace Assets
             }
             return rotation;
         }
+        public void AddKnot(Vector3 position, Quaternion rotation, float fov, bool lookAt)
+        {
+            this.Knots.Add(new ControlPoint(position, rotation, fov, lookAt));
+            SetBezierFromKnots();
+        }
 
+        public void RemoveKnot()
+        {
+            this.Knots.RemoveAt(Knots.Count - 1);
+            SetBezierFromKnots();
+        }
 
+        public void AddLookAt(Vector3 position, Quaternion rotation, float fov)
+        {
+            this.LookAts.Add(new ControlPoint(position, rotation, fov, false));
+            SetBezierFromKnots();
+        }
+
+        public void RemoveLookAt(Vector3 position, Quaternion rotation, float fov)
+        {
+            this.LookAts.RemoveAt(Knots.Count - 1);
+            SetBezierFromKnots();
+        }
+
+        internal float MaxSpeed(int time)
+        {
+            if (!extendBezierControls.IsCalcArcLengthWithT) extendBezierControls.CalcArcLengthWithT(isLoop);
+
+            return extendBezierControls.TotalLength / time * 0.01f;
+        }
     }
 }

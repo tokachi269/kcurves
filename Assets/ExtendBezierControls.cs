@@ -111,9 +111,11 @@ namespace Assets
                 }
             }
             var last = isLoop || SegmentCount < 3 ? 0 : k * ArcLengthWithTStep;
+
             //Lengths[last, step-1] = 1f;
             //Lengths[k, step] += Vector3.Distance(plots[plots.Length], plots[last]);
-
+            
+            CalcTotalKnotsLength();
             IsCalcArcLengthWithT = true;
         }
         public Vector3[] CalcPlots(int stepPerSegment, bool isLoop)
