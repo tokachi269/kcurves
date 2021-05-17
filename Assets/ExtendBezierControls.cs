@@ -21,11 +21,7 @@ namespace Assets
         //コンストラクタ
         public ExtendBezierControls(int n, bool isLoop) : base(n, isLoop)
         {
-            //N = n;
-            //SegmentCount = n < 3 ? 1 : n;
-            Points = new Vector3[2 * SegmentCount + 1];
-            Lengths = new float[SegmentCount - 1, ArcLengthWithTStep];
-            Ts = new double[SegmentCount];
+            Lengths = new float[SegmentCount <= 1 ? 1 : SegmentCount - 2, ArcLengthWithTStep];
             IsCalcArcLengthWithT = false;
         }
 
@@ -80,7 +76,7 @@ namespace Assets
         internal void CalcTotalKnotsLength()
         {
             float l = 0f;
-            for (int i = 0; i < SegmentCount - 1; i++)
+            for (int i = 0; i <= SegmentCount - 2; i++)
             {
                 l += Lengths[i, ArcLengthWithTStep - 1];
             }
@@ -91,26 +87,24 @@ namespace Assets
         public void CalcArcLengthWithT(bool isLoop)
         {
             Vector3[] plots = CalcPlots(ArcLengthWithTStep, isLoop);
-            int k;
-            int segCnt = isLoop || SegmentCount < 3 ? SegmentCount : SegmentCount - 1;
-            for (k = 0; k < segCnt; k++)
+            // TODO SegmentCountが1、２のとき
+            for (int i = 0; i <= Lengths.Length - 1; i++)
             {
                 float l = 0f;
-                for (var i = 0; i < ArcLengthWithTStep; i++)
+                for (var j = 0; j < ArcLengthWithTStep; j++)
                 {
-                    l += Vector3.Distance(plots[i], plots[i + 1]);
-                    Lengths[k, i] = l;
+                    l += Vector3.Distance(plots[j], plots[j + 1]);
+                    Lengths[i, j] = l;
                 }
             }
-            for (k = 0; k < segCnt; k++)
+            for (int i = 0; i <= Lengths.Length - 1; i++)
             {
-                float correctLength = BezierUtil.CalcLength(this[k, 0], this[k, 1], this[k, 2], 1);
-                for (var i = 0; i < ArcLengthWithTStep; i++)
+                float correctLength = BezierUtil.CalcLength(this[i, 0], this[i, 1], this[i, 2], 1);
+                for (var j = 0; j < ArcLengthWithTStep; j++)
                 {
-                    Lengths[k, i] *= correctLength / Lengths[k, ArcLengthWithTStep - 1];
+                    Lengths[i, j] *= correctLength / Lengths[i, ArcLengthWithTStep - 1];
                 }
             }
-            var last = isLoop || SegmentCount < 3 ? 0 : k * ArcLengthWithTStep;
 
             //Lengths[last, step-1] = 1f;
             //Lengths[k, step] += Vector3.Distance(plots[plots.Length], plots[last]);

@@ -28,9 +28,7 @@ namespace Assets
         {
             SegmentCount = n < 3 ? 1 : n;
             Points = new Vector3[2 * SegmentCount + 1];
-            //Lengths = new float[SegmentCount - 1, ArcLengthWithTStep];
             Ts = new double[SegmentCount];
-            //IsCalcArcLengthWithT = false;
         }
     }
 }

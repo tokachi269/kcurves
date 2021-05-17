@@ -26,6 +26,8 @@ namespace Assets
         public static int step = 10;
         //TODO List型に変更
         public static List<GameObject> inputCube = new List<GameObject>();
+        public List<GameObject> bezierObject = new List<GameObject>();
+
         public static GameObject moveCameraCube;
         public static LineRenderer render;
         private int segIndex = 0;
@@ -43,10 +45,10 @@ namespace Assets
             path = gameObject.AddComponent<Path>();
 
             path.AddKnot(new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 1), 60, false);
-            path.AddKnot(new Vector3(1, 2, 1), new Quaternion(0, 0.5f, 0, 1), 60, false);
+            path.AddKnot(new Vector3(1, 2, 1), new Quaternion(0, 0, 0, 1), 60, false);
             path.AddKnot(new Vector3(0, 2, 5), new Quaternion(0, 0, 0, 1), 60, true);
-            path.AddKnot(new Vector3(0, -2, 1), new Quaternion(0, 0, 1, 1), 60, false);
-            path.AddKnot(new Vector3(0, 1, 4), new Quaternion(0, 0, 0, 1), 60, false);
+            path.AddKnot(new Vector3(0, -2, 1), new Quaternion(0, 0, 0, 1), 60, false);
+            path.AddKnot(new Vector3(5, 1, 1), new Quaternion(0, 0, 0, 1), 60, false);
             path.AddLookAt(new Vector3(0, 4, 0), new Quaternion(0, 0, 0, 1), 60);
 
             render = this.gameObject.AddComponent<LineRenderer>();
@@ -118,7 +120,11 @@ namespace Assets
 
                     currentTime += (0.01f / time);
 
-                    if (currentTime > time) currentTime = 0f;
+                    if (currentTime >= time)
+                    {
+                        currentTime = 0f;
+                        moveCameraCube.transform.position = path.Knots[0].position;
+                    }
                 }
             }
         }
@@ -127,8 +133,26 @@ namespace Assets
         {
             if (!(path is null))
             {
+                for (int i = 0; i < bezierObject.Count; i++)
+                {
+                    Destroy(bezierObject[i]);
+                }
+                bezierObject.Clear();
+
+                for (int i = 1; i < path.extendBezierControls.SegmentCount; i++)
+                {
+                    bezierObject.Add(new GameObject("bezierControl" + i));
+                    bezierObject[i - 1] = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    bezierObject[i - 1].transform.position = path.extendBezierControls[i,0];
+
+                    bezierObject[i - 1].transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                    bezierObject[i - 1].transform.parent = this.transform;
+                    bezierObject[i - 1].GetComponent<Renderer>().material.color = Color.red;
+                }
+
                 //TODO output出力
                 var output = path.Output(step, isLoop);
+                
 
                 if (render != null)
                 {                     
@@ -147,18 +171,21 @@ namespace Assets
                 }
 
 
-
-                        for (int i = 0; i < path.Knots.Count - 1; i++)
-                        {
-                            inputCube.Add(new GameObject());
-                            inputCube[i] = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                            inputCube[i].transform.position = path.Knots[i].position;
-                            inputCube[i].transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-                            inputCube[i].transform.parent = this.transform;
-                    
-                            inputCube[i].GetComponent<Renderer>().material.color = Color.blue;
-
+                for (int i = 0; i < inputCube.Count; i++)
+                {
+                    Destroy(inputCube[i]);
                 }
+                inputCube.Clear();
+                for (int i = 0; i < path.Knots.Count; i++)
+                    {
+                        inputCube.Add(new GameObject("inputCube" + i));
+                        inputCube[i] = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        inputCube[i].transform.position = path.Knots[i].position;
+                        inputCube[i].transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                        inputCube[i].transform.parent = this.transform;
+                        
+                        inputCube[i].GetComponent<Renderer>().material.color = Color.blue;
+                    }
 
 
 

@@ -201,13 +201,13 @@ namespace Assets
             }
 
             //入出力ベクトルを拡張
-            var extendedPs = new ExtendedPlayerControls(ps, cs);
+            var extendedPs = new ExtendedKnots(ps, cs);
             var extendedCs = new ExtendedBezierControls(cs);
 
             //連立方程式を解く
             SolveTridiagonalEquation(A, extendedCs, extendedPs);
         }
-        static void SolveTridiagonalEquation(double[] A, ExtendedBezierControls x, ExtendedPlayerControls b)
+        static void SolveTridiagonalEquation(double[] A, ExtendedBezierControls x, ExtendedKnots b)
         {
             var n = A.Length / 3 - 2;
 

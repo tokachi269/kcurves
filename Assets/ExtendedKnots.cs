@@ -1,7 +1,7 @@
 using Assets;
 using UnityEngine;
 
-struct ExtendedPlayerControls
+struct ExtendedKnots
 {
     Vector3 top;
     Vector3[] ps;
@@ -18,7 +18,7 @@ struct ExtendedPlayerControls
         }
     }
 
-    public ExtendedPlayerControls(Vector3[] ps, BezierControls cs)
+    public ExtendedKnots(Vector3[] ps, BezierControls cs)
     {
         top = cs[cs.SegmentCount - 1, 1];
         this.ps = ps;

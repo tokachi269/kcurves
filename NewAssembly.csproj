@@ -59,8 +59,9 @@
     <Compile Include="Assets\Monitor Components\Scripts\MonitorComponent.cs" />
     <Compile Include="Assets\Knots.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorRigidbody2DEditor.cs" />
-    <Compile Include="Assets\ExtendedPlayerControls.cs" />
+    <Compile Include="Assets\ExtendedKnots.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\MonitorTransform.cs" />
+    <Compile Include="Assets\ExtendBezierControls.cs" />
     <Compile Include="Assets\Path.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Monitor.cs" />
     <Compile Include="Assets\KCurves.cs" />
@@ -89,7 +90,6 @@
     <Compile Include="Assets\Perlin.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Monitors.cs" />
     <Compile Include="Assets\Monitor Components\Examples\JumperMan\JumperMan.cs" />
-    <Compile Include="Assets\ExtendBezierControls.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\MyAssembly.asmdef" />

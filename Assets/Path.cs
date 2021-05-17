@@ -16,7 +16,6 @@ namespace Assets
         public ExtendBezierControls extendBezierControls;
         public int ArcLengthWithTStep { get; private set; } = 10;
         public bool isLoop { get; private set; }
-
         public void SetBezierFromKnots()
         {
             extendBezierControls = KCurves.CalcBezier( Knots, isLoop) as ExtendBezierControls;
@@ -24,7 +23,7 @@ namespace Assets
             //extendBezierControls.CalcPlots(step, isLoop, isEquallySpaced);
             //bezierResult.CalcKnotsLength(isLoop);
             //extendBezierControls.CalcTotalKnotsLength(isLoop);
-
+            
             //tの移動距離を計算し、パラメータ化する
             //extendBezierControls.CalcArcLengthWithT(isLoop);
 
