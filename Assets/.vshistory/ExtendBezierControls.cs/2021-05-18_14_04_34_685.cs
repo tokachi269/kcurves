@@ -15,7 +15,7 @@ namespace Assets
 
         public bool IsCalcArcLengthWithT { get; private set; }
 
-        public int ArcLengthWithTStep { get; private set; } = 50;
+        public int ArcLengthWithTStep { get; private set; } = 5;
 
 
         //コンストラクタ

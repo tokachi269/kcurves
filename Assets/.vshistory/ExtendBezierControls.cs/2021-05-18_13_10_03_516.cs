@@ -15,7 +15,7 @@ namespace Assets
 
         public bool IsCalcArcLengthWithT { get; private set; }
 
-        public int ArcLengthWithTStep { get; private set; } = 50;
+        public int ArcLengthWithTStep { get; private set; } = 5;
 
 
         //コンストラクタ
@@ -68,7 +68,7 @@ namespace Assets
             }
 
             //Debug.Log("input:" +input + "  inputL:" + inputL+ "  indexL:" + Lengths[seg, index]+ "  index:" + index);
-            float resultL = 1+index - ((Lengths[segIndex, index] - inputL) / (Lengths[segIndex, index] - (index <= 0 ? 0 : Lengths[segIndex, index - 1])));
+            float resultL = index - ((Lengths[segIndex, index] - inputL) / (Lengths[segIndex, index] - (index <= 0 ? 0 : Lengths[segIndex, index - 1])));
             float resultT = segIndex + (float)(resultL / ArcLengthWithTStep);
             return resultT;
         }

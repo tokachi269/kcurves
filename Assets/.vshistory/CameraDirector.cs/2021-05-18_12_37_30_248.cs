@@ -96,7 +96,7 @@ namespace Assets
                 {
                     if (t >= 2) 
                     {
-                        Debug.Log("");
+
                     }
                     maxSpeed = path.MaxSpeed(time);
                     t = path.extendBezierControls.GetT(ref segIndex, ref inputL);

@@ -30,7 +30,6 @@ namespace Assets
 
         public static GameObject moveCameraCube;
         public static LineRenderer render;
-        public float t = 0;
         private int segIndex = 0;
         private float inputL = 0f;
         private float maxSpeed = 0f;
@@ -94,14 +93,10 @@ namespace Assets
                 Debug.Log("TotalLength:" + path.extendBezierControls.TotalLength);
                 if (path.Knots.Count > 1 && moveCameraCube != null)
                 {
-                    if (t >= 2) 
-                    {
-                        Debug.Log("");
-                    }
                     maxSpeed = path.MaxSpeed(time);
-                    t = path.extendBezierControls.GetT(ref segIndex, ref inputL);
+                    float t = path.extendBezierControls.GetT(ref segIndex, ref inputL);
 
-                    Debug.Log("seg:" + segIndex + "  inputL:" + inputL + "maxS:" + maxSpeed +"currentTime:"+ currentTime);
+                    //Debug.Log("seg:" + segIndex + "  inputL:" + inputL + "maxS" + maxSpeed);
                     {
                         diffT = t - befT;
                         //Debug.Log("t:" + diffT);
@@ -143,11 +138,11 @@ namespace Assets
                 }
                 bezierObject.Clear();
 
-                for (int i = 1; i < path.extendBezierControls.SegmentCount; i++)
+                for (int i = 1; i < path.extendBezierControls.Points.Length; i++)
                 {
                     bezierObject.Add(new GameObject("bezierControl" + i));
                     bezierObject[i - 1] = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    bezierObject[i - 1].transform.position = path.extendBezierControls[i,0];
+                    bezierObject[i - 1].transform.position = path.extendBezierControls.Points[i];
 
                     bezierObject[i - 1].transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
                     bezierObject[i - 1].transform.parent = this.transform;

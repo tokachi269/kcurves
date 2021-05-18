@@ -94,10 +94,6 @@ namespace Assets
                 Debug.Log("TotalLength:" + path.extendBezierControls.TotalLength);
                 if (path.Knots.Count > 1 && moveCameraCube != null)
                 {
-                    if (t >= 2) 
-                    {
-                        Debug.Log("");
-                    }
                     maxSpeed = path.MaxSpeed(time);
                     t = path.extendBezierControls.GetT(ref segIndex, ref inputL);
 

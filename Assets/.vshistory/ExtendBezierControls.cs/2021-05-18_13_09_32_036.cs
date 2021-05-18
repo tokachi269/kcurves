@@ -15,7 +15,7 @@ namespace Assets
 
         public bool IsCalcArcLengthWithT { get; private set; }
 
-        public int ArcLengthWithTStep { get; private set; } = 50;
+        public int ArcLengthWithTStep { get; private set; } = 5;
 
 
         //コンストラクタ
@@ -34,9 +34,9 @@ namespace Assets
             {
                 Vector3[] result = BezierUtil.Divide(this[i, 0], this[i, 1], this[i + 1, 0], (float)Ts[i]);
                 ;
-                for (int j = 0; j <= 4; j++)
+                for (int i = 0; i <= 4; i++)
                 {
-                    dividedPoints[j * i + j] = result[j];
+                    dividedPoints[i * i + i] = result[i];
                 }
                 SegmentCount = dividedSegmentCount;
             }
@@ -68,19 +68,19 @@ namespace Assets
             }
 
             //Debug.Log("input:" +input + "  inputL:" + inputL+ "  indexL:" + Lengths[seg, index]+ "  index:" + index);
-            float resultL = 1+index - ((Lengths[segIndex, index] - inputL) / (Lengths[segIndex, index] - (index <= 0 ? 0 : Lengths[segIndex, index - 1])));
+            float resultL = index - ((Lengths[segIndex, index] - inputL) / (Lengths[segIndex, index] - (index <= 0 ? 0 : Lengths[segIndex, index - 1])));
             float resultT = segIndex + (float)(resultL / ArcLengthWithTStep);
             return resultT;
         }
 
         internal void CalcTotalKnotsLength()
         {
-            float length = 0f;
+            float l = 0f;
             for (int i = 0; i < Lengths.GetLength(0); i++)
             {
-                length += Lengths[i, ArcLengthWithTStep - 1];
+                l += Lengths[i, ArcLengthWithTStep - 1];
             }
-            TotalLength = length;
+            TotalLength = l;
         }
 
         /** ベジェ曲線のパラメータtと弧長のズレをパラメータ化 */

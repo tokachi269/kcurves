@@ -30,7 +30,6 @@ namespace Assets
 
         public static GameObject moveCameraCube;
         public static LineRenderer render;
-        public float t = 0;
         private int segIndex = 0;
         private float inputL = 0f;
         private float maxSpeed = 0f;
@@ -94,10 +93,6 @@ namespace Assets
                 Debug.Log("TotalLength:" + path.extendBezierControls.TotalLength);
                 if (path.Knots.Count > 1 && moveCameraCube != null)
                 {
-                    if (t >= 2) 
-                    {
-                        Debug.Log("");
-                    }
                     maxSpeed = path.MaxSpeed(time);
                     t = path.extendBezierControls.GetT(ref segIndex, ref inputL);
 

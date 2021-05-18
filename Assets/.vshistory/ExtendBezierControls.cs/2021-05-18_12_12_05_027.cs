@@ -15,7 +15,7 @@ namespace Assets
 
         public bool IsCalcArcLengthWithT { get; private set; }
 
-        public int ArcLengthWithTStep { get; private set; } = 50;
+        public int ArcLengthWithTStep { get; private set; } = 40;
 
 
         //コンストラクタ
@@ -30,13 +30,13 @@ namespace Assets
             int dividedSegmentCount = SegmentCount * 2 - 2;
             Vector3[] dividedPoints = new Vector3[dividedSegmentCount];
             int segCnt = isLoop || SegmentCount < 3 ? SegmentCount - 1 : SegmentCount;
-            for (int i = 0; i < segCnt; i++)
+            for (int k = 0; k < segCnt; k++)
             {
-                Vector3[] result = BezierUtil.Divide(this[i, 0], this[i, 1], this[i + 1, 0], (float)Ts[i]);
+                Vector3[] result = BezierUtil.Divide(this[k, 0], this[k, 1], this[k + 1, 0], (float)Ts[k]);
                 ;
-                for (int j = 0; j <= 4; j++)
+                for (int i = 0; i <= 4; i++)
                 {
-                    dividedPoints[j * i + j] = result[j];
+                    dividedPoints[i * k + i] = result[i];
                 }
                 SegmentCount = dividedSegmentCount;
             }
@@ -68,19 +68,19 @@ namespace Assets
             }
 
             //Debug.Log("input:" +input + "  inputL:" + inputL+ "  indexL:" + Lengths[seg, index]+ "  index:" + index);
-            float resultL = 1+index - ((Lengths[segIndex, index] - inputL) / (Lengths[segIndex, index] - (index <= 0 ? 0 : Lengths[segIndex, index - 1])));
+            float resultL = index - ((Lengths[segIndex, index] - inputL) / (Lengths[segIndex, index] - (index <= 0 ? 0 : Lengths[segIndex, index - 1])));
             float resultT = segIndex + (float)(resultL / ArcLengthWithTStep);
             return resultT;
         }
 
         internal void CalcTotalKnotsLength()
         {
-            float length = 0f;
+            float l = 0f;
             for (int i = 0; i < Lengths.GetLength(0); i++)
             {
-                length += Lengths[i, ArcLengthWithTStep - 1];
+                l += Lengths[i, ArcLengthWithTStep - 1];
             }
-            TotalLength = length;
+            TotalLength = l;
         }
 
         /** ベジェ曲線のパラメータtと弧長のズレをパラメータ化 */
@@ -93,20 +93,19 @@ namespace Assets
                 float l = 0f;
                 for (var j = 0; j < ArcLengthWithTStep; j++)
                 {
-                    l += Vector3.Distance(plots[i * ArcLengthWithTStep + j], plots[i * ArcLengthWithTStep + j + 1]);
+                    l += Vector3.Distance(plots[i* ArcLengthWithTStep + j], plots[i * ArcLengthWithTStep + j + 1]);
                     Lengths[i, j] = l;
                 }
             }
-            
-            //for (int i = 0; i < Lengths.GetLength(0); i++)
-            //{
-            //    float correctLength = BezierUtil.CalcLength(this[i, 0], this[i, 1], this[i, 2], 1);
-            //    Debug.Log("index：" + i + " 微分：" + correctLength + "  分割：" + Lengths[i, ArcLengthWithTStep - 1]);
-            //    for (var j = 0; j < ArcLengthWithTStep; j++)
-            //    {
-            //        Lengths[i, j] *= correctLength / Lengths[i, ArcLengthWithTStep - 1];
-            //    }
-            //}
+            for (int i = 0; i < Lengths.GetLength(0); i++)
+            {
+                float correctLength = BezierUtil.CalcLength(this[i, 0], this[i, 1], this[i, 2], 1);
+                Debug.Log("index：" + i + " 微分：" + correctLength + "  分割：" + Lengths[i, ArcLengthWithTStep - 1]);
+                for (var j = 0; j < ArcLengthWithTStep; j++)
+                {
+                    Lengths[i, j] *= correctLength / Lengths[i, ArcLengthWithTStep - 1];
+                }
+            }
 
             //Lengths[last, step-1] = 1f;
             //Lengths[k, step] += Vector3.Distance(plots[plots.Length], plots[last]);
@@ -125,20 +124,20 @@ namespace Assets
              //CalcArcLengthWithT(isLoop);
 
             float t;
-            int offset, i;
+            int offset, k;
             int segCnt = isLoop || SegmentCount < 3 ? SegmentCount : SegmentCount - 2;
-            for (i = 0; i < segCnt; i++)
+            for (k = 0; k < segCnt; k++)
             {
-                offset = i * stepPerSegment;
-                var nextI = (i + 1) % SegmentCount;
-                for (var j = 0; j < stepPerSegment; j++)
+                offset = k * stepPerSegment;
+                var nextk = (k + 1) % SegmentCount;
+                for (var i = 0; i < stepPerSegment; i++)
                 {
-                    t = j / (float)stepPerSegment;
+                    t = i / (float)stepPerSegment;
 
-                    plots[offset + j] = BezierUtil.CalcPosition(this[nextI, 0], this[nextI, 1], this[nextI, 2], t);
+                    plots[offset + i] = BezierUtil.CalcPosition(this[nextk, 0], this[nextk, 1], this[nextk, 2], t);
                 }
             }
-            var last = isLoop || SegmentCount < 3 ? 0 : i;
+            var last = isLoop || SegmentCount < 3 ? 0 : k;
             plots[plots.Length - 1] = BezierUtil.CalcPosition(this[last, 0], this[last, 1], this[last, 2], 1);
             return plots;
         }

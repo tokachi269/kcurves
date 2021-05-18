@@ -14,6 +14,7 @@ namespace Assets
         public List<ControlPoint> LookAts = new List<ControlPoint>();
         //BezierŒvŽZŒ‹‰Ê
         public ExtendBezierControls extendBezierControls;
+        public int ArcLengthWithTStep { get; private set; } = 10;
         public bool isLoop { get; private set; }
         public void SetBezierFromKnots()
         {
@@ -49,7 +50,7 @@ namespace Assets
 
         public Quaternion CalcRotation(int segIndex, float inputL)
         {
-            float t = inputL / extendBezierControls.Lengths[segIndex, extendBezierControls.ArcLengthWithTStep - 1];
+            float t = inputL / extendBezierControls.Lengths[segIndex, ArcLengthWithTStep - 1];
             int nextSegIndex = (segIndex < extendBezierControls.SegmentCount ? segIndex + 1 : segIndex);
 
             Quaternion rotation;
