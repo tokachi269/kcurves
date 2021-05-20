@@ -11,7 +11,7 @@ namespace Assets
         [SerializeField]
         public Path path;
 
-        public bool isLoop = true;
+        public bool isLoop = false;
         public bool iscameraShake = false;
         public bool isGaze = false;
         public bool isEquallySpaced = false;
@@ -44,12 +44,17 @@ namespace Assets
         void Start()
         {
             path = gameObject.AddComponent<Path>();
-
             path.AddKnot(new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 1), 60, false);
-            path.AddKnot(new Vector3(1, 2, 1), new Quaternion(0, 0, 0, 1), 60, false);
+            path.AddKnot(new Vector3(1, 1, 1), new Quaternion(0, 0, 0, 1), 60, false);
             path.AddKnot(new Vector3(0, 2, 5), new Quaternion(0, 0, 0, 1), 60, true);
             path.AddKnot(new Vector3(0, -2, 1), new Quaternion(0, 0, 0, 1), 60, false);
             path.AddKnot(new Vector3(5, 1, 1), new Quaternion(0, 0, 0, 1), 60, false);
+
+            //path.AddKnot(new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 1), 60, false);
+            //path.AddKnot(new Vector3(0, 1, 1), new Quaternion(0, 0, 0, 1), 60, false);
+            //path.AddKnot(new Vector3(0, 2, 0), new Quaternion(0, 0, 0, 1), 60, true);
+            //path.AddKnot(new Vector3(0, 3, 3), new Quaternion(0, 0, 0, 1), 60, false);
+            //path.AddKnot(new Vector3(0, 4, 0), new Quaternion(0, 0, 0, 1), 60, false);
             path.AddLookAt(new Vector3(0, 4, 0), new Quaternion(0, 0, 0, 1), 60);
 
             render = this.gameObject.AddComponent<LineRenderer>();
@@ -91,15 +96,11 @@ namespace Assets
             //GameObject.FindGameObjectWithTag("MainCamera").transform.localRotation = rotation;
             if (isStart)
             {
-                Debug.Log("TotalLength:" + path.extendBezierControls.TotalLength);
+                Debug.Log("TotalLength:" + path.Beziers.TotalLength);
                 if (path.Knots.Count > 1 && moveCameraCube != null)
                 {
-                    if (t >= 2) 
-                    {
-                        Debug.Log("");
-                    }
                     maxSpeed = path.MaxSpeed(time);
-                    t = path.extendBezierControls.GetT(ref segIndex, ref inputL);
+                    t = path.Beziers.GetT(ref segIndex, ref inputL);
 
                     Debug.Log("seg:" + segIndex + "  inputL:" + inputL + "maxS:" + maxSpeed +"currentTime:"+ currentTime);
                     {
@@ -117,7 +118,7 @@ namespace Assets
                     moveCameraCube.transform.position = path.CalcPosition(isLoop, t);
                     moveCameraCube.transform.rotation = path.CalcRotation(segIndex, inputL);
 
-                    int i = (int)Math.Floor(currentTime / time * path.extendBezierControls.SegmentCount);
+                    int i = (int)Math.Floor(currentTime / time * path.Beziers.SegmentCount);
 
                     float dt = Time.deltaTime;
                     inputL += maxSpeed;
@@ -137,26 +138,26 @@ namespace Assets
         {
             if (!(path is null))
             {
+                //TODO output出力
+                var output = path.Output(step, isLoop);
+
                 for (int i = 0; i < bezierObject.Count; i++)
                 {
                     Destroy(bezierObject[i]);
                 }
                 bezierObject.Clear();
 
-                for (int i = 1; i < path.extendBezierControls.SegmentCount; i++)
+                for (int i = 1; i < path.Beziers.SegmentCount; i++)
                 {
                     bezierObject.Add(new GameObject("bezierControl" + i));
                     bezierObject[i - 1] = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    bezierObject[i - 1].transform.position = path.extendBezierControls[i,0];
-
-                    bezierObject[i - 1].transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+                    bezierObject[i - 1].transform.position = path.Beziers[i,0];
+                
+                    bezierObject[i - 1].transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
                     bezierObject[i - 1].transform.parent = this.transform;
                     bezierObject[i - 1].GetComponent<Renderer>().material.color = Color.red;
                 }
 
-                //TODO output出力
-                var output = path.Output(step, isLoop);
-                
 
                 if (render != null)
                 {                     
@@ -208,8 +209,6 @@ namespace Assets
 
             }
             Debug.Log("Rendered");
-            
-
         }
 
 

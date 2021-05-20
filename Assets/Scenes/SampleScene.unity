@@ -403,8 +403,10 @@ MonoBehaviour:
   isEquallySpaced: 0
   isStart: 0
   iteration: 4
-  time: 1
+  time: 10
   currentTime: 0
+  bezierObject: []
+  t: 0
   dist: 0
   distall: 0
   diffT: 0

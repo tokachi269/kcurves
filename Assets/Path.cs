@@ -13,44 +13,79 @@ namespace Assets
         //ユーザー制御注視点
         public List<ControlPoint> LookAts = new List<ControlPoint>();
         //Bezier計算結果
-        public ExtendBezierControls extendBezierControls;
+        public ExtendBezierControls Beziers;
         public bool isLoop { get; private set; }
+
         public void SetBezierFromKnots()
         {
-            extendBezierControls = KCurves.CalcBezier( Knots, isLoop) as ExtendBezierControls;
+            Beziers = KCurves.CalcBezier( Knots, isLoop) as ExtendBezierControls;
             // plotsを計算
             //extendBezierControls.CalcPlots(step, isLoop, isEquallySpaced);
             //bezierResult.CalcKnotsLength(isLoop);
             //extendBezierControls.CalcTotalKnotsLength(isLoop);
-            
+
             //tの移動距離を計算し、パラメータ化する
             //extendBezierControls.CalcArcLengthWithT(isLoop);
+        }
 
+        public Vector3[] DividePoints(bool isLoop, out int dividedSegmentCount)
+        {                                                                                 
+            dividedSegmentCount = (Beziers.SegmentCount - 2 ) * 2 + 2  ;
+            Vector3[] dividedPoints = new Vector3[dividedSegmentCount * 2 + 1];
+            int segCnt = isLoop || Beziers.SegmentCount < 3 ? Beziers.SegmentCount : Beziers.SegmentCount - 2;
+            dividedPoints[0] = Beziers.Points[0];
+            dividedPoints[0] = Beziers.Points[1];
+            for (int i = 1; i <= segCnt; i++)
+            {
+                Vector3[] result = BezierUtil.Divide(Beziers[i, 0], Beziers[i, 1], Beziers[i, 2], (float)Beziers.Ts[i]);
+
+                for (int j = 0; j <= 3; j++)
+                {
+                    dividedPoints[4 * (i - 1) + j + 2] = result[j];
+                }
+            }
+            dividedPoints[dividedPoints.Length - 3] = Beziers.Points[Beziers.Points.Length - 3];
+
+            dividedPoints[dividedPoints.Length - 2] = Beziers.Points[Beziers.Points.Length - 2];
+            dividedPoints[dividedPoints.Length - 1] = Beziers.Points[Beziers.Points.Length - 1];
+            return dividedPoints;
         }
 
         public Vector3[] Output(int step, bool isLoop)
         {
-            if (extendBezierControls is null) SetBezierFromKnots();
-            return extendBezierControls.CalcPlots(step, isLoop);
+
+            if (Beziers is null) {
+                SetBezierFromKnots();
+            }
+            if (Beziers.SegmentCount > 3 || (Beziers.SegmentCount != (Knots.Count < 3 ? 1 : Knots.Count)))
+            {
+                int segment;
+                Vector3[] divVec= DividePoints(isLoop, out segment);
+                Beziers = new ExtendBezierControls(segment, divVec, isLoop);
+            }
+
+            Debug.Log("x segCnt"+Beziers.SegmentCount);
+            Debug.Log("x length"+Beziers.Points.Length);
+            return Beziers.CalcPlots(step, isLoop);
         }
 
 
         public Vector3 CalcPosition(bool isLoop, float t)
         {            
-            int segIndex = (int)Math.Truncate((t + 1) % extendBezierControls.SegmentCount);
-            if (segIndex > extendBezierControls.SegmentCount)
+            int segIndex = (int)Math.Truncate((t + 1) % Beziers.SegmentCount);
+            if (segIndex > Beziers.SegmentCount)
             {
-                segIndex = (isLoop || extendBezierControls.SegmentCount < 3) ? 1 : segIndex++;
+                segIndex = (isLoop || Beziers.SegmentCount < 3) ? 1 : segIndex++;
             }
-            return BezierUtil.CalcPosition(extendBezierControls[segIndex, 0], extendBezierControls[segIndex, 1], extendBezierControls[segIndex, 2], t % 1);
+            return BezierUtil.CalcPosition(Beziers[segIndex, 0], Beziers[segIndex, 1], Beziers[segIndex, 2], t % 1);
         }
 
 
 
         public Quaternion CalcRotation(int segIndex, float inputL)
         {
-            float t = inputL / extendBezierControls.Lengths[segIndex, extendBezierControls.ArcLengthWithTStep - 1];
-            int nextSegIndex = (segIndex < extendBezierControls.SegmentCount ? segIndex + 1 : segIndex);
+            float t = inputL / Beziers.Lengths[segIndex, Beziers.ArcLengthWithTStep - 1];
+            int nextSegIndex = (segIndex < Beziers.SegmentCount ? segIndex + 1 : segIndex);
 
             Quaternion rotation;
             if (!Quaternion.Equals(Knots[segIndex].rotation, Knots[nextSegIndex].rotation))
@@ -97,9 +132,9 @@ namespace Assets
 
         internal float MaxSpeed(int time)
         {
-            if (!extendBezierControls.IsCalcArcLengthWithT) extendBezierControls.CalcArcLengthWithT(isLoop);
+            if (!Beziers.IsCalcArcLengthWithT) Beziers.CalcArcLengthWithT(isLoop);
 
-            return extendBezierControls.TotalLength / time * 0.01f;
+            return Beziers.TotalLength / time * 0.01f;
         }
     }
 }

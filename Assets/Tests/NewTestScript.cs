@@ -24,7 +24,7 @@ namespace Assets
 
             path.SetBezierFromKnots();
 
-            Assert.AreApproximatelyEqual(path.extendBezierControls.TotalLength, 14.8682f);
+            Assert.AreApproximatelyEqual(path.Beziers.TotalLength, 14.8682f);
         }
     }
 }
