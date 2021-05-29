@@ -19,27 +19,16 @@ namespace Assets
         [DefaultValue(4)]
         public  int iteration = 4;
         [SerializeField]
-        public int time = 10;
-        public float currentTime = 0;
+
 
         //セグメントごとの分割数
-        public static int step = 10;
+        public static ushort step = 10;
         //TODO List型に変更
         public static List<GameObject> inputCube = new List<GameObject>();
         public List<GameObject> bezierObject = new List<GameObject>();
 
         public static GameObject moveCameraCube;
         public static LineRenderer render;
-        public float t = 0;
-        private int segIndex = 0;
-        private float inputL = 0f;
-        private float maxSpeed = 0f;
-
-        public float dist = 0;
-        public float distall = 0;
-        public float diffT = 0;
-        private Vector3 bef = Vector3.zero;
-        private float befT = 0;
 
         void Start()
         {
@@ -60,7 +49,7 @@ namespace Assets
             render = this.gameObject.AddComponent<LineRenderer>();
 
             path.SetBezierFromKnots();
-            moveCameraCube = new GameObject();
+            moveCameraCube = new GameObject("moveCameraCube");
             moveCameraCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             moveCameraCube.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
             moveCameraCube.GetComponent<Renderer>().material.color = Color.blue;
@@ -96,43 +85,16 @@ namespace Assets
             //GameObject.FindGameObjectWithTag("MainCamera").transform.localRotation = rotation;
             if (isStart)
             {
-                Debug.Log("TotalLength:" + path.Beziers.TotalLength);
                 if (path.Knots.Count > 1 && moveCameraCube != null)
                 {
-                    maxSpeed = path.MaxSpeed(time);
-                    t = path.Beziers.GetT(ref segIndex, ref inputL);
-
-                    Debug.Log("seg:" + segIndex + "  inputL:" + inputL + "maxS:" + maxSpeed +"currentTime:"+ currentTime);
-                    {
-                        diffT = t - befT;
-                        //Debug.Log("t:" + diffT);
-                        befT = t;
-                        Vector3 now = path.CalcPosition(isLoop, t);
-
-                        distall += dist;
-                        dist = Vector3.Distance(bef, now);
-                        bef = now;
-                        //Debug.Log("dist:" + dist);
-                    }
-
-                    moveCameraCube.transform.position = path.CalcPosition(isLoop, t);
-                    moveCameraCube.transform.rotation = path.CalcRotation(segIndex, inputL);
-
-                    int i = (int)Math.Floor(currentTime / time * path.Beziers.SegmentCount);
-
-                    float dt = Time.deltaTime;
-                    inputL += maxSpeed;
-
-                    currentTime += (0.01f / time);
-
-                    if (currentTime >= time)
-                    {
-                        currentTime = 0f;
-                        moveCameraCube.transform.position = path.Knots[0].position;
-                    }
+                    path.MoveCamera();
                 }
+                //moveCameraCube.transform.position = pos;
+                //moveCameraCube.transform.rotation = rot;
             }
         }
+
+
 
         public void renderObject()
         {
@@ -147,7 +109,7 @@ namespace Assets
                 }
                 bezierObject.Clear();
 
-                for (int i = 1; i < path.Beziers.SegmentCount; i++)
+                for (int i = 1; i < path.Beziers.SegmentCount-1; i++)
                 {
                     bezierObject.Add(new GameObject("bezierControl" + i));
                     bezierObject[i - 1] = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -211,10 +173,5 @@ namespace Assets
             Debug.Log("Rendered");
         }
 
-
-        public static float EaseInOutSine(float t){
-            return (float)(-(Math.Cos(Math.PI * t) - 1) / 2);
-        }
-
-}
+    }
 }

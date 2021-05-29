@@ -66,6 +66,7 @@
     <Compile Include="Assets\Monitor Components\Scripts\Monitor.cs" />
     <Compile Include="Assets\KCurves.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\Utils.cs" />
+    <Compile Include="Assets\PerlinCameraShake.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\MonitorAudioSource.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\LogCallbackDispatcher.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorDebugLogEditor.cs" />
@@ -75,10 +76,10 @@
     <Compile Include="Assets\Monitor Components\Examples\Using API\UsingAPI.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorRigidbodyEditor.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\MonitorInput.cs" />
+    <Compile Include="Assets\Easing.cs" />
     <Compile Include="Assets\CameraMover.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\MonitorRigidbody.cs" />
     <Compile Include="Assets\Constant.cs" />
-    <Compile Include="Assets\JitterMotion.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorTransformEditor.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorComponentEditor.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorsEditorWindow.cs" />
@@ -87,7 +88,6 @@
     <Compile Include="Assets\Monitor Components\Scripts\MonitorRigidbody2D.cs" />
     <Compile Include="Assets\BezierUtil.cs" />
     <Compile Include="Assets\BezierControls.cs" />
-    <Compile Include="Assets\Perlin.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Monitors.cs" />
     <Compile Include="Assets\Monitor Components\Examples\JumperMan\JumperMan.cs" />
   </ItemGroup>

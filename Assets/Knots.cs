@@ -8,12 +8,12 @@ using System.ComponentModel;
 
 namespace Assets
 {
-    public class ControlPoint
-    {
+	public class ControlPoint
+	{
 		public Vector3 position;
 
 		public Quaternion rotation;
-		
+
 		public float t;
 
 		public float Length;
@@ -32,10 +32,10 @@ namespace Assets
 		public float fov;
 
 		public ApplyItems applyItems = new ApplyItems(true, true, true);
-		
+
 		public bool isLookAt { get; set; }
 
-        public ControlPoint( Vector3 position,Quaternion rotation,float fov,bool isLookAt)
+		public ControlPoint(Vector3 position, Quaternion rotation, float fov, bool isLookAt)
 		{
 			this.position = position;
 			this.rotation = rotation;
@@ -43,6 +43,9 @@ namespace Assets
 			//this.CaptureCamera();
 			this.isLookAt = isLookAt;
 		}
+
+		[DefaultValue(EasingMode.Auto)]
+		public EasingMode easingMode;
 
 
 		//public void CaptureCamera()

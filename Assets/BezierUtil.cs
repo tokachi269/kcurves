@@ -10,7 +10,7 @@ namespace Assets
     static class BezierUtil
     {
         /** tの2次ベジェ曲線の座標を求める */
-        public static Vector3 CalcPosition(Vector3 P1, Vector3 P2, Vector3 P3, float t)
+        public static Vector3 Position(Vector3 P1, Vector3 P2, Vector3 P3, float t)
         {
             return (1 - t) * (1 - t) * P1 + 2 * (1 - t) * t * P2 + t * t * P3;
         }

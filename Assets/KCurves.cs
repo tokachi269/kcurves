@@ -48,7 +48,7 @@ namespace Assets
             for (int i = 0; i < iteration; i++)
             {
                 if (i < 3 || i < iteration / 2)
-                    Step1(space.C, space.L, isLoop);
+                Step1(space.C, space.L, isLoop);
                 Step2(space.C, space.L);
                 Step3(points, space.C, space.T);
                 Step4(points, space.C, space.L, space.T, space.A, isLoop);
