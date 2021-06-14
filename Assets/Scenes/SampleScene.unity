@@ -273,8 +273,8 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
-  - component: {fileID: 963194229}
   - component: {fileID: 963194230}
+  - component: {fileID: 963194229}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -341,7 +341,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: -10}
+  m_LocalPosition: {x: 0, y: 1, z: -5.11}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 37462152}
@@ -356,9 +356,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 48b644be41a1a3d488e97af5e82d34d5, type: 3}
+  m_Script: {fileID: 11500000, guid: cb1eb63c9f08dc04c91769c48f75ca4f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _frequency: 30
+  _translationMasterMagnitude: 1
+  _translateAxisX: 1
+  _translateAxisY: 1
+  _translateAxisZ: 0
+  _translateAxisXMultiplier: 1
+  _translateAxisYMultiplier: 1
+  _translateAxisZMultiplier: 1
+  _rotationMasterMagnitude: 15
+  _rotateAxisX: 1
+  _rotateAxisY: 1
+  _rotateAxisZ: 1
+  _rotateAxisXMultiplier: 1
+  _rotateAxisYMultiplier: 1
+  _rotateAxisZMultiplier: 1
+  _decay: 2
+  _trauma: 0
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -419,13 +436,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   path: {fileID: 0}
-  isLoop: 0
-  iscameraShake: 0
-  isGaze: 0
-  isEquallySpaced: 0
-  isStart: 0
-  iteration: 4
-  bezierObject: []
+  rotate: {fileID: 0}
 --- !u!4 &1818716793
 Transform:
   m_ObjectHideFlags: 0

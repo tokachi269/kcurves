@@ -2,7 +2,7 @@
 using UnityEngine;
 using System.ComponentModel;
 using System.Collections.Generic;
-
+using System.IO;
 
 namespace Assets
 {
@@ -11,166 +11,82 @@ namespace Assets
         [SerializeField]
         public Path path;
 
-        public bool isLoop = false;
-        public bool iscameraShake = false;
-        public bool isGaze = false;
-        public bool isEquallySpaced = false;
-        public bool isStart = false;
-        [DefaultValue(4)]
-        public  int iteration = 4;
         [SerializeField]
+        public Rotate rotate;
 
-
-        //セグメントごとの分割数
-        public static ushort step = 10;
-        //TODO List型に変更
-        public static List<GameObject> inputCube = new List<GameObject>();
-        public List<GameObject> bezierObject = new List<GameObject>();
-
-        public static GameObject moveCameraCube;
-        public static LineRenderer render;
+        public static string RecoveryDirectory => System.IO.Path.Combine(Directory.GetCurrentDirectory(), "CameraOperator");
 
         void Start()
         {
             path = gameObject.AddComponent<Path>();
-            path.AddKnot(new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 1), 60, false);
-            path.AddKnot(new Vector3(1, 1, 1), new Quaternion(0, 0, 0, 1), 60, false);
-            path.AddKnot(new Vector3(0, 2, 5), new Quaternion(0, 0, 0, 1), 60, true);
-            path.AddKnot(new Vector3(0, -2, 1), new Quaternion(0, 0, 0, 1), 60, false);
-            path.AddKnot(new Vector3(5, 1, 1), new Quaternion(0, 0, 0, 1), 60, false);
+            rotate = gameObject.AddComponent<Rotate>();
 
-            //path.AddKnot(new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 1), 60, false);
-            //path.AddKnot(new Vector3(0, 1, 1), new Quaternion(0, 0, 0, 1), 60, false);
-            //path.AddKnot(new Vector3(0, 2, 0), new Quaternion(0, 0, 0, 1), 60, true);
-            //path.AddKnot(new Vector3(0, 3, 3), new Quaternion(0, 0, 0, 1), 60, false);
-            //path.AddKnot(new Vector3(0, 4, 0), new Quaternion(0, 0, 0, 1), 60, false);
+            path.AddKnot(new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 1), 60);
+            path.AddKnot(new Vector3(1, 1, 1), new Quaternion(0, 0, 0, 1), 60);
+            path.AddKnot(new Vector3(0, 2, 5), new Quaternion(0, 0, 0, 1), 60);
+            path.AddKnot(new Vector3(0, -2, 1), new Quaternion(0, 0, 0, 1), 60);
+            path.AddKnot(new Vector3(5, 1, 1), new Quaternion(0, 0, 0, 1), 60);
+
+            //path.AddKnot(new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 1), 60);
+            //path.AddKnot(new Vector3(0, 1, 1), new Quaternion(0, 0, 0, 1), 60);
+            //path.AddKnot(new Vector3(0, 2, 0), new Quaternion(0, 0, 0, 1), 60);
+            //path.AddKnot(new Vector3(0, 3, 3), new Quaternion(0, 0, 0, 1), 60);
+            //path.AddKnot(new Vector3(0, 4, 0), new Quaternion(0, 0, 0, 1), 60);
             path.AddLookAt(new Vector3(0, 4, 0), new Quaternion(0, 0, 0, 1), 60);
 
-            render = this.gameObject.AddComponent<LineRenderer>();
+
+            path.Time = 10;
 
             path.SetBezierFromKnots();
-            moveCameraCube = new GameObject("moveCameraCube");
-            moveCameraCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            moveCameraCube.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
-            moveCameraCube.GetComponent<Renderer>().material.color = Color.blue;
-            moveCameraCube.transform.position = path.Knots[0].position;
-            moveCameraCube.transform.parent = this.transform;
-            // moveCameraCube.AddComponent(typeof(JitterMotion));
-            renderObject();
+
+            path.Render();
+            path.IsCameraShake = true;
+
+            rotate.AddKnot(new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 1), 60);
+            rotate.TimePerRound = 4f;
+
         }
 
-        void OnValidate()
-        {
-            renderObject();
-        }
 
         void Update()
         {
             if (Input.GetKeyDown("k"))
             {
-                path.AddKnot(Camera.main.transform.position, Camera.main.transform.rotation, 60, false);
+                path.AddKnot(CameraUtil.CameraPosition());
                 Debug.Log("Add Knot Succeed");
-                renderObject();
+                path.Render();
             }
             if (Input.GetKeyDown("j"))
             {
                 path.RemoveKnot();
                 Debug.Log("Remove Knot Succeed");
-                renderObject();
+                path.Render();
             }
-            //var mainCamObj = GameObject.FindGameObjectWithTag("MainCamera");
-            //Debug.Log(mainCamObj.transform.localRotation.z);
-            //Quaternion rotation = GameObject.Find("Main Camera").transform.localRotation;
-            //rotation.z = +90.0f;
-            //GameObject.FindGameObjectWithTag("MainCamera").transform.localRotation = rotation;
-            if (isStart)
+            if (Input.GetKeyDown("t"))
             {
-                if (path.Knots.Count > 1 && moveCameraCube != null)
+                if (path != null)
                 {
-                    path.MoveCamera();
+                    StartCoroutine(path.Play());
                 }
-                //moveCameraCube.transform.position = pos;
-                //moveCameraCube.transform.rotation = rot;
+                Debug.Log("Path Start!!");
             }
-        }
 
-
-
-        public void renderObject()
-        {
-            if (!(path is null))
+            if (Input.GetKeyDown("y"))
             {
-                //TODO output出力
-                var output = path.Output(step, isLoop);
-
-                for (int i = 0; i < bezierObject.Count; i++)
+                if (rotate!= null)
                 {
-                    Destroy(bezierObject[i]);
+                    StartCoroutine(rotate.Play());
                 }
-                bezierObject.Clear();
-
-                for (int i = 1; i < path.Beziers.SegmentCount-1; i++)
-                {
-                    bezierObject.Add(new GameObject("bezierControl" + i));
-                    bezierObject[i - 1] = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    bezierObject[i - 1].transform.position = path.Beziers[i,0];
-                
-                    bezierObject[i - 1].transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
-                    bezierObject[i - 1].transform.parent = this.transform;
-                    bezierObject[i - 1].GetComponent<Renderer>().material.color = Color.red;
-                }
-
-
-                if (render != null)
-                {                     
-                    //cube = new GameObject[output.Length];
-
-                    render.material = new Material(Shader.Find("Sprites/Default"));
-                    render.positionCount = output.Length;
-                    render.startWidth = 0.1f;
-                    render.endWidth = 0.1f;
-                    render.startColor = Color.white;
-                    render.endColor = Color.black;
-                    for (int i = 0; i < output.Length; i++)
-                    {
-                        render.SetPosition(i, output[i]);
-                    }
-                }
-
-
-                for (int i = 0; i < inputCube.Count; i++)
-                {
-                    Destroy(inputCube[i]);
-                }
-                inputCube.Clear();
-                for (int i = 0; i < path.Knots.Count; i++)
-                    {
-                        inputCube.Add(new GameObject("inputCube" + i));
-                        inputCube[i] = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        inputCube[i].transform.position = path.Knots[i].position;
-                        inputCube[i].transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
-                        inputCube[i].transform.parent = this.transform;
-                        
-                        inputCube[i].GetComponent<Renderer>().material.color = Color.blue;
-                    }
-
-
-
-                if (inputCube != null && inputCube.Count != 0)
-                {
-                    for (int i = 0; i < path.Knots.Count - 1; i++)
-                    {
-                        inputCube[i].transform.position = path.Knots[i].position;
-                        inputCube[i].transform.rotation = path.Knots[i].rotation;
-                    }
-                }
-                if (path.Knots.Count > inputCube.Count)
-                {
-                    inputCube.RemoveAt(inputCube.Count - 1);
-                }
-
+                Debug.Log("Rotate Start!!");
             }
-            Debug.Log("Rendered");
+            if (Input.GetKeyDown("u"))
+            {
+                if (path != null)
+                {
+                    path.Serialize("xx");
+                }
+                Debug.Log("path Serialized");
+            }
         }
 
     }
