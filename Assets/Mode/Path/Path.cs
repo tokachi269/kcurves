@@ -29,9 +29,10 @@ namespace Assets
         
         private int Iteration = 5;
         [SerializeField]
-        public bool IsLoop { get; set; }
+        public bool IsLoop= false;
         [SerializeField]
-        public ushort Time { get; set; }
+        public ushort Time = 10;
+        [SerializeField]
         public ushort Step = 10;
 
         [SerializeField]
@@ -69,9 +70,21 @@ namespace Assets
 
         }
 
+        void OnValidate()
+        {
+            SetBezierFromKnots();
+        }
+
         public void SetBezierFromKnots()
         {
             Beziers = KCurves.CalcBeziers(Knots, Iteration, IsLoop) as ExtendBezierControls;
+            if (Beziers.SegmentCount >= 3)
+            {
+                int segment;
+                Vector3[] divVec = DividePoints(IsLoop, out segment);
+                Beziers = new ExtendBezierControls(segment, divVec, IsLoop);
+            }
+
             Render();
         }
 
@@ -275,32 +288,41 @@ namespace Assets
         // ユーザー制御点をベジェ制御点に追加する
         private Vector3[] DividePoints(bool isLoop, out int dividedSegmentCount)
         {
-            //Debug.Log("Beziers.SegmentCount:" + Beziers.SegmentCount);
-            dividedSegmentCount = Beziers.SegmentCount < 3 ? 2 : (Beziers.SegmentCount - 2) * 2;
-            //Debug.Log("dividedSegmentCount:" + dividedSegmentCount);
-            Vector3[] dividedPoints = new Vector3[dividedSegmentCount * 2 + 1];
-            ushort segCnt = (ushort)(isLoop || Beziers.SegmentCount < 3 ? Beziers.SegmentCount : Beziers.SegmentCount - 2);
+            Debug.Log("Beziers.SegmentCount:" + Beziers.SegmentCount);
 
-            for (ushort i = 1; i <= segCnt; i++)
+            if (isLoop)
             {
-                //Debug.Log("i=" + i +","+ Beziers[i, 0] +","+ Beziers[i, 1] + "," + Beziers[i, 2] + "," + (float)Beziers.Ts[i]);
-                Vector3[] result = BezierUtil.Divide(Beziers[i, 0], Beziers[i, 1], Beziers[i, 2], (float)Beziers.Ts[i]);
-
-                for (ushort j = 0; j <= 3; j++)
-                {
-                    ushort index = (ushort)(4 * (i - 1) + j);
-                    //Debug.Log(index + ", "+result[j]);
-                    if (index != 0 && (index + 2) % 4 == 0)
-                    {
-                        dividedPoints[index] = Knots[(index + 2) / 4].position;
-                    }
-                    else
-                    {
-                        dividedPoints[index] = result[j];
-                    }
-                }
+                dividedSegmentCount = (Beziers.SegmentCount * 2 - 1);
             }
-            dividedPoints[dividedPoints.Length - 1] = Knots[Knots.Count - 1].position;
+            else
+            { 
+                dividedSegmentCount = (Beziers.SegmentCount - 2) * 2;
+            }
+            
+            Debug.Log("dividedSegmentCount:" + dividedSegmentCount);
+            Vector3[] dividedPoints = new Vector3[isLoop ? dividedSegmentCount * 2 + 4 : dividedSegmentCount * 2 + 1];
+
+            ushort segCnt = (ushort)(isLoop ? Beziers.SegmentCount : Beziers.SegmentCount - 1);
+            Debug.Log("segCnt" + segCnt);
+
+            var tss = Beziers.Ts.Select((num, index) => (num, index));
+            foreach (var t in tss) Debug.Log(t.index+"," + t.num);
+
+            ushort index = 0;
+            int i = isLoop ? 0 : 1;
+            for (; i < segCnt; i++)
+            {
+                Debug.Log("i=" + i +","+ Beziers[i, 0] +","+ Beziers[i, 1] + "," + Beziers[i, 2] + "," + (float)Beziers.Ts[i]);
+                Vector3[] result = BezierUtil.Divide(Beziers[i, 0], Beziers[i, 1], Beziers[i, 2], (float)Beziers.Ts[i]);
+                int condition = (i == segCnt - 1 && isLoop) ? 4 : 3;
+                for (int j=0; j <= condition; j++,index++)
+                {
+                    Debug.Log("dividedPoints" + dividedPoints.Length+" index:"+index + ", "+result[j]);
+                    dividedPoints[index] = result[j];
+                }
+
+            }
+            if (!isLoop) dividedPoints[dividedPoints.Length - 1] = Beziers[segCnt,0];
             //Debug.Log(dividedPoints.Length - 1 + ", " + dividedPoints[dividedPoints.Length - 1]);
             return dividedPoints;
         }
@@ -311,15 +333,7 @@ namespace Assets
             {
                 SetBezierFromKnots();
             }
-            if (Beziers.SegmentCount >= 3 && (Beziers.SegmentCount == (Knots.Count < 3 ? 1 : Knots.Count)))
-            {
-                int segment;
-                Vector3[] divVec = DividePoints(isLoop, out segment);
-                Beziers = new ExtendBezierControls(segment, divVec, isLoop);
-            }
 
-            Debug.Log("x segCnt" + Beziers.SegmentCount);
-            Debug.Log("x length" + Beziers.Points.Length);
             return Beziers.CalcPlots(step, isLoop);
         }
 
@@ -383,7 +397,6 @@ namespace Assets
 
         public void Render()
         {
-
             var output = Output(Step, IsLoop);
 
                 for (int i = 0; i < bezierObject.Count; i++)

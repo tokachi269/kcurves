@@ -53,21 +53,21 @@ namespace Assets
             Step2(space.C, space.L);
 
             //input.Length‚Æt‚Ì”‚Í“¯‚¶
-            SetTs(space.C,space.T);
+            SetTs(space.C,space.T, isLoop);
 
             return space.C;
         }
 
-        static void SetTs(BezierControls cs, double[] spaceT)
+        static void SetTs(BezierControls cs, double[] spaceT,bool isLoop)
         {
             double[] ts = new double[spaceT.Length];
-            ts[0]= 0d;
+            ts[0]= isLoop? spaceT[0] : 0d;
 
             for (int i = 1; i < ts.Length - 1; i++)
             {
                 ts[i] += spaceT[i];
             }
-            ts[ts.Length - 1] = ts.Length - 1;
+            ts[ts.Length - 1] = isLoop ? spaceT[ts.Length - 1] : ts.Length - 1;
             cs.Ts = ts;
         }
 

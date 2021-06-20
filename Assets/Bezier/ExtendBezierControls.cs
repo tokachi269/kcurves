@@ -97,31 +97,39 @@ namespace Assets
         }
         public Vector3[] CalcPlots(ushort stepPerSegment, bool isLoop)
         {
-            int segCnt = isLoop || SegmentCount < 2 ? SegmentCount : SegmentCount;
-
             Vector3[] plots;
-            if (segCnt < 2)
-                plots = new Vector3[stepPerSegment + 1];
-            else
-                plots = new Vector3[(isLoop ? segCnt - 2 : (segCnt)) * stepPerSegment + 1];
-            
-
             float t;
             int offset, i;
+            if (SegmentCount <= 2)
+            {
+                plots = new Vector3 [SegmentCount];
+                plots[0] = this[0, 0];
+                if (SegmentCount == 2) plots[1] = this[1, 0];
+                return plots;
+            }
+
+            int segCnt = isLoop ? SegmentCount + 1 : SegmentCount;
+            plots = new Vector3[Math.Max(0, segCnt) * stepPerSegment + (isLoop ? 0:1)];
 
 
             for (i = 0; i < segCnt; i++)
             {
                 offset = i * stepPerSegment;
-
                 for (var j = 0; j < stepPerSegment; j++)
                 {
                     t = j / (float)stepPerSegment;
+
                     plots[offset + j] = BezierUtil.Position(this[i, 0], this[i, 1], this[i, 2], t);
                 }
             }
-            var last = isLoop ? 0 : i-1;
-            plots[plots.Length-1] = BezierUtil.Position(this[last, 0], this[last, 1], this[last, 2], 1);
+            if (isLoop) {
+                plots[plots.Length - 1] = this[0, 0]; 
+            }
+            else
+            {
+                var last = isLoop ? 0 : i - 1;
+                plots[plots.Length - 1] = BezierUtil.Position(this[last, 0], this[last, 1], this[last, 2], 1);
+            }
             return plots;
         }
 

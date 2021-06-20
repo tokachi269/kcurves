@@ -21,7 +21,7 @@ namespace Assets
             path = gameObject.AddComponent<Path>();
             rotate = gameObject.AddComponent<Rotate>();
 
-            path.AddKnot(new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 1), 60);
+            path.AddKnot(new Vector3(0, 0, 1), new Quaternion(0, 0, 0, 1), 60);
             path.AddKnot(new Vector3(1, 1, 1), new Quaternion(0, 0, 0, 1), 60);
             path.AddKnot(new Vector3(0, 2, 5), new Quaternion(0, 0, 0, 1), 60);
             path.AddKnot(new Vector3(0, -2, 1), new Quaternion(0, 0, 0, 1), 60);
