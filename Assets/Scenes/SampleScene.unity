@@ -464,15 +464,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   component: {fileID: 1818716792}
-  monitorInputFields:
-  - field:
-    - dist
-    color: {r: 0.2509804, g: 1, b: 0.53333336, a: 1}
-    fieldTypeName: System.Single
-  - field:
-    - diffT
-    color: {r: 0.2509804, g: 0.91764706, b: 1, a: 1}
-    fieldTypeName: System.Single
+  monitorInputFields: []
   mode: 2
   min: Infinity
   max: -Infinity

@@ -132,21 +132,26 @@ namespace Assets
               : (Math.Pow(2 * t - 2, 2) * ((num + 1) * (t * 2 - 2) + num) + 2) / 2);
         }
 
-        private static float EaseOutBackSin(float t)
+        public static float EaseOutBackSin(float t)
         {
             float num = EasingBack + 1;
 
             return (float)(1 + num * Math.Pow(t - 1, 3) + EasingBack * Math.Pow(t - 1, 2));
         }
 
-        private static float EaseInBackSin(float t)
+        public static float EaseInBackSin(float t)
         {
             float num = EasingBack + 1;
 
             return num * t * t * t - EasingBack * t * t;
         }
 
-        private static void EasingModeFlagGenerater(){
+        public static float easeInOutQuad(float t) {
+        return (float)(t < 0.5 ? 2 * t* t : 1 - Math.Pow(-2 * t + 2, 2) / 2);
+
+        }
+
+    private static void EasingModeFlagGenerater(){
             for (byte n = 0; n <= 3; n++)
             {
                 for (byte m = 0; m <= 3; m++)

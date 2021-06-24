@@ -19,7 +19,7 @@ namespace Assets
         //c_{i,j}
         public Vector3 this[int i, int j]
         {
-            get 
+            get
             {
                 if (2 * i + j > Points.Length) throw new ArgumentException($"The specified {i} and {j} are out of range of {nameof(Points)}.");
                 return Points[2 * i + j];

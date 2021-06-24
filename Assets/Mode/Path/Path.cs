@@ -1,3 +1,4 @@
+using MonitorComponents;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -46,27 +47,50 @@ namespace Assets
         public static List<GameObject> inputCube = new List<GameObject>();
         public List<GameObject> bezierObject = new List<GameObject>();
 
-        public static LineRenderer render;
+        public static LineRendererEx Line;
 
+        Monitor monitor;
+        MonitorInput diffTMonitor;
+        MonitorInput distMonitor;
+        MonitorInput befTMonitor;
         /* Debug用変数 **/
+        [SerializeField]
         public float dist = 0;
+        [SerializeField]
         public float distall = 0;
+        [SerializeField]
         public float diffT = 0;
+        [SerializeField]
         private Vector3 bef = Vector3.zero;
+        [SerializeField]
         private float befT = 0;
         /* Debug用変数ここまで **/
 
-        public void Start()
+        void Update()
         {
-           // CameraShake = gameObject.AddComponent<PerlinCameraShake>();
-           // CameraShake.enabled = false;
+          //  diffTMonitor.Sample(diffT);
+           // distMonitor.Sample(dist);
+           // befTMonitor.Sample(befT);
+        }
+
+            public void Start()
+        {
+            // CameraShake = gameObject.AddComponent<PerlinCameraShake>();
+            // CameraShake.enabled = false;
             moveCameraCube = new GameObject("moveCameraCube");
             moveCameraCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
             moveCameraCube.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
             moveCameraCube.GetComponent<Renderer>().material.color = Color.blue;
             moveCameraCube.transform.parent = this.transform;
 
-            render = gameObject.AddComponent<LineRenderer>();
+            Line = gameObject.AddComponent<LineRendererEx>();
+
+            monitor = new Monitor("monitor");
+            monitor.Mode = ValueAxisMode.Fixed;
+            monitor.Max = 1f;
+            diffTMonitor = new MonitorInput(monitor, "diffT", Color.red);
+            distMonitor = new MonitorInput(monitor, "dist", Color.magenta);
+            befTMonitor = new MonitorInput(monitor, "T", Color.magenta);
 
         }
 
@@ -77,6 +101,10 @@ namespace Assets
 
         public void SetBezierFromKnots()
         {
+            if (Knots.Count > 0 && moveCameraCube!=null)
+            {
+                moveCameraCube.transform.position = Knots[0].position;
+            }
             Beziers = KCurves.CalcBeziers(Knots, Iteration, IsLoop) as ExtendBezierControls;
             if (Beziers.SegmentCount >= 3)
             {
@@ -183,17 +211,17 @@ namespace Assets
                 //Debug.Log("t:"+ t);
 
                 //Debug.Log("bezierIndex:" + bezierIndex + "  ProgressLength:" + ProgressLength + "maxS:" + maxSpeed + "currentTime:" + currentTime);
-                //{
-                //    diffT = t - befT;
-                //    //Debug.Log("t:" + diffT);
-                //    befT = t;
-                //    Vector3 now = CalcPosition(isLoop, t);
-                //
-                //    distall += dist;
-                //    dist = Vector3.Distance(bef, now);
-                //    bef = now;
-                //    //Debug.Log("dist:" + dist);
-                //}
+                {
+                    diffT = t - befT;
+                    //Debug.Log("t:" + diffT);
+                    befT = t;
+                    Vector3 now = CalcPosition(bezierIndex, t, IsLoop);
+                
+                    distall += dist;
+                    dist = Vector3.Distance(bef, now);
+                    bef = now;
+                    //Debug.Log("dist:" + dist);
+                }
 
                 if (t <= Beziers.SegmentCount)
                 {
@@ -288,7 +316,7 @@ namespace Assets
         // ユーザー制御点をベジェ制御点に追加する
         private Vector3[] DividePoints(bool isLoop, out int dividedSegmentCount)
         {
-            Debug.Log("Beziers.SegmentCount:" + Beziers.SegmentCount);
+           // Debug.Log("Beziers.SegmentCount:" + Beziers.SegmentCount);
 
             if (isLoop)
             {
@@ -299,25 +327,25 @@ namespace Assets
                 dividedSegmentCount = (Beziers.SegmentCount - 2) * 2;
             }
             
-            Debug.Log("dividedSegmentCount:" + dividedSegmentCount);
+           // Debug.Log("dividedSegmentCount:" + dividedSegmentCount);
             Vector3[] dividedPoints = new Vector3[isLoop ? dividedSegmentCount * 2 + 4 : dividedSegmentCount * 2 + 1];
 
             ushort segCnt = (ushort)(isLoop ? Beziers.SegmentCount : Beziers.SegmentCount - 1);
-            Debug.Log("segCnt" + segCnt);
+           // Debug.Log("segCnt" + segCnt);
 
-            var tss = Beziers.Ts.Select((num, index) => (num, index));
-            foreach (var t in tss) Debug.Log(t.index+"," + t.num);
+            //var tss = Beziers.Ts.Select((num, index) => (num, index));
+            //foreach (var t in tss) Debug.Log(t.index+"," + t.num);
 
             ushort index = 0;
             int i = isLoop ? 0 : 1;
             for (; i < segCnt; i++)
             {
-                Debug.Log("i=" + i +","+ Beziers[i, 0] +","+ Beziers[i, 1] + "," + Beziers[i, 2] + "," + (float)Beziers.Ts[i]);
+               // Debug.Log("i=" + i +","+ Beziers[i, 0] +","+ Beziers[i, 1] + "," + Beziers[i, 2] + "," + (float)Beziers.Ts[i]);
                 Vector3[] result = BezierUtil.Divide(Beziers[i, 0], Beziers[i, 1], Beziers[i, 2], (float)Beziers.Ts[i]);
                 int condition = (i == segCnt - 1 && isLoop) ? 4 : 3;
                 for (int j=0; j <= condition; j++,index++)
                 {
-                    Debug.Log("dividedPoints" + dividedPoints.Length+" index:"+index + ", "+result[j]);
+                  //  Debug.Log("dividedPoints" + dividedPoints.Length+" index:"+index + ", "+result[j]);
                     dividedPoints[index] = result[j];
                 }
 
@@ -397,9 +425,10 @@ namespace Assets
 
         public void Render()
         {
+
             var output = Output(Step, IsLoop);
 
-                for (int i = 0; i < bezierObject.Count; i++)
+            for (int i = 0; i < bezierObject.Count; i++)
                 {
                     Destroy(bezierObject[i]);
                 }
@@ -415,26 +444,30 @@ namespace Assets
                     bezierObject[i - 1].transform.parent = this.transform;
                     bezierObject[i - 1].GetComponent<Renderer>().material.color = Color.red;
                 }
+            
 
-
-                if (render != null)
+            if (Line != null)
                 {
-                    //cube = new GameObject[output.Length];
+                Destroy(Line);
+                //cube = new GameObject[output.Length];
 
-                    render.material = new Material(Shader.Find("Sprites/Default"));
-                    render.positionCount = output.Length;
-                    render.startWidth = 0.1f;
-                    render.endWidth = 0.1f;
-                    render.startColor = Color.white;
-                    render.endColor = Color.black;
-                    for (int i = 0; i < output.Length; i++)
+                //Line.material = new Material(Shader.Find("Sprites/Default"));
+                //Line.positionCount = output.Length;
+                //Line.startWidth = 0.1f;
+                //Line.endWidth = 0.1f;
+                //Line.startColor = Color.white;
+                //Line.endColor = Color.black;
+                for (int i = 0; i < output.Length; i++)
                     {
-                        render.SetPosition(i, output[i]);
+                        Line.AddPosition(output[i]);
                     }
-                }
+                Line.Apply();
+                Line.GetComponent<Renderer>().material.color = Color.gray;
+
+            }
 
 
-                for (int i = 0; i < inputCube.Count; i++)
+            for (int i = 0; i < inputCube.Count; i++)
                 {
                     Destroy(inputCube[i]);
                 }

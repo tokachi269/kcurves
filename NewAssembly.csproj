@@ -58,13 +58,13 @@
   <ItemGroup>
     <Compile Include="Assets\Monitor Components\Scripts\MonitorComponent.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorRigidbody2DEditor.cs" />
-    <Compile Include="Assets\Bezier\ExtendedKnots.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\MonitorTransform.cs" />
     <Compile Include="Assets\Bezier\ExtendBezierControls.cs" />
     <Compile Include="Assets\Mode\Path\Path.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Monitor.cs" />
     <Compile Include="Assets\Bezier\KCurves.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\Utils.cs" />
+    <Compile Include="Assets\LineRendererEx.cs" />
     <Compile Include="Assets\Mode\PerlinCameraShake.cs" />
     <Compile Include="Assets\Mode\Rotate\Rotate.cs" />
     <Compile Include="Assets\Mode\Easing.cs" />
@@ -83,6 +83,7 @@
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorTransformEditor.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorComponentEditor.cs" />
     <Compile Include="Assets\Mode\BaseCameraMode.cs" />
+    <Compile Include="Assets\Bezier\Bezier3D.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorsEditorWindow.cs" />
     <Compile Include="Assets\Mode\ControlPoint.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorAudioSourceEditor.cs" />

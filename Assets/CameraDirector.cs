@@ -13,7 +13,6 @@ namespace Assets
 
         [SerializeField]
         public Rotate rotate;
-
         public static string RecoveryDirectory => System.IO.Path.Combine(Directory.GetCurrentDirectory(), "CameraOperator");
 
         void Start()
@@ -50,6 +49,14 @@ namespace Assets
 
         void Update()
         {
+            Vector3 pos = Input.mousePosition;
+            Ray ray = Camera.main.ScreenPointToRay(pos);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                Debug.Log(hit.point);
+            }
+
             if (Input.GetKeyDown("k"))
             {
                 path.AddKnot(CameraUtil.CameraPosition());
