@@ -8,12 +8,11 @@ namespace Assets
 {
     public static class KCurves
     {
-        public static BezierControls CalcBeziers(List<ControlPoint> Knots, int iteration, bool isLoop)
+        public static BezierControls CalcBeziers(Vector3[] Knots, int iteration, bool isLoop)
         {
-            var Input = Knots.Where(data => data.applyItems.position == true).Select(data => data.position).ToArray();
-            Debug.Log(Input.Length);
-            CalcSpace cSpace = new KCurves.CalcSpace(Input.Length, isLoop);
-            return CalcBezierControls(Input, cSpace, iteration, isLoop);
+            Debug.Log(Knots.Length);
+            CalcSpace cSpace = new KCurves.CalcSpace(Knots.Length, isLoop);
+            return CalcBezierControls(Knots, cSpace, iteration, isLoop);
         }
 
         private static BezierControls CalcBezierControls(Vector3[] points, CalcSpace space, int iteration, bool isLoop)
@@ -141,6 +140,7 @@ namespace Assets
                     lambdas[i] = (t1 - Mathf.Sqrt(t1 * t2)) / (t1 - t2);
             }
         }
+
         static void Step2(BezierControls cs, float[] lambdas)
         {
             var n = lambdas.Length;
@@ -150,6 +150,7 @@ namespace Assets
             }
             cs[0, 0] = cs[n - 1, 2] = (1 - lambdas[n - 1]) * cs[n - 1, 1] + lambdas[n - 1] * cs[0, 1];
         }
+
         static void Step3(Vector3[] ps, BezierControls cs, double[] ts)
         {
             for (int i = 0; i < ts.Length; i++)
@@ -172,6 +173,7 @@ namespace Assets
                 ts[i] = SolveCubicEquation(a, b, c, d);
             }
         }
+
         static void Step4(Vector3[] ps, BezierControls cs, float[] lambdas, double[] ts, double[] A, bool isLoop)
         {
             var n = ps.Length;
@@ -205,6 +207,7 @@ namespace Assets
             //˜A—§•û’öŽ®‚ð‰ð‚­
             SolveTridiagonalEquation(A, extendedCs, extendedPs);
         }
+
         static void SolveTridiagonalEquation(double[] A, ExtendedBezierControls x, ExtendedKnots b)
         {
             var n = A.Length / 3 - 2;
@@ -230,6 +233,7 @@ namespace Assets
                 x[i] = (x[i] - (float)A[i3 + 2] * x[i + 1]) / (float)A[i3 + 1];
             }
         }
+
         static double SolveCubicEquation(double a, double b, double c, double d)
         {
             //•‰‚Ì’l‚É‘Î‰ž‚µ‚½‚Ræª

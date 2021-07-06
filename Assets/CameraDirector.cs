@@ -36,8 +36,6 @@ namespace Assets
 
             path.Time = 10;
 
-            path.SetBezierFromKnots();
-
             path.Render();
             path.IsCameraShake = true;
 
@@ -54,9 +52,18 @@ namespace Assets
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
             {
-                Debug.Log(hit.point);
+                path.findClosest(hit.point);
             }
-
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (Physics.Raycast(ray, out hit))
+                {
+                    float t = path.findClosest(hit.point);
+                    path.AddKnot(CameraUtil.CameraPosition(),t);
+                    Debug.Log("Insert Knot Succeed");
+                    path.Render();
+                }
+            }
             if (Input.GetKeyDown("k"))
             {
                 path.AddKnot(CameraUtil.CameraPosition());

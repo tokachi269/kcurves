@@ -32,6 +32,8 @@ namespace Assets
         [SerializeField]
         public bool IsLoop= false;
         [SerializeField]
+        public bool IsCoordinateControl = false;
+        [SerializeField]
         public ushort Time = 10;
         [SerializeField]
         public ushort Step = 10;
@@ -42,12 +44,12 @@ namespace Assets
 
         protected ControlPoint DefaultPosition { get; set; }
 
-        private GameObject moveCameraCube;
+        public GameObject moveCameraCube;
 
         public static List<GameObject> inputCube = new List<GameObject>();
         public List<GameObject> bezierObject = new List<GameObject>();
 
-        public static LineRendererEx Line;
+        public static PipeMeshGenerator Line;
 
         Monitor monitor;
         MonitorInput diffTMonitor;
@@ -73,7 +75,7 @@ namespace Assets
            // befTMonitor.Sample(befT);
         }
 
-            public void Start()
+            public void Awake()
         {
             // CameraShake = gameObject.AddComponent<PerlinCameraShake>();
             // CameraShake.enabled = false;
@@ -82,9 +84,8 @@ namespace Assets
             moveCameraCube.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
             moveCameraCube.GetComponent<Renderer>().material.color = Color.blue;
             moveCameraCube.transform.parent = this.transform;
-
-            Line = gameObject.AddComponent<LineRendererEx>();
-
+            moveCameraCube.layer = 2;
+            Line = gameObject.AddComponent<PipeMeshGenerator>();
             monitor = new Monitor("monitor");
             monitor.Mode = ValueAxisMode.Fixed;
             monitor.Max = 1f;
@@ -94,6 +95,12 @@ namespace Assets
 
         }
 
+        public void CoordinateControl()
+        {
+            //TODO
+            IsCoordinateControl = !IsCoordinateControl;
+        }
+
         void OnValidate()
         {
             SetBezierFromKnots();
@@ -101,11 +108,7 @@ namespace Assets
 
         public void SetBezierFromKnots()
         {
-            if (Knots.Count > 0 && moveCameraCube!=null)
-            {
-                moveCameraCube.transform.position = Knots[0].position;
-            }
-            Beziers = KCurves.CalcBeziers(Knots, Iteration, IsLoop) as ExtendBezierControls;
+            Beziers = KCurves.CalcBeziers(Knots.Where(data => data.applyItems.position == true).Select(data => data.position).ToArray(), Iteration, IsLoop) as ExtendBezierControls;
             if (Beziers.SegmentCount >= 3)
             {
                 int segment;
@@ -398,13 +401,29 @@ namespace Assets
             SetBezierFromKnots();
         }
 
-        public void AddKnot(ControlPoint cp)
+        public void AddKnot(ControlPoint cp, float? t = null)
         {
-            this.Knots.Add(cp);
-            if (Knots.Count == 0)
+            if(t!= null)
             {
-                moveCameraCube.transform.position = Knots[0].position;
+                var ft = (float)t;
+                int bezierIndex = (int)Math.Floor(ft);
+                int knotIndex = bezierIndex % 2 == 0 ? (bezierIndex / 2) : (bezierIndex + 1) / 2;
+                Debug.Log("ft:"+ ft + " " + bezierIndex + " " + knotIndex);
+                Vector3 position = CalcPosition((int)Math.Floor(ft), ft % 1, IsLoop);
+                Quaternion rotation = Quaternion.Lerp(Knots[knotIndex].rotation, Knots[knotIndex].rotation, bezierIndex % 2 == 0 ? ft % 1 : ft) ;
+                float fov= Mathf.Lerp(Knots[knotIndex].fov, Knots[knotIndex].fov, bezierIndex % 2 == 0 ? ft % 1 : ft);
+
+                this.Knots.Insert(knotIndex+1, new ControlPoint(position, rotation, fov));
             }
+            else
+            {
+                this.Knots.Add(cp);
+                if (Knots.Count == 0)
+                {
+                    moveCameraCube.transform.position = Knots[0].position;
+                }
+            }
+
             SetBezierFromKnots();
         }
 
@@ -420,6 +439,43 @@ namespace Assets
             if (!Beziers.IsCalcArcLengthWithT) Beziers.CalcArcLengthWithT(IsLoop);
 
             return Beziers.TotalLength / time;
+        }
+
+        public float findClosest(Vector3 cursor)
+        {
+            int step = 5;
+            int index = 5;
+            var output = Output(5, IsLoop);
+            float distance = float.MaxValue;
+            foreach (var v in output.Select((p, i) => new { p, i }))
+            {
+                dist = Vector3.Distance(v.p, cursor);
+                if (dist < distance)
+                {
+                    distance = dist;
+                    index = v.i;
+                }
+            }
+            float t = (float)index / step;
+            distance = float.MaxValue;
+            for ( float j = 1; j > 0.01; j /= 2 )
+            {
+                if (distance < 0.01) break;
+                for (float k= t - j; k <= t + j; k += j/2)
+                {
+                    if (0> k || Beziers.SegmentCount < k) continue;
+                    dist = Vector3.Distance(CalcPosition((int)Math.Floor(k), k % 1, IsLoop), cursor);
+                    if (dist < distance)
+                    {
+                        distance = dist;
+                        t = k;
+                    }
+                }
+            }
+            Debug.Log(t);
+            moveCameraCube.transform.position = CalcPosition((int)Math.Floor(t), t % 1, IsLoop);
+
+            return t;
         }
 
 
@@ -443,27 +499,14 @@ namespace Assets
                     bezierObject[i - 1].transform.localScale = new Vector3(0.15f, 0.15f, 0.15f);
                     bezierObject[i - 1].transform.parent = this.transform;
                     bezierObject[i - 1].GetComponent<Renderer>().material.color = Color.red;
-                }
+                bezierObject[i - 1].layer = 2;
+            }
             
 
             if (Line != null)
-                {
-                Destroy(Line);
-                //cube = new GameObject[output.Length];
-
-                //Line.material = new Material(Shader.Find("Sprites/Default"));
-                //Line.positionCount = output.Length;
-                //Line.startWidth = 0.1f;
-                //Line.endWidth = 0.1f;
-                //Line.startColor = Color.white;
-                //Line.endColor = Color.black;
-                for (int i = 0; i < output.Length; i++)
-                    {
-                        Line.AddPosition(output[i]);
-                    }
-                Line.Apply();
-                Line.GetComponent<Renderer>().material.color = Color.gray;
-
+            {
+                Line.points = output.ToList();
+                Line.RenderPipe();
             }
 
 
@@ -479,6 +522,7 @@ namespace Assets
                     inputCube[i].transform.position = Knots[i].position;
                     inputCube[i].transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
                     inputCube[i].transform.parent = this.transform;
+                    inputCube[i].layer = 2;
 
                     inputCube[i].GetComponent<Renderer>().material.color = Color.blue;
                 }
