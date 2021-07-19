@@ -11,6 +11,16 @@ namespace Assets
         {
             return (1 - t) * (1 - t) * P1 + 2 * (1 - t) * t * P2 + t * t * P3;
         }
+        public static Vector3 Position(Vector3 P1, Vector3 P2, Vector3 P3, Vector3 P4, float t)
+        {
+            t = Mathf.Clamp01(t);
+            float oneMinusT = 1f - t;
+            return
+                oneMinusT * oneMinusT * oneMinusT * P1 +
+                    3f * oneMinusT * oneMinusT * t * P2 +
+                    3f * oneMinusT * t * t * P3 +
+                    t * t * t * P4;
+        }
 
         /** 2次ベジェ曲線の弧長を媒介変数tで積分して求める */
         public static float CalcLength(Vector3 P1, Vector3 P2, Vector3 P3, double t)

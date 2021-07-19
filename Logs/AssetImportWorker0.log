@@ -1,0 +1,516 @@
+Using pre-set license
+Built from '2021.1/staging' branch; Version is '2021.1.2f1 (e5d502d80fbb) revision 15062274'; Using compiler version '192528614'; Build Type 'Release'
+OS: 'Windows 10 Home; OS build 19043.1110; Version 2009; 64bit' Language: 'ja' Physical Memory: 32702 MB
+BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1, IsPro: 0
+
+ COMMAND LINE ARGUMENTS:
+C:\Program Files\Unity\Hub\Editor\2021.1.2f1\Editor\Unity.exe
+-adb2
+-batchMode
+-noUpm
+-name
+AssetImportWorker0
+-projectPath
+D:/GitHub/CameraOperatorMod/kcurves
+-logFile
+Logs/AssetImportWorker0.log
+-srvPort
+55076
+Successfully changed project path to: D:/GitHub/CameraOperatorMod/kcurves
+D:/GitHub/CameraOperatorMod/kcurves
+Using Asset Import Pipeline V2.
+Refreshing native plugins compatible for Editor in 97.44 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Initialize engine version: 2021.1.2f1 (e5d502d80fbb)
+[Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/2021.1.2f1/Editor/Data/Resources/UnitySubsystems
+[Subsystems] Discovering subsystems at path D:/GitHub/CameraOperatorMod/kcurves/Assets
+GfxDevice: creating device client; threaded=0; jobified=0
+Direct3D:
+    Version:  Direct3D 11.0 [level 11.1]
+    Renderer: NVIDIA GeForce GTX 1060 6GB (ID=0x1c03)
+    Vendor:   NVIDIA
+    VRAM:     6052 MB
+    Driver:   30.0.14.7111
+Initialize mono
+Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/2021.1.2f1/Editor/Data/Managed'
+Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/2021.1.2f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit'
+Mono config path = 'C:/Program Files/Unity/Hub/Editor/2021.1.2f1/Editor/Data/MonoBleedingEdge/etc'
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56392
+Begin MonoManager ReloadAssembly
+Registering precompiled unity dll's ...
+Register platform support module: C:/Program Files/Unity/Hub/Editor/2021.1.2f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
+Registered in 0.002079 seconds.
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 92.22 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.662 seconds
+Platform modules already initialized, skipping
+Registering precompiled user dll's ...
+Registered in 0.004272 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 1.10 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.480 seconds
+Platform modules already initialized, skipping
+========================================================================
+Worker process is ready to serve import requests
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.08 seconds
+Refreshing native plugins compatible for Editor in 1.19 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3249 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.5 MB.
+System memory in use after: 120.7 MB.
+
+Unloading 55 unused Assets to reduce memory usage. Loaded Objects now: 3672.
+Total: 6.700000 ms (FindLiveObjects: 0.498700 ms CreateObjectMapping: 0.326700 ms MarkObjects: 5.788000 ms  DeleteObjects: 0.084600 ms)
+
+========================================================================
+Received Import Request.
+  path: Assets/CameraDirector.cs
+  artifactKey: Guid(dfee7e127cd448d48a60596cd46be3d0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/CameraDirector.cs using Guid(dfee7e127cd448d48a60596cd46be3d0) Importer(815301076,1909f56bfc062723c751e8b465ee728b)  -> (artifact id: 'c1e8fd9fb6177f3463bd887a51733c5f') in 0.046439 seconds 
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.004174 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 1.37 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.386 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.87 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.5 MB.
+System memory in use after: 120.7 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3675.
+Total: 5.573100 ms (FindLiveObjects: 0.369500 ms CreateObjectMapping: 0.179400 ms MarkObjects: 4.947800 ms  DeleteObjects: 0.073800 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003290 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 1.44 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.271 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.98 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.6 MB.
+System memory in use after: 120.8 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3678.
+Total: 6.021700 ms (FindLiveObjects: 0.320700 ms CreateObjectMapping: 0.305100 ms MarkObjects: 5.338500 ms  DeleteObjects: 0.056100 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003162 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 1.15 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.347 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 1.10 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.6 MB.
+System memory in use after: 120.8 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3681.
+Total: 7.412100 ms (FindLiveObjects: 0.465500 ms CreateObjectMapping: 0.327300 ms MarkObjects: 6.547600 ms  DeleteObjects: 0.069700 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.004068 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 1.04 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.248 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.92 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.6 MB.
+System memory in use after: 120.8 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3684.
+Total: 6.739900 ms (FindLiveObjects: 0.316400 ms CreateObjectMapping: 0.237100 ms MarkObjects: 6.120800 ms  DeleteObjects: 0.062800 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003080 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 1.00 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.300 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 1.17 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.6 MB.
+System memory in use after: 120.8 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3687.
+Total: 8.007600 ms (FindLiveObjects: 0.448900 ms CreateObjectMapping: 0.252000 ms MarkObjects: 7.238300 ms  DeleteObjects: 0.066000 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.006561 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 0.95 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.221 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.91 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.6 MB.
+System memory in use after: 120.9 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3690.
+Total: 5.912900 ms (FindLiveObjects: 0.351000 ms CreateObjectMapping: 0.169600 ms MarkObjects: 5.300900 ms  DeleteObjects: 0.089500 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.007937 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 0.87 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.347 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.82 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.7 MB.
+System memory in use after: 120.9 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3693.
+Total: 6.514900 ms (FindLiveObjects: 0.424800 ms CreateObjectMapping: 0.286200 ms MarkObjects: 5.733500 ms  DeleteObjects: 0.068400 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003564 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 1.29 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.271 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.83 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.7 MB.
+System memory in use after: 120.9 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3696.
+Total: 6.357300 ms (FindLiveObjects: 0.380200 ms CreateObjectMapping: 0.173800 ms MarkObjects: 5.689400 ms  DeleteObjects: 0.112100 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003891 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 1.02 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.188 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.78 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.7 MB.
+System memory in use after: 120.9 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3699.
+Total: 6.079300 ms (FindLiveObjects: 0.467800 ms CreateObjectMapping: 0.215800 ms MarkObjects: 5.301500 ms  DeleteObjects: 0.093200 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.004262 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 1.27 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.627 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.95 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.7 MB.
+System memory in use after: 120.9 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3702.
+Total: 6.912700 ms (FindLiveObjects: 0.443800 ms CreateObjectMapping: 0.274000 ms MarkObjects: 6.048300 ms  DeleteObjects: 0.144300 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003628 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 1.25 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.327 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.81 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.7 MB.
+System memory in use after: 120.9 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3705.
+Total: 6.341800 ms (FindLiveObjects: 0.463900 ms CreateObjectMapping: 0.226900 ms MarkObjects: 5.590000 ms  DeleteObjects: 0.058600 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003806 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 0.83 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.244 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.83 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.7 MB.
+System memory in use after: 120.9 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3708.
+Total: 6.391200 ms (FindLiveObjects: 0.264200 ms CreateObjectMapping: 0.185300 ms MarkObjects: 5.830200 ms  DeleteObjects: 0.109600 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003735 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 1.25 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.436 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.91 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.7 MB.
+System memory in use after: 120.9 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3711.
+Total: 6.763700 ms (FindLiveObjects: 0.453300 ms CreateObjectMapping: 0.361600 ms MarkObjects: 5.885700 ms  DeleteObjects: 0.060900 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.006549 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 1.08 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.478 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 1.06 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.7 MB.
+System memory in use after: 120.9 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3714.
+Total: 7.178700 ms (FindLiveObjects: 0.412200 ms CreateObjectMapping: 0.260400 ms MarkObjects: 6.447700 ms  DeleteObjects: 0.057000 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003970 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 1.09 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.316 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 1.00 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.7 MB.
+System memory in use after: 120.9 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3717.
+Total: 6.688200 ms (FindLiveObjects: 0.473300 ms CreateObjectMapping: 0.317200 ms MarkObjects: 5.831900 ms  DeleteObjects: 0.063500 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003120 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 1.07 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.291 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.95 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.7 MB.
+System memory in use after: 120.9 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3720.
+Total: 8.128600 ms (FindLiveObjects: 0.475600 ms CreateObjectMapping: 0.309800 ms MarkObjects: 7.280800 ms  DeleteObjects: 0.061000 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003033 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 0.85 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.211 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 1.31 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.7 MB.
+System memory in use after: 120.9 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3723.
+Total: 7.293700 ms (FindLiveObjects: 0.491600 ms CreateObjectMapping: 0.261000 ms MarkObjects: 6.445700 ms  DeleteObjects: 0.094100 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003694 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 0.81 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.288 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 1.36 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.7 MB.
+System memory in use after: 120.9 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3726.
+Total: 8.210500 ms (FindLiveObjects: 0.539100 ms CreateObjectMapping: 0.387300 ms MarkObjects: 7.209700 ms  DeleteObjects: 0.065200 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.003527 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 1.01 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.505 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.99 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.7 MB.
+System memory in use after: 120.9 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3729.
+Total: 5.916500 ms (FindLiveObjects: 0.318100 ms CreateObjectMapping: 0.204900 ms MarkObjects: 5.329700 ms  DeleteObjects: 0.061000 ms)
+
+========================================================================
+Received Prepare
+Registering precompiled user dll's ...
+Registered in 0.004827 seconds.
+The root folder may contain only these .ruleset files: Default.ruleset, Assembly-CSharp.ruleset, Assembly-CSharp-firstpass.ruleset, Assembly-CSharp-Editor.ruleset, and Assembly-CSharp-Editor-firstpass.ruleset.
+
+Begin MonoManager ReloadAssembly
+Native extension for WindowsStandalone target not found
+Refreshing native plugins compatible for Editor in 0.81 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Mono: successfully reloaded assembly
+- Completed reload, in  1.214 seconds
+Platform modules already initialized, skipping
+Refreshing native plugins compatible for Editor in 0.78 ms, found 1 plugins.
+Preloading 0 native plugins for Editor in 0.00 ms.
+Unloading 3244 Unused Serialized files (Serialized files now loaded: 0)
+System memory in use before: 120.7 MB.
+System memory in use after: 120.9 MB.
+
+Unloading 46 unused Assets to reduce memory usage. Loaded Objects now: 3732.
+Total: 5.947300 ms (FindLiveObjects: 0.290400 ms CreateObjectMapping: 0.173000 ms MarkObjects: 5.413800 ms  DeleteObjects: 0.068700 ms)
+

@@ -21,7 +21,6 @@ public class PipeMeshGenerator : MonoBehaviour {
     public bool makeDoubleSided;
     public float colinearThreshold = 0.001f;
     MeshCollider meshCollider;
-
     void Start() {
         if (generateOnStart) {
             RenderPipe();
