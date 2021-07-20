@@ -69,11 +69,13 @@
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorTransformEditor.cs" />
     <Compile Include="Assets\Mode\BaseCameraMode.cs" />
     <Compile Include="Assets\Bezier\Bezier3D.cs" />
+    <Compile Include="Assets\Squad.cs" />
     <Compile Include="Assets\CameraDirector.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\MonitorRigidbody2D.cs" />
     <Compile Include="Assets\Bezier\BezierUtil.cs" />
     <Compile Include="Assets\Mode\CameraUtil.cs" />
     <Compile Include="Assets\Bezier\BezierControls.cs" />
+    <Compile Include="Assets\QuaternionEx.cs" />
     <Compile Include="Assets\Math3D.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorRigidbody2DEditor.cs" />
     <Compile Include="Assets\Bezier\ExtendBezierControls.cs" />

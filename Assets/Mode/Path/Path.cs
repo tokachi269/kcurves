@@ -367,8 +367,8 @@ namespace Assets
         private Quaternion CalcRotation(int knotIndex, float ratio)
         {
 
-
-            Quaternion rotation = GetPoint(knotIndex,ratio);
+            Quaternion rotation = Squad.Spline(Knots, knotIndex, Knots.Count, ratio);
+           // Quaternion rotation = GetPoint(knotIndex,ratio);
             // float easing = Easing.EaseInOutSine(ratio);
 
 
@@ -415,6 +415,7 @@ namespace Assets
 
             //return Quaternion.Euler(GetCatmullRomPosition(p0, p1, p2, p3, ratio));
         }
+
         Vector3 GetCatmullRomPosition(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float ratio)
         {
             //The coefficients of the cubic polynomial (except the 0.5f * which I added later for performance)
