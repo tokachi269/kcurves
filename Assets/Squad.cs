@@ -11,9 +11,7 @@ namespace Assets
     {
 		// Returns a smoothed quaternion along the set of quaternions making up the spline, each quaternion is along an equidistant value in t
 		public static Quaternion Spline(List<ControlPoint> knots ,int knotIndex, int count,float  t )
-        {
-			// float alongLine = (count - 1) * t - knotIndex;
-			
+        {			
 			if (knotIndex == 0)
 			{
 				return SplineSegment(knots[knotIndex].rotation, knots[knotIndex].rotation, knots[knotIndex + 1].rotation, knots[knotIndex + 2].rotation, t);
@@ -21,7 +19,7 @@ namespace Assets
 			else if (knotIndex == count - 2 && knotIndex > 0){
 				return SplineSegment(knots[knotIndex - 1].rotation, knots[knotIndex].rotation, knots[knotIndex + 1].rotation, knots[knotIndex + 1].rotation, t);
 			}
-			else if (knotIndex >= 1 && knotIndex <count - 2){
+			else if (knotIndex >= 1 && knotIndex < count - 2){
 				return SplineSegment(knots[knotIndex - 1].rotation, knots[knotIndex].rotation, knots[knotIndex + 1].rotation, knots[knotIndex + 2].rotation, t);
 			}
 			return Quaternion.identity;
@@ -33,9 +31,7 @@ namespace Assets
 			Quaternion qa = Intermediate(q0, q1, q2);
 			Quaternion qb = Intermediate(q1, q2, q3);
 			return SQUAD(q1, qa, qb, q2, t);
-
 		}
-
 
 		// Tries to compute sensible tangent values for the quaternion
 		public static Quaternion Intermediate(Quaternion q0 , Quaternion q1, Quaternion q2)
@@ -47,14 +43,13 @@ namespace Assets
 			QuaternionEx.Log(ref c2);
 
 			Quaternion c3 = c2 * c1;
-			QuaternionEx.Scale(ref c3 , - 0.25f);
+			QuaternionEx.Scale(ref c3 , 1f);
 			QuaternionEx.Exp(ref c3);
 
 			Quaternion r = q1 * c3;
 			r.Normalize();
 			return r;
 		}
-
 
 		// Returns a smooth approximation between q1 and q2 using t1 and t2 as 'tangents'
 		public static Quaternion SQUAD(Quaternion q1 , Quaternion t1 , Quaternion t2 , Quaternion q2 ,float  t )

@@ -36,7 +36,7 @@ namespace Assets
         [SerializeField]
         public ushort Time = 10;
         [SerializeField]
-        public ushort Step = 10;
+        public ushort Step = 5;
 
         [SerializeField]
         public bool IsCameraShake { get; set; }
@@ -45,7 +45,7 @@ namespace Assets
         protected ControlPoint DefaultPosition { get; set; }
 
         public GameObject moveCameraCube;
-
+        public static LineRenderer LineRenderer;
         public static List<GameObject> inputCube = new List<GameObject>();
         public List<GameObject> bezierObject = new List<GameObject>();
 
@@ -77,6 +77,7 @@ namespace Assets
 
             public void Awake()
         {
+            LineRenderer = gameObject.AddComponent<LineRenderer>();
             // CameraShake = gameObject.AddComponent<PerlinCameraShake>();
             // CameraShake.enabled = false;
             moveCameraCube = new GameObject("moveCameraCube");
@@ -659,13 +660,25 @@ namespace Assets
                     bezierObject[i - 1].layer = 2;
             }
             
-
             if (Line != null)
             {
-                Line.points = output.ToList();
-                Line.RenderPipe();
+                //Line.RenderPipe(output);
             }
+            if (LineRenderer != null)
+            {
+                //cube = new GameObject[output.Length];
 
+                LineRenderer.material = new Material(Shader.Find("Sprites/Default"));
+                LineRenderer.positionCount = output.Length;
+                LineRenderer.startWidth = 0.1f;
+                LineRenderer.endWidth = 0.1f;
+                LineRenderer.startColor = Color.white;
+                LineRenderer.endColor = Color.black;
+                for (int i = 0; i < output.Length; i++)
+                {
+                    LineRenderer.SetPosition(i, output[i]);
+                }
+            }
 
             for (int i = 0; i < inputCube.Count; i++)
                 {

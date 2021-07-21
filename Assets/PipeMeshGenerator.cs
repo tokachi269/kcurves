@@ -5,7 +5,7 @@ using UnityEngine;
 public class PipeMeshGenerator : MonoBehaviour {
 
     // see README.md file for more information about the following parameters
-    public List<Vector3> points;
+    public Vector3[] points;
     public float pipeRadius = 0.1f;
     public float elbowRadius = 0.1f;
     [Range(3, 32)]
@@ -22,26 +22,28 @@ public class PipeMeshGenerator : MonoBehaviour {
     public float colinearThreshold = 0.001f;
     MeshCollider meshCollider;
     void Start() {
+        pipeMaterial = new Material(Shader.Find("Specular"));
         if (generateOnStart) {
-            RenderPipe();
+            RenderPipe(null);
         }
     }
 
-    public void RenderPipe() {
-        if (points.Count < 2) {
-            return;
+    public void RenderPipe(Vector3[]? p) {
+        if( p != null)
+        {
+            points = p;
         }
 
         // remove any colinear points, as creating elbows between them
         // would result in a torus of infinite radius, which is generally
         // frowned upon. also, it helps in keeping the triangle count low. :)
-        RemoveColinearPoints();
+        // RemoveColinearPoints();
 
         // add mesh filter if not present
         MeshFilter currentMeshFilter = GetComponent<MeshFilter>();
         MeshFilter mf = currentMeshFilter != null ? currentMeshFilter : gameObject.AddComponent<MeshFilter>();
         Mesh mesh = GenerateMesh();
-        
+
         if (flatShading)
             mesh = MakeFlatShading(mesh);
         if (makeDoubleSided)
@@ -51,8 +53,8 @@ public class PipeMeshGenerator : MonoBehaviour {
         // add mesh renderer if not present
         MeshRenderer currentMeshRenderer = GetComponent<MeshRenderer>();
         MeshRenderer mr = currentMeshRenderer != null ? currentMeshRenderer : gameObject.AddComponent<MeshRenderer>();
-        mr.materials = new Material[1] { pipeMaterial };
-
+        //mr.materials = new Material[1] { pipeMaterial };
+        mr.material.shader = Shader.Find("Unlit/SimpleVertexColorShader");
         MeshCollider meshCollider = GetComponent<MeshCollider>();
         MeshCollider mc = meshCollider != null ? meshCollider : gameObject.AddComponent<MeshCollider>();
 
@@ -66,9 +68,10 @@ public class PipeMeshGenerator : MonoBehaviour {
         List<Vector3> vertices = new List<Vector3>();
         List<int> triangles = new List<int>();
         List<Vector3> normals = new List<Vector3>();
+        List<Color>  colors = new List<Color>();
 
         // for each segment, generate a cylinder
-        for (int i = 0; i < points.Count - 1; i++) {
+        for (int i = 0; i < points.Length - 1; i++) {
             Vector3 initialPoint = points[i];
             Vector3 endPoint = points[i + 1];
             Vector3 direction = (points[i + 1] - points[i]).normalized;
@@ -79,7 +82,7 @@ public class PipeMeshGenerator : MonoBehaviour {
                 initialPoint = initialPoint + direction * elbowRadius;
             }
 
-            if (i < points.Count - 2 && generateElbows) {
+            if (i < points.Length - 2 && generateElbows) {
                 // leave space for the elbow that will connect to the next
                 // segment, except on the last segment
                 endPoint = endPoint - direction * elbowRadius;
@@ -94,7 +97,7 @@ public class PipeMeshGenerator : MonoBehaviour {
 
         // for each segment generate the elbow that connects it to the next one
         if (generateElbows) {
-            for (int i = 0; i < points.Count - 2; i++) {
+            for (int i = 0; i < points.Length - 2; i++) {
                 Vector3 point1 = points[i]; // starting point
                 Vector3 point2 = points[i + 1]; // the point around which the elbow will be built
                 Vector3 point3 = points[i + 2]; // next point
@@ -107,14 +110,19 @@ public class PipeMeshGenerator : MonoBehaviour {
         }
 
         m.SetVertices(vertices);
+        for(int i = 0;i < vertices.Count; i++)
+        {
+            colors.Add(Color.Lerp(Color.white, Color.gray, (float)i / vertices.Count));
+        }
         m.SetTriangles(triangles, 0);
         m.SetNormals(normals);
+        m.SetColors(colors);
         return m;
     }
 
     void RemoveColinearPoints() {
         List<int> pointsToRemove = new List<int>();
-        for (int i = 0; i < points.Count - 2; i++) {
+        for (int i = 0; i < points.Length - 2; i++) {
             Vector3 point1 = points[i];
             Vector3 point2 = points[i + 1];
             Vector3 point3 = points[i + 2];
@@ -132,7 +140,7 @@ public class PipeMeshGenerator : MonoBehaviour {
 
         pointsToRemove.Reverse();
         foreach (int idx in pointsToRemove) {
-            points.RemoveAt(idx);
+           // points.RemoveAt(idx);
         }
     }
 
@@ -185,7 +193,7 @@ public class PipeMeshGenerator : MonoBehaviour {
     void MakeElbowTriangles(List<Vector3> vertices, List<int> triangles, int segmentIdx, int elbowIdx) {
         // connect the two circles corresponding to segment segmentIdx of an
         // elbow with index elbowIdx
-        int offset = (points.Count - 1) * pipeSegments * 2; // all vertices of cylinders
+        int offset = (points.Length - 1) * pipeSegments * 2; // all vertices of cylinders
         offset += elbowIdx * (elbowSegments + 1) * pipeSegments; // all vertices of previous elbows
         offset += segmentIdx * pipeSegments; // the current segment of the current elbow
 
@@ -357,15 +365,15 @@ public class PipeMeshGenerator : MonoBehaviour {
     void GenerateEndCaps(List<Vector3> vertices, List<int> triangles, List<Vector3> normals) {
         // create the circular cap on each end of the pipe
         int firstCircleOffset = 0;
-        int secondCircleOffset = (points.Count - 1) * pipeSegments * 2 - pipeSegments;
+        int secondCircleOffset = (points.Length - 1) * pipeSegments * 2 - pipeSegments;
 
         vertices.Add(points[0]); // center of first segment cap
         int firstCircleCenter = vertices.Count - 1;
         normals.Add(points[0] - points[1]);
 
-        vertices.Add(points[points.Count - 1]); // center of end segment cap
+        vertices.Add(points[points.Length - 1]); // center of end segment cap
         int secondCircleCenter = vertices.Count - 1;
-        normals.Add(points[points.Count - 1] - points[points.Count - 2]);
+        normals.Add(points[points.Length - 1] - points[points.Length - 2]);
 
         for (int i = 0; i < pipeSegments; i++) {
             triangles.Add(firstCircleCenter);
