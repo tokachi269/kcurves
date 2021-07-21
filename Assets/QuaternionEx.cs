@@ -13,9 +13,14 @@ namespace Assets
 		{
 			float a0 = a.w;
 			a.w = 0f;
+
+			//Absで絶対値を取得
 			if (Mathf.Abs(a0) < 1.0)
 			{
-				float angle = Mathf.Acos(a0);
+				//オイラー角を計算
+				float angle = Mathf.Acos(a0); 
+				
+
 				float sinAngle = Mathf.Sin(angle);
 				if (Mathf.Abs(sinAngle) >= 1.0e-15)
 				{
@@ -23,10 +28,8 @@ namespace Assets
 					a.x *= coeff;
 					a.y *= coeff;
 					a.z *= coeff;
-
 				}
 			}
-
 		}
 
 		public static Quaternion Loged(ref Quaternion a)
@@ -46,16 +49,15 @@ namespace Assets
 					result.z *= coeff;
 				}
 			}
-
 			return result;
 		}
 
-		public static void Conjugate(Quaternion a)
-		{
-			a.x *= -1;
-			a.y *= -1;
-			a.z *= -1;
-		}
+		//public static void Conjugate(Quaternion a)
+		//{
+		//	a.x *= -1;
+		//	a.y *= -1;
+		//	a.z *= -1;
+		//}
 
 		public static Quaternion Conjugated(Quaternion a)
 		{
@@ -139,22 +141,25 @@ namespace Assets
 		//	return length;
 		//}
 
-		public static Quaternion SlerpNoInvert(Quaternion fro , Quaternion  to ,float factor)
+		public static Quaternion SlerpNoInvert(Quaternion from , Quaternion  to ,float t)
         {
-			float dot  = Quaternion.Dot(fro, to);
+			//内積を計算
+			float dot  = Quaternion.Dot(from, to);
 
-			if (Mathf.Abs(dot) > 0.9999f) return fro;
+			if (Mathf.Abs(dot) > 0.9999f) return from;
 
+			//角度を求める
 			float theta = Mathf.Acos(dot);
+
 			float sinT = 1.0f / Mathf.Sin(theta);
-			float newFactor = Mathf.Sin(factor * theta) * sinT;
-			float invFactor = Mathf.Sin((1.0f - factor) * theta) * sinT;
+			float newFactor = Mathf.Sin(t * theta) * sinT;
+			float invFactor = Mathf.Sin((1.0f - t) * theta) * sinT;
 
 			Quaternion q;
-			q.x = invFactor * fro.x + newFactor * to.x;
-			q.y = invFactor * fro.y + newFactor * to.y;
-			q.z = invFactor * fro.z + newFactor * to.z;
-			q.w = invFactor * fro.w + newFactor * to.w;
+			q.x = invFactor * from.x + newFactor * to.x;
+			q.y = invFactor * from.y + newFactor * to.y;
+			q.z = invFactor * from.z + newFactor * to.z;
+			q.w = invFactor * from.w + newFactor * to.w;
 
 			return q;
 		}

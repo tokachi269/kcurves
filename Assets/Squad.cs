@@ -12,19 +12,17 @@ namespace Assets
 		// Returns a smoothed quaternion along the set of quaternions making up the spline, each quaternion is along an equidistant value in t
 		public static Quaternion Spline(List<ControlPoint> knots ,int knotIndex, int count,float  t )
         {
-			float alongLine = (count - 1) * t - knotIndex;
+			// float alongLine = (count - 1) * t - knotIndex;
 			
 			if (knotIndex == 0)
 			{
-				return SplineSegment(knots[knotIndex].rotation, knots[knotIndex].rotation, knots[knotIndex + 1].rotation, knots[knotIndex + 2].rotation, alongLine);
-
+				return SplineSegment(knots[knotIndex].rotation, knots[knotIndex].rotation, knots[knotIndex + 1].rotation, knots[knotIndex + 2].rotation, t);
 			}
 			else if (knotIndex == count - 2 && knotIndex > 0){
-				return SplineSegment(knots[knotIndex - 1].rotation, knots[knotIndex].rotation, knots[knotIndex + 1].rotation, knots[knotIndex + 1].rotation, alongLine);
-
+				return SplineSegment(knots[knotIndex - 1].rotation, knots[knotIndex].rotation, knots[knotIndex + 1].rotation, knots[knotIndex + 1].rotation, t);
 			}
 			else if (knotIndex >= 1 && knotIndex <count - 2){
-				return SplineSegment(knots[knotIndex - 1].rotation, knots[knotIndex].rotation, knots[knotIndex + 1].rotation, knots[knotIndex + 2].rotation, alongLine);
+				return SplineSegment(knots[knotIndex - 1].rotation, knots[knotIndex].rotation, knots[knotIndex + 1].rotation, knots[knotIndex + 2].rotation, t);
 			}
 			return Quaternion.identity;
 		}
