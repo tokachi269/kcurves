@@ -50,10 +50,7 @@ namespace Assets
         public Render render;
         public Serializer serializer;
 
-        Monitor monitor;
-        MonitorInput diffTMonitor;
-        MonitorInput distMonitor;
-        MonitorInput befTMonitor;
+
         /* Debugópïœêî **/
         [SerializeField]
         public float dist = 0;
@@ -79,12 +76,7 @@ namespace Assets
             render = new Render(this);
             serializer = new Serializer(this);
 
-            monitor = new Monitor("monitor");
-            monitor.Mode = ValueAxisMode.Fixed;
-            monitor.Max = 1f;
-            diffTMonitor = new MonitorInput(monitor, "diffT", Color.red);
-            distMonitor = new MonitorInput(monitor, "dist", Color.magenta);
-            befTMonitor = new MonitorInput(monitor, "T", Color.magenta);
+
 
         }
 

@@ -54,8 +54,15 @@
      <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorTransformEditor.cs" />
      <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorsEditorWindow.cs" />
      <Compile Include="Assets\Monitor Components\Scripts\Editor\Utils.cs" />
+     <None Include="Assets\SimpleVertexColorShader.shader" />
      <None Include="Assets\Tests\Tests.asmdef" />
      <None Include="Assets\MyAssembly.asmdef" />
+ <Reference Include="Assembly-Boo-firstpass">
+ <HintPath>D:/GitHub/CameraOperatorMod/kcurves/Library/ScriptAssemblies/Assembly-Boo-firstpass.dll</HintPath>
+ </Reference>
+ <Reference Include="Assembly-Boo">
+ <HintPath>D:/GitHub/CameraOperatorMod/kcurves/Library/ScriptAssemblies/Assembly-Boo.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEditor.Advertisements">
  <HintPath>C:/Program Files/Unity/Hub/Editor/5.6.7f1/Editor/Data/UnityExtensions/Unity/Advertisements/Editor/UnityEditor.Advertisements.dll</HintPath>
  </Reference>

@@ -11,7 +11,6 @@ namespace Assets
         IEnumerator Play();
         void AddKnot(Vector3 position, Quaternion rotation, float fov);
         void RemoveKnot();
-        class Render { };
     }
     public abstract class BaseCameraMode : MonoBehaviour
     {
