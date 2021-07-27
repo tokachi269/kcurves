@@ -28,7 +28,7 @@ public class PipeMeshGenerator : MonoBehaviour {
         }
     }
 
-    public void RenderPipe(Vector3[]? p) {
+    public void RenderPipe(Vector3[] p) {
         if( p != null)
         {
             points = p;
