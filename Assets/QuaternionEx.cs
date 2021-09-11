@@ -31,44 +31,6 @@ namespace Assets
 			}
 		}
 
-		public static Quaternion Loged(ref Quaternion a)
-		{
-			Quaternion result = a;
-			float a0 = result.w;
-			result.w = 0f;
-			if (Mathf.Abs(a0) < 1.0)
-			{
-				float angle = Mathf.Acos(a0);
-				float sinAngle = Mathf.Sin(angle);
-				if (Mathf.Abs(sinAngle) >= 1.0e-15)
-				{
-					float coeff = angle / sinAngle;
-					result.x *= coeff;
-					result.y *= coeff;
-					result.z *= coeff;
-				}
-			}
-			return result;
-		}
-
-		//public static void Conjugate(Quaternion a)
-		//{
-		//	a.x *= -1;
-		//	a.y *= -1;
-		//	a.z *= -1;
-		//}
-
-		public static Quaternion Conjugated(Quaternion a)
-		{
-			Quaternion result = a;
-			result.x *= -1;
-			result.y *= -1;
-			result.z *= -1;
-			return result;
-
-		}
-
-
 		public static void Scale(ref Quaternion a, float s)
 		{
 			a.w *= s;
@@ -77,15 +39,13 @@ namespace Assets
 			a.z *= s;
 		}
 
-		public static Quaternion Scaled(Quaternion a, float s)
+		public static Quaternion Add(Quaternion a, Quaternion b)
 		{
-			Quaternion result = a;
-			result.w *= s;
-			result.x *= s;
-			result.y *= s;
-			result.z *= s;
-			return result;
-
+			float x = a.x + b.x;
+			float y = a.y + b.y;
+			float z = a.z + b.z;
+			float w = a.w + b.w;
+			return new Quaternion(x,y,z,w);
 		}
 
 		public static void Exp(ref Quaternion a)
@@ -118,27 +78,6 @@ namespace Assets
 			return result;
 			}
 
-		//public float Normalize(ref Quaternion a)
-		//{
-		//	float length = a.Length();
-		//	if (length > 1.0e-15)
-		//	{
-		//		float invlen = 1.0f / length;
-		//		a.w *= invlen;
-		//		a.x *= invlen;
-		//		a.y *= invlen;
-		//		a.z *= invlen;
-		//	}
-		//	else
-		//	{
-		//		length = 0f;
-		//		a.w = 0f;
-		//		a.x = 0f;
-		//		a.y = 0f;
-		//		a.z = 0f;
-		//	}
-		//	return length;
-		//}
 
 		public static Quaternion SlerpNoInvert(Quaternion from , Quaternion  to ,float t)
         {

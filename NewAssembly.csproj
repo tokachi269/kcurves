@@ -74,7 +74,7 @@
     <Compile Include="Assets\Mode\Easing.cs" />
     <Compile Include="Assets\PipeMeshGenerator.cs" />
     <Compile Include="Assets\Constant.cs" />
-    <Compile Include="Assets\Mode\ControlPoint.cs" />
+    <Compile Include="Assets\Mode\CameraConfig.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\MyAssembly.asmdef" />

@@ -11,6 +11,7 @@ namespace Assets
         {
             return (1 - t) * (1 - t) * P1 + 2 * (1 - t) * t * P2 + t * t * P3;
         }
+
         public static Vector3 Position(Vector3 P1, Vector3 P2, Vector3 P3, Vector3 P4, float t)
         {
             t = Mathf.Clamp01(t);

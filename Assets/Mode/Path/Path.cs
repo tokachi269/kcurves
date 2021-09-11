@@ -17,11 +17,11 @@ namespace Assets
         public override string Name { get; set; }
 
         //ユーザー制御点
-        protected override List<ControlPoint> Knots { get; set; } = new List<ControlPoint>();
+        protected override List<CameraConfig> Knots { get; set; } = new List<CameraConfig>();
         public int KnotsCount => Knots.Count;
 
         //ユーザー制御注視点
-        protected List<ControlPoint> LookAts { get; private set; } = new List<ControlPoint>();
+        protected List<CameraConfig> LookAts { get; private set; } = new List<CameraConfig>();
         public int LookAtsCount => Knots.Count;
 
         //Bezier計算結果
@@ -44,7 +44,7 @@ namespace Assets
         public bool IsCameraShake { get; set; }
         //public PerlinCameraShake CameraShake;
 
-        protected ControlPoint DefaultPosition { get; set; }
+        protected CameraConfig defaultCameraConfig { get; set; }
 
         public Render render;
         public Serializer serializer;
@@ -74,9 +74,6 @@ namespace Assets
         {
             render = new Render(this);
             serializer = new Serializer(this);
-
-
-
         }
 
         public void CoordinateControl()
@@ -209,7 +206,8 @@ namespace Assets
         /// </summary>
         public IEnumerator Play()
         {
-            DefaultPosition = CameraUtil.CameraPosition();
+            List<CameraConfig> tempKnots = Knots;
+            defaultCameraConfig = CameraUtil.CameraPosition();
 
             if (IsCameraShake)
             {
@@ -224,15 +222,19 @@ namespace Assets
             var easingMode = SetEasingMode();
 
             float KnotBetweenRange = Beziers.Length(0);
-            if (Knots[0].delay != 0f)
+
+            // 停止時間が設定されている場合、指定秒数間処理を待機
+            if (tempKnots[0].delay != 0f)
             {
-                yield return new WaitForSeconds(Knots[0].delay);
+                yield return new WaitForSeconds(tempKnots[0].delay);
             }
 
             EasingMode mode = (EasingMode)((byte)easingMode[1] | ((byte)easingMode[0] << 1));
 
+            // 
             for (float currentTime= 0; ;)
             {
+                //次のセグメントに移動したか判定する
                 bool isSegChanged = false;
                 if (bezierIndex == 0 || bezierIndex == Beziers.SegmentCount)
                 {
@@ -258,7 +260,7 @@ namespace Assets
                     }
                 }
 
-
+                //セグメントが移動した場合、計算に必要なパラメーターを設定する
                 if (isSegChanged)
                 {
                     bezierIndex++;
@@ -267,7 +269,8 @@ namespace Assets
                     //mode = EasingMode.None;
                     mode = (EasingMode)((byte)easingMode[knotIndex + 1] | ((byte)easingMode[knotIndex] << 1));
                     KnotBetweenRange = 0f;
-                    if (knotIndex == Knots.Count - 1)
+
+                    if (knotIndex == tempKnots.Count - 1)
                     {
                         KnotBetweenRange = Beziers.Length(bezierIndex);
                     }
@@ -279,11 +282,12 @@ namespace Assets
                         }
                     }
 
-
-                    if (Knots[knotIndex].delay != 0f)
+                    // 停止時間が設定されている場合、指定秒数間処理を待機
+                    if (tempKnots[knotIndex].delay != 0f)
                     {
-                        yield return new WaitForSeconds(Knots[knotIndex].delay);
+                        yield return new WaitForSeconds(tempKnots[knotIndex].delay);
                     }
+
                     Debug.Log("knotIndex++");
                     if (bezierIndex == Beziers.SegmentCount)
                     {
@@ -291,7 +295,7 @@ namespace Assets
                     }
                 }
 
-                // Debug.Log("mode:" + mode + " bezierIndex:" + bezierIndex + " knotIndex:" + knotIndex + " KnotBetweenRange:" + KnotBetweenRange+ "ProgressLength" + progressLength);
+                // Debug.Log("mode:" + mode + " bezierIndex:" + bezierIndex + " knotIndex:" + knotIndex + " KnotBetweenRange:" + KnotBetweenRange+ " ProgressLength" + progressLength);
 
                 float easing = Easing.GetEasing(mode, progressLength / KnotBetweenRange);
 
@@ -299,10 +303,9 @@ namespace Assets
 
                 float t = Beziers.GetT(bezierIndex, bezierIndex != 0 && bezierIndex % 2 == 0 ? easing * KnotBetweenRange - Beziers.Length(bezierIndex-1) : easing*KnotBetweenRange);
 
-                //Debug.Log("t:"+ t);
-
                 //Debug.Log("bezierIndex:" + bezierIndex + "  ProgressLength:" + ProgressLength + "maxS:" + maxSpeed + "currentTime:" + currentTime);
                 {
+                    //debug用変数
                     diffT = t - befT;
                     //Debug.Log("t:" + diffT);
                     befT = t;
@@ -314,14 +317,15 @@ namespace Assets
                     //Debug.Log("dist:" + dist);
                 }
 
+                // positonとrotationを適用
                 if (t <= Beziers.SegmentCount)
                 {
                     Vector3 pos = CalcPosition(bezierIndex, t);
-                    Quaternion rot = CalcRotation(knotIndex, easing);
+                    Quaternion rot = CalcRotation(ref tempKnots, knotIndex, easing);
                     render.moveCameraCube.transform.position = pos;
                     render.moveCameraCube.transform.rotation = rot;
-                    GameObject.Find("Main Camera").transform.position = pos;
-                    GameObject.Find("Main Camera").transform.rotation = rot;
+                    //GameObject.Find("Main Camera").transform.position = pos;
+                    //GameObject.Find("Main Camera").transform.rotation = rot;
                 }
 
                 float dt = UnityEngine.Time.deltaTime;
@@ -330,12 +334,16 @@ namespace Assets
                 currentTime += dt;
                 yield return null;
             }
+
             if (IsCameraShake)
             {
-           //     CameraShake.enabled = false;
+            //    CameraShake.enabled = false;
             }
-            render.moveCameraCube.transform.position = DefaultPosition.position;
-            render.moveCameraCube.transform.rotation = DefaultPosition.rotation;
+
+            GameObject.Find("Main Camera").transform.position = defaultCameraConfig.position;
+            GameObject.Find("Main Camera").transform.rotation = defaultCameraConfig.rotation;
+            render.moveCameraCube.transform.position = defaultCameraConfig.position;
+            render.moveCameraCube.transform.rotation = defaultCameraConfig.rotation;
             yield break;
         }
 
@@ -344,24 +352,23 @@ namespace Assets
             return BezierUtil.Position(Beziers[bezierIndex, 0], Beziers[bezierIndex, 1], Beziers[bezierIndex, 2], t % 1);
         }
 
-        private Quaternion CalcRotation(int knotIndex, float ratio)
+        private Quaternion CalcRotation(ref List<CameraConfig> Knots,int knotIndex, float ratio)
         {
-            Quaternion rotation = Squad.Spline(Knots, knotIndex, Knots.Count, ratio);
+            Quaternion rotation = Squad.Spline(ref Knots, knotIndex, Knots.Count, ratio);
 
             if (LookAts.Count != 0)
             {
-                //if (Knots[knotIndex].isLookAt || Knots[knotIndex+1].isLookAt)
-                //{
-                //    rotation = Vector3.Lerp((Knots[knotIndex].isLookAt ? (Quaternion.LookRotation(LookAts[0].position) * new Quaternion(1, -1, 1, 1)).eulerAngles : rotation),
-                //                           (Knots[knotIndex+1].isLookAt ? (Quaternion.LookRotation(LookAts[0].position) * new Quaternion(1, -1, 1, 1)).eulerAngles : rotation), ratio);
-                //}
+                if (Knots[knotIndex].isLookAt || Knots[knotIndex+1].isLookAt)
+                {
+                   // rotation = Vector3.Lerp(Knots[knotIndex].isLookAt ? (Quaternion.LookRotation(LookAts[0].position) * new Quaternion(1, -1, 1, 1)).eulerAngles : rotation,
+                   //                        Knots[knotIndex+1].isLookAt ? (Quaternion.LookRotation(LookAts[0].position) * new Quaternion(1, -1, 1, 1)).eulerAngles : rotation, ratio);
+                }
             }
 
-            rotation.z = 0f;
-            rotation.w = 0f;
+            // rotation.z = 0f;
+            // rotation.w = 0f;
             return rotation;
         }
-
 
         private EasingMode[] SetEasingMode()
         {
@@ -439,14 +446,14 @@ namespace Assets
 
         public void AddKnot(Vector3 position, Quaternion rotation, float fov)
         {
-            this.Knots.Add(new ControlPoint(position, rotation, fov));
+            this.Knots.Add(new CameraConfig(position, rotation, fov));
             if (Knots.Count == 0)
             {
                 render.moveCameraCube.transform.position = Knots[0].position;
             }
             SetBezierFromKnots();
         }
-        public void AddKnot(ControlPoint cp, float? t = null)
+        public void AddKnot(CameraConfig cp, float? t = null)
         {
             if (t != null)
             {
@@ -458,7 +465,7 @@ namespace Assets
                 Quaternion rotation = Quaternion.Lerp(Knots[knotIndex].rotation, Knots[knotIndex].rotation, bezierIndex % 2 == 0 ? ft % 1 : ft);
                 float fov = Mathf.Lerp(Knots[knotIndex].fov, Knots[knotIndex].fov, bezierIndex % 2 == 0 ? ft % 1 : ft);
 
-                this.Knots.Insert(knotIndex + 1, new ControlPoint(position, rotation, fov));
+                this.Knots.Insert(knotIndex + 1, new CameraConfig(position, rotation, fov));
             }
             else
             {
@@ -499,10 +506,10 @@ namespace Assets
         }
         public void AddLookAt(Vector3 position, Quaternion rotation, float fov)
         {
-            this.LookAts.Add(new ControlPoint(position, rotation, fov));
+            this.LookAts.Add(new CameraConfig(position, rotation, fov));
             SetBezierFromKnots();
         }
-        public void AddLookAt(ControlPoint cp, float? t = null)
+        public void AddLookAt(CameraConfig cp, float? t = null)
         {
             //TODO tを指定した場合の処理を追記する
             this.LookAts.Add(cp);
@@ -515,7 +522,9 @@ namespace Assets
         }
         private float MaxSpeed(int time)
         {
-            if (!Beziers.IsCalcArcLengthWithT) Beziers.CalcArcLengthWithT(IsLoop);
+            if (!Beziers.IsCalcTotalLength) {
+                Beziers.CalcTotalLength(IsLoop);
+            }
 
             return Beziers.TotalLength / time;
         }
@@ -562,6 +571,8 @@ namespace Assets
             public GameObject moveCameraCube;
             public LineRenderer LineRenderer;
             public List<GameObject> inputCube = new List<GameObject>();
+            public List<GameObject> inputCubeVector = new List<GameObject>();
+
             public List<GameObject> bezierObject = new List<GameObject>();
 
             public PipeMeshGenerator LineMesh;
@@ -574,7 +585,7 @@ namespace Assets
                 // CameraShake.enabled = false;
                 moveCameraCube = new GameObject("moveCameraCube");
                 moveCameraCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                moveCameraCube.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
+                moveCameraCube.transform.localScale = new Vector3(0.2f, 0.2f, 0.5f);
                 moveCameraCube.GetComponent<Renderer>().material.color = Color.blue;
                 moveCameraCube.transform.parent = Path.gameObject.transform;
                 moveCameraCube.layer = 2;
@@ -626,17 +637,38 @@ namespace Assets
                 {
                     Destroy(inputCube[i]);
                 }
+
+                for (int i = 0; i < inputCubeVector.Count; i++)
+                {
+                    Destroy(inputCubeVector[i]);
+                }
+
                 inputCube.Clear();
+                inputCubeVector.Clear();
+
                 for (int i = 0; i < Path.Knots.Count; i++)
                 {
                     inputCube.Add(new GameObject("inputCube" + i));
+
                     inputCube[i] = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     inputCube[i].transform.position = Path.Knots[i].position;
                     inputCube[i].transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
                     inputCube[i].transform.parent = Path.gameObject.transform;
                     inputCube[i].layer = 2;
-
                     inputCube[i].GetComponent<Renderer>().material.color = Color.blue;
+
+                    inputCube.Add(new GameObject("inputCubeVector" + i));
+
+
+                    inputCubeVector.Add(new GameObject("inputCube" + i));
+
+                    inputCubeVector[i] = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    inputCubeVector[i].transform.position = Path.Knots[i].position;
+                    inputCubeVector[i].transform.localPosition = new Vector3(0, 0, 1f);
+                    inputCubeVector[i].transform.localScale = new Vector3(0.05f,  0.05f, 1f);
+                    inputCubeVector[i].transform.parent = Path.gameObject.transform;
+                    inputCubeVector[i].layer = 2;
+                    inputCubeVector[i].GetComponent<Renderer>().material.color = Color.white;
                 }
 
                 if (inputCube != null && inputCube.Count != 0)
@@ -645,11 +677,15 @@ namespace Assets
                     {
                         inputCube[i].transform.position = Path.Knots[i].position;
                         inputCube[i].transform.rotation = Path.Knots[i].rotation;
+
+                        inputCubeVector[i].transform.position = Path.Knots[i].position;
+                        inputCubeVector[i].transform.rotation = Path.Knots[i].rotation;
                     }
                 }
                 if (Path.Knots.Count > inputCube.Count)
                 {
                     inputCube.RemoveAt(inputCube.Count - 1);
+                    inputCubeVector.RemoveAt(inputCube.Count - 1);
                 }
 
                 Debug.Log("Rendered");

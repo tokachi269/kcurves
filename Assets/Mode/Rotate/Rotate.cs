@@ -11,7 +11,7 @@ namespace Assets
         public override string Name { get; set; }
 
         //ユーザー制御点
-        protected override List<ControlPoint> Knots { get; set; } = new List<ControlPoint>();
+        protected override List<CameraConfig> Knots { get; set; } = new List<CameraConfig>();
         [SerializeField]
         public float TimePerRound { get; set; }
         [SerializeField]
@@ -20,7 +20,7 @@ namespace Assets
         public bool IsCameraShake { get; set; }
      //   public PerlinCameraShake CameraShake;
 
-        protected ControlPoint DefaultPosition { get; set; }
+        protected CameraConfig DefaultPosition { get; set; }
         private GameObject moveCameraCube;
 
         public void Start()
@@ -76,7 +76,7 @@ namespace Assets
 
         public void AddKnot(Vector3 position, Quaternion rotation, float fov)
         {
-            this.Knots.Add(new ControlPoint(position, rotation, fov));
+            this.Knots.Add(new CameraConfig(position, rotation, fov));
             if (Knots.Count == 0)
             {
                 moveCameraCube.transform.position = Knots[0].position;
@@ -89,7 +89,7 @@ namespace Assets
         }
 
 
-        public void AddKnot(ControlPoint cp)
+        public void AddKnot(CameraConfig cp)
         {
             this.Knots.Add(cp);
             if (Knots.Count == 0)

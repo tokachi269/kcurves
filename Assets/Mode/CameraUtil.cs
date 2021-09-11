@@ -8,9 +8,9 @@ namespace Assets
 {
     public static class CameraUtil
     {
-        public static ControlPoint CameraPosition()
+        public static CameraConfig CameraPosition()
         {
-            return new ControlPoint(Camera.main.transform.position, Camera.main.transform.rotation, Camera.main.fieldOfView);
+            return new CameraConfig(Camera.main.transform.position, Camera.main.transform.rotation, Camera.main.fieldOfView);
         }
 
         /*P2をP1から回転が少ない方向に回転するように補正する*/

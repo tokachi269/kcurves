@@ -19,7 +19,7 @@ namespace Assets
 		[DefaultValue(true)]
 		public bool LookAt { get; set; }
 
-		public ControlPoint ControlPoint
+		public CameraConfig ControlPoint
 		{
 			get => default;
 			set

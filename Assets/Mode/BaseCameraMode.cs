@@ -16,12 +16,12 @@ namespace Assets
     {
         public abstract string Name { get; set; }
         //ユーザー制御点
-        protected abstract List<ControlPoint> Knots { get; set; }
+        protected abstract List<CameraConfig> Knots { get; set; }
 
         public int Time { get; set; }
 
         public bool IsCameraShake { get; set; }
 
-        protected ControlPoint DefaultCameraPosition { get; }
+        protected CameraConfig DefaultCameraPosition { get; }
     }
 }

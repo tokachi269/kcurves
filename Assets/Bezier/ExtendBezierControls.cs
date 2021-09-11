@@ -12,15 +12,14 @@ namespace Assets
 
         public float TotalLength { get; private set; }
 
-        public bool IsCalcArcLengthWithT { get; private set; }
+        public bool IsCalcTotalLength { get; private set; }
 
-        public ushort ArcLengthWithTStep { get; private set; } = 10;
-
+        public ushort ArcLengthWithTStep { get; private set; } = 50;
 
         public ExtendBezierControls(int n, bool isLoop) : base(n, isLoop)
         {
             Lengths = new float[SegmentCount <= 1 ? 1 : SegmentCount-2, ArcLengthWithTStep];
-            IsCalcArcLengthWithT = false;
+            IsCalcTotalLength = false;
         }
 
         public ExtendBezierControls(int n, Vector3[] points, bool isLoop) : base(n, isLoop)
@@ -31,21 +30,23 @@ namespace Assets
 
         internal float GetT(int bezierIndex, float inputL)
         {
-
             int index = Mathf.Clamp((int)Math.Floor(inputL / Lengths[bezierIndex, ArcLengthWithTStep - 1] * (ArcLengthWithTStep - 1)),0, ArcLengthWithTStep - 1);
 
             for (int i = 0; i < ArcLengthWithTStep - 1; i++)
             {
-                if ((index <= 0) || (index >= ArcLengthWithTStep - 1)) break;
-                if (inputL <= Lengths[bezierIndex, index])
-                    if (Lengths[bezierIndex, index - 1] < inputL) break;
-                    else index--;
-                else index++;
+                if ((index <= 0) || (index >= ArcLengthWithTStep - 1)) { break; }
+
+                if (inputL <= Lengths[bezierIndex, index]){
+                    if (Lengths[bezierIndex, index - 1] < inputL){ break; }
+                    else{index--; }
+                }
+                else{ index++; }
             }
-            //Debug.Log("segIndex"+ segIndex + "  index:" + index);
-            //Debug.Log("  inputL:" + inputL+ "  indexL:" + Lengths[segIndex, index]+ "  index:" + index);
+
+            //Debug.Log("  inputL:" + inputL+ "  indexL:" + Lengths[bezierIndex, index]+ "  index:" + index);
             float resultL = 1+index - ((Lengths[bezierIndex, index] - inputL) / (Lengths[bezierIndex, index] - (index <= 0 ? 0 : Lengths[bezierIndex, index - 1])));
             float resultT = (float)(resultL / ArcLengthWithTStep);
+
             return resultT;
         }
 
@@ -54,6 +55,13 @@ namespace Assets
             return Lengths[bezierIndex, ArcLengthWithTStep-1];
         }
 
+        public void CalcTotalLength(bool isLoop)
+        {
+            CalcArcLengthWithT(isLoop);
+            TotalLength = Lengths.Cast<float>().Where((n, i) => ((i + 1) % ArcLengthWithTStep) == 0).Sum();
+            Debug.Log("TotalLength" + TotalLength);
+            IsCalcTotalLength = true;
+        }
 
         /** ベジェ曲線のパラメータtと弧長のズレをパラメータ化 */
         public void CalcArcLengthWithT(bool isLoop)
@@ -75,7 +83,6 @@ namespace Assets
                         Lengths[i, j] = l;
                     }
                 }
-
             }
 
             //TODO 微分の結果が正しくない
@@ -88,12 +95,8 @@ namespace Assets
             //        Lengths[i, j] *= correctLength / Lengths[i, ArcLengthWithTStep - 1];
             //    }
             //}
-
-            //Lengths[last, step-1] = 1f;
-            //Lengths[k, step] += Vector3.Distance(plots[plots.Length], plots[last]);
-            TotalLength = Lengths.Cast<float>().Where((n, i) =>  (i % ArcLengthWithTStep - 1) == 0).Sum();
-            IsCalcArcLengthWithT = true;
         }
+
         public Vector3[] CalcPlots(ushort stepPerSegment, bool isLoop)
         {
             Vector3[] plots;
