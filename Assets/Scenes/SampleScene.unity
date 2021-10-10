@@ -465,6 +465,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   component: {fileID: 1818716792}
   monitorInputFields: []
-  mode: 2
-  min: Infinity
-  max: -Infinity
+  mode: 0
+  min: -1
+  max: 1

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using Assert = UnityEngine.Assertions.Assert;
 
-namespace Assets
+namespace CameraOperator.Tool
 {
     public class NewTestScript
     {
@@ -60,10 +60,10 @@ namespace Assets
         public IEnumerator CameraMoveTest()
         {
             var cd = new GameObject("Hoge");
-            CameraDirector cameraDirector = cd.gameObject.AddComponent<CameraDirector>();
+            ToolController toolController = cd.gameObject.AddComponent<ToolController>();
 
-            Assert.IsTrue(0 <= cameraDirector.path.diffT);
-            Assert.IsTrue(0 <= cameraDirector.path.dist);
+            Assert.IsTrue(0 <= toolController.path.diffT);
+            Assert.IsTrue(0 <= toolController.path.dist);
             yield return null;
         }
     }

@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="CameraOperator.Tool.BezierControls" Collapsed="true">
+    <Position X="0.5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgABACAAAAAAAAAACAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\CameraOperator\Bezier\BezierControls.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraOperator.Tool.BezierUtil" Collapsed="true">
+    <Position X="7" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAgAAAAAAAAAAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>Assets\CameraOperator\Bezier\BezierUtil.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraOperator.Tool.ExtendBezierControls" Collapsed="true">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAEAgQABABAAIAAAAAAEAYAAAAAAAA=</HashCode>
+      <FileName>Assets\CameraOperator\Bezier\ExtendBezierControls.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraOperator.Tool.KCurves" Collapsed="true">
+    <Position X="10.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAACAAAAAAABAIAAAAAAAEAAEEAAAAIAAI=</HashCode>
+      <FileName>Assets\CameraOperator\Bezier\KCurves.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraOperator.Tool.ToolController" Collapsed="true">
+    <Position X="10.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAACAAAAAEAAASAAAAAAAAAAAAAAAAQAAAAAA=</HashCode>
+      <FileName>Assets\CameraOperator\ToolController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraOperator.Tool.ApplyItems" Collapsed="true">
+    <Position X="5.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAACgIAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Assets\CameraOperator\Constant.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraOperator.Tool.BaseCameraMode" Collapsed="true">
+    <Position X="1.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAACAAAAAAAAAAAEAAAIQAAAAAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>Assets\CameraOperator\Mode\BaseCameraMode.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraOperator.Tool.CameraConfig" Collapsed="true">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAQAAICgIAhAABBAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Assets\CameraOperator\Mode\CameraConfig.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraOperator.Tool.CameraUtil" Collapsed="true">
+    <Position X="7" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Assets\CameraOperator\Mode\CameraUtil.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraOperator.Tool.Easing" Collapsed="true">
+    <Position X="8.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAIAAAIAAAAAAAACAACBAAAAAAABAACAgIA=</HashCode>
+      <FileName>Assets\CameraOperator\Mode\Easing.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraOperator.Tool.Path" Collapsed="true">
+    <Position X="0.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQCBALAcAAIIAQBBkGsAoQAAGAABBAA4QAFQEAQAUA=</HashCode>
+      <FileName>Assets\CameraOperator\Mode\Path\Path.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CameraOperator.Tool.Rotate" Collapsed="true">
+    <Position X="2.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACAAAAAAAkAAAIwACAAAACAAgBAAAEAAAQA=</HashCode>
+      <FileName>Assets\CameraOperator\Mode\Rotate\Rotate.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="CameraOperator.Tool.Squad" Collapsed="true">
+    <Position X="10.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>Assets\CameraOperator\Squad.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="CameraMover" Collapsed="true">
+    <Position X="5.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEYAEAAQCCAAACAAAAAAAAAAAAhAgAABIACgBAAQAIA=</HashCode>
+      <FileName>Assets\CameraMover.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Math3D" Collapsed="true">
+    <Position X="5.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAYAKQABAAQAAkBAAEAAAAQAQIQAJMQCAAAAAwA=</HashCode>
+      <FileName>Assets\CameraOperator\Math3D.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PerlinCameraShake" Collapsed="true">
+    <Position X="7" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAgIAIgCBBEQAEhEEAAAoBAgQBAiIAUAABADBACIA=</HashCode>
+      <FileName>Assets\CameraOperator\Mode\PerlinCameraShake.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="PipeMeshGenerator" Collapsed="true">
+    <Position X="8.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AggABESIACAACAAAAAQAAAgAQAFIAIAEQAJAgACAAiA=</HashCode>
+      <FileName>Assets\CameraOperator\PipeMeshGenerator.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="CameraOperator.Tool.ICameraMode" Collapsed="true">
+    <Position X="5.25" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAgAAAAEAAAAA=</HashCode>
+      <FileName>Assets\CameraOperator\Mode\BaseCameraMode.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="CameraOperator.Tool.ISerialize" Collapsed="true">
+    <Position X="7" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAACBAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Assets\CameraOperator\Mode\Path\Path.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="CameraOperator.Tool.EasingMode" Collapsed="true">
+    <Position X="5.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQEAAAAAAAQAABCAAAAIAEAAAgBADAAABECACEAAEg=</HashCode>
+      <FileName>Assets\CameraOperator\Mode\Easing.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Yu Gothic UI" Size="9" />
+</ClassDiagram>
