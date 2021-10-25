@@ -20,7 +20,7 @@ namespace CameraOperator.Tool
         {
             path = gameObject.AddComponent<Path>();
             rotate = gameObject.AddComponent<Rotate>();
-
+/*
             path.AddKnot(new Vector3(0, 0, 1), new Quaternion(0, 0, 0, 1), 60);
             path.AddKnot(new Vector3(1, 1, 1), new Quaternion(0, 0, 0, 1), 60);
             path.AddKnot(new Vector3(0, 2, 5), new Quaternion(0, 0, 0, 1), 60);
@@ -33,7 +33,7 @@ namespace CameraOperator.Tool
             //path.AddKnot(new Vector3(0, 3, 3), new Quaternion(0, 0, 0, 1), 60);
             //path.AddKnot(new Vector3(0, 4, 0), new Quaternion(0, 0, 0, 1), 60);
             path.AddLookAt(new Vector3(0, 4, 0), new Quaternion(0, 0, 0, 1), 60);
-
+*/
             rotate.AddKnot(new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 1), 60);
 
             saves = new Dictionary<string, BaseCameraMode>();
