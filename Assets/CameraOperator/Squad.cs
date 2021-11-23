@@ -15,12 +15,15 @@ namespace CameraOperator.Tool
 
 			if (i == 0)
 			{
+				Debug.Log("" + i + i + (i + 1) + (i + 2));
 				return SplineSegment(knots[i].rotation, knots[i].rotation, knots[i + 1].rotation, knots[i + 2].rotation, t);
 			}
 			else if (i == count - 2 && i > 0){
+				Debug.Log("" + (i - 1) + i + (i + 1) + (i + 1));
 				return SplineSegment(knots[i - 1].rotation, knots[i].rotation, knots[i + 1].rotation, knots[i + 1].rotation, t);
 			}
 			else if (i >= 1 && i < count - 2){
+				Debug.Log("" + (i-1) + i + (i + 1) + (i + 2));
 				return SplineSegment(knots[i - 1].rotation, knots[i].rotation, knots[i + 1].rotation, knots[i + 2].rotation, t);
 			}
 			return Quaternion.identity;
@@ -38,7 +41,9 @@ namespace CameraOperator.Tool
 
 		public static Quaternion GetPoint(Quaternion q0, Quaternion q1, Quaternion q2, Quaternion q3, float t)
 		{
-			return Quaternion.Slerp(Quaternion.Slerp(q1, q2, t), Quaternion.Lerp(q0, q3, t), (float)(2.0 * t * (1.0 - t)));
+
+			//return Quaternion.Lerp(q0, q3, t);
+			return Quaternion.Lerp(Quaternion.Lerp(Quaternion.Lerp(q0, q1, t), Quaternion.Lerp(q1, q2, t),t), Quaternion.Lerp(Quaternion.Lerp(q1, q2, t), Quaternion.Lerp(q2, q3, t), t), t);
 		}
 	}
 }
