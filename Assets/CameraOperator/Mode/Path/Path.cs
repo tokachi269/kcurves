@@ -235,7 +235,10 @@ namespace CameraOperator.Tool
             {
                // CameraShake.enabled = true;
             }
-
+            Positions.CalcTotalLength(IsLoop);
+            Rotations.CalcTotalLength(IsLoop);
+            PlayAnimation PositionsPlayer = new PlayAnimation(Positions);
+            PlayAnimation RotationsPlayer = new PlayAnimation(Positions);
             float maxSpeed = MaxSpeed(Time);
             int knotIndex = 0;
             int bezierIndex = 0;
@@ -243,7 +246,7 @@ namespace CameraOperator.Tool
             float progressLength = 0f;
             var easingMode = SetEasingMode();
 
-            float KnotBetweenRange = Positions.Length(0);
+            float PositionBetweenRange = Positions.Length(0);
 
             // ’â~ŠÔ‚ªİ’è‚³‚ê‚Ä‚¢‚éê‡Aw’è•b”ŠÔˆ—‚ğ‘Ò‹@
             if (tempKnots[0].delay != 0f)
@@ -290,17 +293,17 @@ namespace CameraOperator.Tool
                     knotIndex = bezierIndex % 2 == 0 ? (bezierIndex / 2) : (bezierIndex + 1) / 2;
                     //mode = EasingMode.None;
                     mode = (EasingMode)((byte)easingMode[knotIndex + 1] | ((byte)easingMode[knotIndex] << 1));
-                    KnotBetweenRange = 0f;
+                    PositionBetweenRange = 0f;
 
                     if (knotIndex == tempKnots.Count - 1)
                     {
-                        KnotBetweenRange = Positions.Length(bezierIndex);
+                        PositionBetweenRange = Positions.Length(bezierIndex);
                     }
                     else
                     {
                         for (ushort j = (ushort)(2 * knotIndex - 1); j < Positions.SegmentCount && j <= 2 * knotIndex; j++)
                         {
-                            KnotBetweenRange += Positions.Length(j);
+                            PositionBetweenRange += Positions.Length(j);
                         }
                     }
 
@@ -319,11 +322,11 @@ namespace CameraOperator.Tool
 
                 // Debug.Log("mode:" + mode + " bezierIndex:" + bezierIndex + " knotIndex:" + knotIndex + " KnotBetweenRange:" + KnotBetweenRange+ " ProgressLength" + progressLength);
 
-                float easing = Easing.GetEasing(mode, progressLength / KnotBetweenRange);
+                float easing = Easing.GetEasing(mode, progressLength / PositionBetweenRange);
 
                 //Debug.Log("easing:"+ easing);
 
-                float t = Positions.GetT(bezierIndex, bezierIndex != 0 && bezierIndex % 2 == 0 ? easing * KnotBetweenRange - Positions.Length(bezierIndex-1) : easing*KnotBetweenRange);
+                float t = Positions.GetT(bezierIndex, bezierIndex != 0 && bezierIndex % 2 == 0 ? easing * PositionBetweenRange - Positions.Length(bezierIndex-1) : easing*PositionBetweenRange);
 
                 //Debug.Log("bezierIndex:" + bezierIndex + "  ProgressLength:" + ProgressLength + "maxS:" + maxSpeed + "currentTime:" + currentTime);
                 {

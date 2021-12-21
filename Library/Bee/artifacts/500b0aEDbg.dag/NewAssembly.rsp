@@ -322,6 +322,7 @@
 "Assets/CameraOperator/Mode/CameraUtil.cs"
 "Assets/CameraOperator/Mode/Easing.cs"
 "Assets/CameraOperator/Mode/Path/Path.cs"
+"Assets/CameraOperator/Mode/Path/PlayAnimation.cs"
 "Assets/CameraOperator/Mode/PerlinCameraShake.cs"
 "Assets/CameraOperator/Mode/Rotate/Rotate.cs"
 "Assets/CameraOperator/PipeMeshGenerator.cs"

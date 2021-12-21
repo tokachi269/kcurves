@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PixelRect:
     serializedVersion: 2
-    x: 865.3334
-    y: 459.33334
+    x: 346
+    y: 552.6667
     width: 1414
     height: 811.3334
   m_ShowMode: 4
   m_Title: Game
   m_RootView: {fileID: 6}
-  m_MinSize: {x: 875, y: 300}
+  m_MinSize: {x: 875, y: 371}
   m_MaxSize: {x: 10000, y: 10000}
   m_Maximized: 0
 --- !u!114 &2
@@ -45,10 +45,10 @@ MonoBehaviour:
     y: 30
     width: 1414
     height: 761.3334
-  m_MinSize: {x: 679, y: 342}
-  m_MaxSize: {x: 12004, y: 8042}
+  m_MinSize: {x: 677, y: 321}
+  m_MaxSize: {x: 12002, y: 8021}
   vertical: 0
-  controlID: 92
+  controlID: 86
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -92,7 +92,7 @@ MonoBehaviour:
     serializedVersion: 2
     x: 0
     y: 0
-    width: 288
+    width: 200.66667
     height: 490.66666
   m_MinSize: {x: 200, y: 200}
   m_MaxSize: {x: 4000, y: 4000}
@@ -120,8 +120,8 @@ MonoBehaviour:
     y: 490.66666
     width: 991.3333
     height: 270.66672
-  m_MinSize: {x: 101, y: 121}
-  m_MaxSize: {x: 4001, y: 4021}
+  m_MinSize: {x: 100, y: 100}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 21}
   m_Panes:
   - {fileID: 16}
@@ -129,7 +129,7 @@ MonoBehaviour:
   - {fileID: 13}
   - {fileID: 12}
   m_Selected: 1
-  m_LastSelected: 0
+  m_LastSelected: 2
 --- !u!114 &6
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -222,10 +222,10 @@ MonoBehaviour:
     y: 0
     width: 991.3333
     height: 761.3334
-  m_MinSize: {x: 403, y: 342}
-  m_MaxSize: {x: 8003, y: 8042}
+  m_MinSize: {x: 402, y: 321}
+  m_MaxSize: {x: 8002, y: 8021}
   vertical: 1
-  controlID: 22
+  controlID: 87
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -247,10 +247,10 @@ MonoBehaviour:
     y: 0
     width: 991.3333
     height: 490.66666
-  m_MinSize: {x: 403, y: 221}
-  m_MaxSize: {x: 8003, y: 4021}
+  m_MinSize: {x: 402, y: 221}
+  m_MaxSize: {x: 8002, y: 4021}
   vertical: 0
-  controlID: 23
+  controlID: 88
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -266,9 +266,9 @@ MonoBehaviour:
   m_Children: []
   m_Position:
     serializedVersion: 2
-    x: 288
+    x: 200.66667
     y: 0
-    width: 703.3333
+    width: 790.6666
     height: 490.66666
   m_MinSize: {x: 202, y: 221}
   m_MaxSize: {x: 4002, y: 4021}
@@ -300,8 +300,8 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 258
-    y: 1018
+    x: 719.3334
+    y: 980
     width: 990.3333
     height: 249.66672
   m_ViewDataDictionary: {fileID: 0}
@@ -325,13 +325,13 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 796
-    y: 853.3334
+    x: 719.3334
+    y: 980
     width: 990.3333
     height: 249.66672
   m_ViewDataDictionary: {fileID: 0}
   m_Spl:
-    ID: 696
+    ID: 430
     splitterInitialOffset: 193
     currentActiveSplitter: -1
     realSizes:
@@ -443,9 +443,9 @@ MonoBehaviour:
       parentId: 1000
       parentUniqueId: '[kcurves][suite]'
     - id: 1006
-      uniqueId: Tests.dll/[Tests][Assets][suite]
-      name: Assets
-      fullName: Assets
+      uniqueId: Tests.dll/[CameraOperator][suite]
+      name: CameraOperator
+      fullName: CameraOperator
       resultStatus: 0
       duration: 0
       messages: 
@@ -458,10 +458,10 @@ MonoBehaviour:
       categories: []
       parentId: 1005
       parentUniqueId: '[Tests.dll][suite]'
-    - id: 1001
-      uniqueId: Tests.dll/Assets/[Tests][Assets.NewTestScript][suite]
-      name: NewTestScript
-      fullName: Assets.NewTestScript
+    - id: 1007
+      uniqueId: Tests.dll/CameraOperator/[Tests][CameraOperator.Tool][suite]
+      name: Tool
+      fullName: CameraOperator.Tool
       resultStatus: 0
       duration: 0
       messages: 
@@ -473,11 +473,27 @@ MonoBehaviour:
       isSuite: 1
       categories: []
       parentId: 1006
-      parentUniqueId: Tests.dll/[Tests][Assets][suite]
+      parentUniqueId: Tests.dll/[CameraOperator][suite]
+    - id: 1001
+      uniqueId: Tests.dll/CameraOperator/Tool/[Tests][CameraOperator.Tool.NewTestScript][suite]
+      name: NewTestScript
+      fullName: CameraOperator.Tool.NewTestScript
+      resultStatus: 0
+      duration: 0
+      messages: 
+      output: 
+      stacktrace: 
+      notRunnable: 0
+      ignoredOrSkipped: 0
+      description: 
+      isSuite: 1
+      categories: []
+      parentId: 1007
+      parentUniqueId: Tests.dll/CameraOperator/[Tests][CameraOperator.Tool][suite]
     - id: 1004
-      uniqueId: Tests.dll/Assets/NewTestScript/[Tests][Assets.NewTestScript.CameraMoveTest]
+      uniqueId: Tests.dll/CameraOperator/Tool/NewTestScript/[Tests][CameraOperator.Tool.NewTestScript.CameraMoveTest]
       name: CameraMoveTest
-      fullName: Assets.NewTestScript.CameraMoveTest
+      fullName: CameraOperator.Tool.NewTestScript.CameraMoveTest
       resultStatus: 0
       duration: 0
       messages: 
@@ -490,11 +506,11 @@ MonoBehaviour:
       categories:
       - Uncategorized
       parentId: 1001
-      parentUniqueId: Tests.dll/Assets/[Tests][Assets.NewTestScript][suite]
+      parentUniqueId: Tests.dll/CameraOperator/Tool/[Tests][CameraOperator.Tool.NewTestScript][suite]
     - id: 1002
-      uniqueId: Tests.dll/Assets/NewTestScript/[Tests][Assets.NewTestScript.PathCalculatingTest]
+      uniqueId: Tests.dll/CameraOperator/Tool/NewTestScript/[Tests][CameraOperator.Tool.NewTestScript.PathCalculatingTest]
       name: PathCalculatingTest
-      fullName: Assets.NewTestScript.PathCalculatingTest
+      fullName: CameraOperator.Tool.NewTestScript.PathCalculatingTest
       resultStatus: 0
       duration: 0
       messages: 
@@ -507,11 +523,11 @@ MonoBehaviour:
       categories:
       - Uncategorized
       parentId: 1001
-      parentUniqueId: Tests.dll/Assets/[Tests][Assets.NewTestScript][suite]
+      parentUniqueId: Tests.dll/CameraOperator/Tool/[Tests][CameraOperator.Tool.NewTestScript][suite]
     - id: 1003
-      uniqueId: Tests.dll/Assets/NewTestScript/[Tests][Assets.NewTestScript.RemoveKnotsTest]
+      uniqueId: Tests.dll/CameraOperator/Tool/NewTestScript/[Tests][CameraOperator.Tool.NewTestScript.RemoveKnotsTest]
       name: RemoveKnotsTest
-      fullName: Assets.NewTestScript.RemoveKnotsTest
+      fullName: CameraOperator.Tool.NewTestScript.RemoveKnotsTest
       resultStatus: 0
       duration: 0
       messages: 
@@ -524,7 +540,7 @@ MonoBehaviour:
       categories:
       - Uncategorized
       parentId: 1001
-      parentUniqueId: Tests.dll/Assets/[Tests][Assets.NewTestScript][suite]
+      parentUniqueId: Tests.dll/CameraOperator/Tool/[Tests][CameraOperator.Tool.NewTestScript][suite]
     m_ResultText: 
     m_ResultStacktrace: 
     m_TestListState:
@@ -644,14 +660,15 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 394.6667
-    y: 1092.6667
+    x: 719.3334
+    y: 980
     width: 990.3333
     height: 249.66672
   m_ViewDataDictionary: {fileID: 0}
   m_SearchFilter:
     m_NameFilter: 
-    m_ClassNames: []
+    m_ClassNames:
+    - Material
     m_AssetLabels: []
     m_AssetBundleNames: []
     m_VersionControlStates: []
@@ -660,24 +677,23 @@ MonoBehaviour:
     m_SceneHandles: 
     m_ShowAllHits: 0
     m_SkipHidden: 0
-    m_SearchArea: 1
-    m_Folders:
-    - Assets/Mode
+    m_SearchArea: 0
+    m_Folders: []
     m_Globs: []
     m_OriginalText: 
   m_ViewMode: 1
-  m_StartGridSize: 16
+  m_StartGridSize: 64
   m_LastFolders:
-  - Assets/Mode
+  - Assets/Bezier
   m_LastFoldersGridSize: 16
   m_LastProjectPath: D:\GitHub\CameraOperatorMod\kcurves
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
     scrollPos: {x: 0, y: 0}
-    m_SelectedIDs: ca540000
-    m_LastClickedID: 21706
-    m_ExpandedIDs: 00000000c2540000
+    m_SelectedIDs: 01ca9a3b
+    m_LastClickedID: 1000000001
+    m_ExpandedIDs: 00000000c254000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -730,8 +746,8 @@ MonoBehaviour:
       m_Icon: {fileID: 0}
       m_ResourceFile: 
   m_ListAreaState:
-    m_SelectedInstanceIDs: 
-    m_LastClickedInstanceID: 0
+    m_SelectedInstanceIDs: 8a540000
+    m_LastClickedInstanceID: 21642
     m_HadKeyboardFocusLastEvent: 0
     m_ExpandedInstanceIDs: c623000040c60000dac600007a250000ac25000008250000ee29000058580000
     m_RenameOverlay:
@@ -758,7 +774,7 @@ MonoBehaviour:
       m_ResourceFile: 
     m_NewAssetIndexInList: -1
     m_ScrollPosition: {x: 0, y: 0}
-    m_GridSize: 16
+    m_GridSize: 64
   m_SkipHiddenPackages: 0
   m_DirectoriesAreaWidth: 384
 --- !u!114 &17
@@ -781,8 +797,8 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 1856.6667
-    y: 489.33334
+    x: 1337.3334
+    y: 582.6667
     width: 421.6667
     height: 740.3334
   m_ViewDataDictionary: {fileID: 0}
@@ -819,9 +835,9 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 865.3334
-    y: 489.33334
-    width: 287
+    x: 346
+    y: 582.6667
+    width: 199.66667
     height: 469.66666
   m_ViewDataDictionary: {fileID: 0}
   m_SceneHierarchy:
@@ -873,9 +889,9 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 1083.3334
-    y: 543.3334
-    width: 702.6666
+    x: 512
+    y: 576
+    width: 788.6666
     height: 469.66666
   m_ViewDataDictionary: {fileID: 0}
   m_ShowContextualTools: 0
@@ -889,9 +905,9 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
-    m_Target: {x: -5.989367, y: -5.350849, z: 3.0934076}
+    m_Target: {x: 102.04929, y: -119.191284, z: 32.33838}
     speed: 2
-    m_Value: {x: -5.989367, y: -5.350849, z: 3.0934076}
+    m_Value: {x: 102.04929, y: -119.191284, z: 32.33838}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 2
@@ -938,13 +954,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.29813325, y: 0.45947737, z: -0.16504723, w: -0.821668}
+    m_Target: {x: 0.3271217, y: 0.5392861, z: -0.22921732, w: 0.74311}
     speed: 2
-    m_Value: {x: -0.29777884, y: 0.45893115, z: -0.16485102, w: -0.8206912}
+    m_Value: {x: 0.32669872, y: 0.53858876, z: -0.22892094, w: 0.7421491}
   m_Size:
-    m_Target: 9.025347
+    m_Target: 85.28915
     speed: 2
-    m_Value: 9.025347
+    m_Value: 85.28915
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -989,9 +1005,9 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 1153.3334
-    y: 489.33334
-    width: 701.3333
+    x: 546.6667
+    y: 582.6667
+    width: 788.6666
     height: 469.66666
   m_ViewDataDictionary: {fileID: 0}
   m_SerializedViewNames: []
@@ -1000,7 +1016,7 @@ MonoBehaviour:
   m_ShowGizmos: 0
   m_TargetDisplay: 0
   m_ClearColor: {r: 0, g: 0, b: 0, a: 0}
-  m_TargetSize: {x: 701.3333, y: 448.66666}
+  m_TargetSize: {x: 788.6666, y: 448.66666}
   m_TextureFilterMode: 0
   m_TextureHideFlags: 61
   m_RenderIMGUI: 1
@@ -1015,8 +1031,8 @@ MonoBehaviour:
     m_VRangeLocked: 0
     hZoomLockedByDefault: 0
     vZoomLockedByDefault: 0
-    m_HBaseRangeMin: -233.77777
-    m_HBaseRangeMax: 233.77777
+    m_HBaseRangeMin: -262.8889
+    m_HBaseRangeMax: 262.8889
     m_VBaseRangeMin: -149.55556
     m_VBaseRangeMax: 149.55556
     m_HAllowExceedBaseRangeMin: 1
@@ -1036,23 +1052,23 @@ MonoBehaviour:
       serializedVersion: 2
       x: 0
       y: 21
-      width: 701.3333
+      width: 788.6666
       height: 448.66666
-    m_Scale: {x: 2.7386124, y: 2.738613}
-    m_Translation: {x: 323.6662, y: 76.5749}
+    m_Scale: {x: 2.738613, y: 2.738613}
+    m_Translation: {x: 386.3327, y: 44.574955}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -118.1862
-      y: -27.961199
-      width: 256.09076
+      x: -141.06876
+      y: -16.276472
+      width: 287.98032
       height: 163.8299
     m_MinimalGUI: 1
   m_defaultScale: 1
-  m_LastWindowPixelSize: {x: 1052, y: 704.5}
+  m_LastWindowPixelSize: {x: 1183, y: 704.5}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000100000100
@@ -1078,8 +1094,8 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 865.3334
-    y: 980
+    x: 346
+    y: 1073.3334
     width: 990.3333
     height: 249.66672
   m_ViewDataDictionary: {fileID: 0}

@@ -96,6 +96,7 @@
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorAudioSourceEditor.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Monitors.cs" />
     <Compile Include="Assets\Monitor Components\Examples\JumperMan\JumperMan.cs" />
+    <Compile Include="Assets\CameraOperator\Mode\Path\PlayAnimation.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\MyAssembly.asmdef" />
