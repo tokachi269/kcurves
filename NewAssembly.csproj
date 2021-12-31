@@ -88,6 +88,7 @@
     <Compile Include="Assets\Monitor Components\Scripts\MonitorDebugLog.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Colors.cs" />
     <Compile Include="Assets\Monitor Components\Examples\Using API\UsingAPI.cs" />
+    <Compile Include="Assets\CameraOperator\Mode\Path\PlayAnimation.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\MonitorRigidbody.cs" />
     <Compile Include="Assets\CameraOperator\Constant.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorComponentEditor.cs" />
@@ -96,7 +97,6 @@
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorAudioSourceEditor.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Monitors.cs" />
     <Compile Include="Assets\Monitor Components\Examples\JumperMan\JumperMan.cs" />
-    <Compile Include="Assets\CameraOperator\Mode\Path\PlayAnimation.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\MyAssembly.asmdef" />
