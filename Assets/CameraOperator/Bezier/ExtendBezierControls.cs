@@ -14,7 +14,7 @@ namespace CameraOperator.Tool
 
         public bool IsCalcTotalLength { get; private set; }
 
-        public ushort ArcLengthWithTStep { get; private set; } = 50;
+        public ushort ArcLengthWithTStep { get; private set; } = 10;
 
         public ExtendBezierControls(int n, bool isLoop) : base(n, isLoop)
         {
@@ -30,7 +30,7 @@ namespace CameraOperator.Tool
 
         internal float GetT(int bezierIndex, float inputL)
         {
-            int index = Mathf.Clamp((int)Math.Floor(inputL / Lengths[bezierIndex, ArcLengthWithTStep - 1] * (ArcLengthWithTStep - 1)),0, ArcLengthWithTStep - 1);
+            int index = Mathf.Clamp((int)Math.Floor(inputL * (ArcLengthWithTStep - 1)),0, ArcLengthWithTStep - 1);
 
             for (int i = 0; i < ArcLengthWithTStep - 1; i++)
             {

@@ -241,10 +241,10 @@ namespace CameraOperator.Tool
             }
             Positions.CalcTotalLength(IsLoop);
             Rotations.CalcTotalLength(IsLoop);
-            float maxSpeed = MaxSpeed(Time);
+            float baseSpeed = MaxSpeed(Time);
 
-            PlayAnimation PositionsPlayer = new PlayAnimation(Positions, maxSpeed);
-            PlayAnimation RotationsPlayer = new PlayAnimation(Positions, maxSpeed);
+            PlayAnimation PositionsPlayer = new PlayAnimation(Positions, baseSpeed);
+            PlayAnimation RotationsPlayer = new PlayAnimation(Positions, baseSpeed);
             targetKnotIndex = 0;
             targetBezierIndex = 0;
 
@@ -252,7 +252,7 @@ namespace CameraOperator.Tool
             var easingMode = SetEasingMode();
 
             float PositionBetweenRange = Positions.Length(0);
-
+            float t = 0;
             // 停止時間が設定されている場合、指定秒数間処理を待機
             if (tempKnots[0].delay != 0f) yield return new WaitForSeconds(tempKnots[0].delay);
 
@@ -261,12 +261,6 @@ namespace CameraOperator.Tool
             while (true)
             {
 
-                float easing = Easing.GetEasing(mode, progressLength / PositionBetweenRange);
-
-                float t = Positions.GetT(targetBezierIndex, targetBezierIndex != 0 && targetBezierIndex % 2 == 0 ? easing * PositionBetweenRange - Positions.Length(targetBezierIndex-1) : easing*PositionBetweenRange);
-                
-                DebugDifferencialCalculation(t);
-                
                 // positonとrotationを適用
                 if (t <= Positions.SegmentCount)
                 {
@@ -288,16 +282,25 @@ namespace CameraOperator.Tool
 
                 PositionsPlayer.Play(ref tempKnots, ref easingMode, ref progressLength,ref targetKnotIndex, ref targetBezierIndex, true);
                 RotationsPlayer.Play(ref tempKnots, ref easingMode, ref progressLength,ref targetKnotIndex, ref targetBezierIndex, false);
-
-               // 停止時間が設定されている場合、指定秒数間処理を待機
+                Debug.Log("progressLength:"  + progressLength + " targetKnotIndex:"+targetKnotIndex+" targetBezierIndex:"+targetBezierIndex);
+                
+                // 停止時間が設定されている場合、指定秒数間処理を待機
                 if (tempKnots[targetKnotIndex].delay != 0f) yield return new WaitForSeconds(tempKnots[targetKnotIndex].delay);
 
-                Debug.Log("knotIndex++");
                 if (targetBezierIndex == Positions.SegmentCount) break;
+
+                //TODO easingの計算がおかしい
+                //float easing = Easing.GetEasing(mode, progressLength / PositionBetweenRange);
+                 float easing = progressLength / PositionsPlayer.PositionBetweenRange;
+                Debug.Log("easing:"+ easing+ " progressLength:" + progressLength + " PositionBetweenRange:"+ PositionBetweenRange + "progressLength / PositionBetweenRange = "+ progressLength / PositionBetweenRange);
+                t = Positions.GetT(targetBezierIndex, easing);
+                Debug.Log(t);
+                DebugDifCalculation(t);
+
 
                 float dt = UnityEngine.Time.deltaTime;
 
-                progressLength += maxSpeed * dt;
+                progressLength += baseSpeed * dt;
                 yield return null;
             }
 
@@ -320,7 +323,7 @@ namespace CameraOperator.Tool
             yield break;
         }
 
-        private void DebugDifferencialCalculation(float t)
+        private void DebugDifCalculation(float t)
         {
             {
                 //debug用変数

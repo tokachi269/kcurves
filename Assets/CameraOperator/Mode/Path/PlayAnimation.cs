@@ -8,7 +8,7 @@ namespace CameraOperator.Tool
         private ExtendBezierControls Positions;
         private int currentKnotIndex = 0;
         private int currentBezierIndex = 0;
-        private float PositionBetweenRange = 0f;
+        public float PositionBetweenRange = 0f;
         private float MaxSpeed = 0;
         private EasingMode mode;
 
