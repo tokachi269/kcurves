@@ -82,7 +82,7 @@ public class PerlinCameraShake : MonoBehaviour
     [Header("CURRENT TRAUMA (for testing):")]
     [SerializeField]
     [Range(0, 1)]
-    private float _trauma = 0;
+    private float _trauma = 0.04f;
 
     private Camera _camera;
     private Vector3 _originalCamPosition;
@@ -113,12 +113,12 @@ public class PerlinCameraShake : MonoBehaviour
     }
 #endif
 
-    private void Start()
+    private void Awake()
     {
         //if (_playerTrauma == null)
         //    throw new Exception("Component failed: GameEvent dependency not set.");
 
-        _camera = GetComponent<Camera>();
+        _camera = Camera.main;
         StoreCameraState();
 
         if (_trauma > 0)
@@ -147,8 +147,8 @@ public class PerlinCameraShake : MonoBehaviour
     {
         _trauma = Mathf.Clamp01(value);
 
-        if (_trauma > 0 && !_shakeJobRunning && CanShake())
-            StartCoroutine(ShakeJob());
+       // if (_trauma > 0 && !_shakeJobRunning && CanShake())
+           // StartCoroutine(ShakeJob());
     }
 
     /// <summary>
@@ -187,7 +187,7 @@ public class PerlinCameraShake : MonoBehaviour
     /// Unity coroutine responsible for executing camera shake.
     /// Exits after trauma decays to zero, and camera is interpolated back to original position and rotation.
     /// </summary>
-    private IEnumerator ShakeJob()
+    public void ShakeJob(ref Vector3 pos, ref Quaternion rot)
     {
         _shakeJobRunning = true;
 
@@ -199,8 +199,7 @@ public class PerlinCameraShake : MonoBehaviour
 
         // Execute camera shake until trauma decays to zero
         ProcessTrauma:
-        while (!Mathf.Approximately(_trauma, 0))
-        {
+
             //TODO: Implement shake 'ramp-up', i.e. smooth out the transition to the first Perlin offset.
 
             // Offset sampling point
@@ -215,7 +214,7 @@ public class PerlinCameraShake : MonoBehaviour
                     _translateAxisZ && _translateAxisZMultiplier > 0 ? GetOffset(TRANSLATION_Z_SEED, _translateAxisZMultiplier) : 0
                 );
 
-                _camera.transform.localPosition = translationOffset + _originalCamPosition;
+            pos = translationOffset + pos;
 
                 float GetOffset(float seed, float multiplier)
                     => GetPerlin(seed) * _translationMasterMagnitude * _trauma * multiplier;
@@ -230,7 +229,7 @@ public class PerlinCameraShake : MonoBehaviour
                     _rotateAxisZ && _rotateAxisZMultiplier > 0 ? GetOffset(ROTATION_Z_SEED, _rotateAxisZMultiplier) : 0
                 );
 
-                _camera.transform.localRotation = Quaternion.Euler(rotationOffset) * _originalCamRotation;
+            rot = Quaternion.Euler(rotationOffset) * rot;
 
                 float GetOffset(float seed, float multiplier)
                     => GetPerlin(seed) * _rotationMasterMagnitude * _trauma * multiplier;
@@ -239,39 +238,6 @@ public class PerlinCameraShake : MonoBehaviour
             // Decay trauma
             // _trauma = Mathf.Clamp01(_trauma - (Time.deltaTime * _decay * (_trauma + DURATION_DECAY)));
 
-            yield return null;
-        }
-
-        // Interpolate back to original state
-        // - For the sake of simplicity only position equality is tested
-        // - Rotation should be close enough too, without any visible jumps
-        while (!ApproximatelyEqual(_camera.transform.localPosition, _originalCamPosition))
-        {
-            // If trauma was added meanwhile, reprocess
-            if (_trauma != 0)
-                goto ProcessTrauma;
-
-            if (shouldTranslate)
-                _camera.transform.localPosition = Vector3.MoveTowards(
-                    current: _camera.transform.localPosition,
-                    target: _originalCamPosition,
-                    maxDistanceDelta: _translationMasterMagnitude * Time.deltaTime
-                );
-
-            if (shouldRotate)
-                _camera.transform.localRotation = Quaternion.RotateTowards(
-                    from: _camera.transform.localRotation,
-                    to: _originalCamRotation,
-                    maxDegreesDelta: _rotationMasterMagnitude * Time.deltaTime
-                );
-
-            yield return null;
-        }
-
-        // Ensure that camera state is restored precisely
-        RestoreCameraState();
-
-        _shakeJobRunning = false;
     }
 
     public bool ApproximatelyEqual(Vector3 firstVector, Vector3 secondVector)

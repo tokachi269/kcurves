@@ -16,6 +16,7 @@ namespace CameraOperator.Tool
         {
             this.Positions = positions;
             this.MaxSpeed = maxSpeed;
+            PositionBetweenRange = positions.Length(0);
         }
         public void Play(ref List<CameraConfig> tempKnots, ref EasingMode[] easingMode, ref float progressLength,ref int targetKnotIndex,ref int targetBezierIndex, bool isReturn)
         {
@@ -33,9 +34,8 @@ namespace CameraOperator.Tool
             bool isSegChanged = false;
             if (targetBezierIndex == 0 || targetBezierIndex == Positions.SegmentCount)
             {
-                if (progressLength >= Positions.Length(targetBezierIndex))
+                if (progressLength >= PositionBetweenRange)
                 {
-                    progressLength -= Positions.Length(targetBezierIndex);
                     isSegChanged = true;
                 }
             }
@@ -50,7 +50,7 @@ namespace CameraOperator.Tool
             {
                 if (progressLength >= Positions.Length(targetBezierIndex - 1) + Positions.Length(targetBezierIndex))
                 {
-                    progressLength -= Positions.Length(targetBezierIndex - 1) + Positions.Length(targetBezierIndex);
+                    //progressLength -= Positions.Length(targetBezierIndex - 1) + Positions.Length(targetBezierIndex);
                     isSegChanged = true;
                 }
             }
@@ -61,19 +61,21 @@ namespace CameraOperator.Tool
                 targetBezierIndex++;
 
                 targetKnotIndex = targetBezierIndex % 2 == 0 ? (targetBezierIndex / 2) : (targetBezierIndex + 1) / 2;
-                //mode = EasingMode.None;
-                mode = (EasingMode)((byte)easingMode[targetKnotIndex + 1] | ((byte)easingMode[targetKnotIndex] << 1));
-                PositionBetweenRange = 0f;
+                if (targetBezierIndex == 1 || targetBezierIndex % 2 == 1)
+                {
+                    progressLength -= PositionBetweenRange;
 
-                if (targetKnotIndex == tempKnots.Count - 1)
-                {
-                    PositionBetweenRange = Positions.Length(targetBezierIndex);
-                }
-                else
-                {
-                    for (ushort j = (ushort)(2 * targetKnotIndex - 1); j < Positions.SegmentCount && j <= 2 * targetKnotIndex; j++)
+                    PositionBetweenRange = 0;
+                    if (targetKnotIndex == tempKnots.Count - 1)
                     {
-                        PositionBetweenRange += Positions.Length(j);
+                        PositionBetweenRange = Positions.Length(targetBezierIndex);
+                    }
+                    else
+                    {
+                        for (ushort j = (ushort)(2 * targetKnotIndex - 1); j < Positions.SegmentCount && j <= 2 * targetKnotIndex; j++)
+                        {
+                            PositionBetweenRange += Positions.Length(j);
+                        }
                     }
                 }
             }

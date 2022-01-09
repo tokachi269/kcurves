@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 using UnityEngine;
@@ -40,7 +41,7 @@ namespace CameraOperator.Tool
 
         private int Iteration = 5;
         [SerializeField]
-        public bool IsLoop= false;
+        public bool IsLoop = false;
         [SerializeField]
         public bool IsCoordinateControl = false;
         [SerializeField]
@@ -52,6 +53,8 @@ namespace CameraOperator.Tool
         public bool IsCameraShake = false;
         [SerializeField]
         public bool isApplyCamera = true;
+        [SerializeField]
+        public bool IsAutoTimeSetting = true;
 
         protected CameraConfig defaultCameraConfig { get; set; }
 
@@ -71,22 +74,26 @@ namespace CameraOperator.Tool
         [SerializeField]
         private float befT = 0;
         /* Debug用変数ここまで **/
+
         public int targetKnotIndex = 0;
         public int targetBezierIndex = 0;
-
+        public float currentTime = 0;
         public float progressLength = 0f;
+        private Vector3 _nowMousePosi; // 現在のマウスのワールド座標
+
         void Update()
         {
-          //  diffTMonitor.Sample(diffT);
-           // distMonitor.Sample(dist);
-           // befTMonitor.Sample(befT);
+            // diffTMonitor.Sample(diffT);
+            // distMonitor.Sample(dist);
+            // befTMonitor.Sample(befT);
         }
 
         public void Awake()
         {
             render = new Render(this);
             serializer = new Serializer(this);
-            CameraShake = new PerlinCameraShake();
+            CameraShake = gameObject.AddComponent<PerlinCameraShake>();
+            CameraShake.enabled = true;
         }
 
         public void CoordinateControl()
@@ -115,7 +122,7 @@ namespace CameraOperator.Tool
             }
 
             Rotations = KCurves.CalcBeziers(Knots.Where(data => data.applyItems.position == true).Select(data => data.rotation.eulerAngles).ToArray(), Iteration, IsLoop) as ExtendBezierControls;
-            
+
             if (Rotations.SegmentCount >= 3)
             {
                 int segment;
@@ -125,7 +132,6 @@ namespace CameraOperator.Tool
 
             render.Display();
         }
-        private Vector3 _nowMousePosi; // 現在のマウスのワールド座標
 
         /// <summary>
         /// カーソルの位置のknotを取得する
@@ -161,7 +167,7 @@ namespace CameraOperator.Tool
         /// </summary>
         public void MoveKnot()
         {
-            render.bezierObject.Select(g =>g.layer = 0);
+            render.bezierObject.Select(g => g.layer = 0);
 
             Vector3 nowmouseposi = Input.mousePosition;
             Vector3 diffposi;
@@ -234,24 +240,28 @@ namespace CameraOperator.Tool
         {
             List<CameraConfig> tempKnots = Knots;
             defaultCameraConfig = CameraUtil.CameraPosition();
+            float totalTime = tempKnots.Where(data => data.applyItems.position == true).Select(data => data.time).Sum();
 
-            if (IsCameraShake)
-            {
-               // CameraShake.enabled = true;
-            }
             Positions.CalcTotalLength(IsLoop);
             Rotations.CalcTotalLength(IsLoop);
+
             float baseSpeed = MaxSpeed(Time);
 
             PlayAnimation PositionsPlayer = new PlayAnimation(Positions, baseSpeed);
             PlayAnimation RotationsPlayer = new PlayAnimation(Positions, baseSpeed);
+
+            float[] times = null;
+            if (IsAutoTimeSetting)
+            {
+                times = AutoTimeSetting();
+            }
+
             targetKnotIndex = 0;
             targetBezierIndex = 0;
-
+            currentTime = 0;
             progressLength = 0f;
             var easingMode = SetEasingMode();
 
-            float PositionBetweenRange = Positions.Length(0);
             float t = 0;
             // 停止時間が設定されている場合、指定秒数間処理を待機
             if (tempKnots[0].delay != 0f) yield return new WaitForSeconds(tempKnots[0].delay);
@@ -266,8 +276,12 @@ namespace CameraOperator.Tool
                 {
                     Vector3 pos = CalcPosition(targetBezierIndex, t);
                     Quaternion rot = Quaternion.Inverse(Quaternion.Euler(CalcRot(targetBezierIndex, t)));
+                    
+                    if (IsCameraShake)
+                    {
+                        CameraShake.ShakeJob(ref pos, ref rot);
+                    }
 
-                    //Quaternion rot = CalcRotation(ref tempKnots, knotIndex, progressLength / KnotBetweenRange);
                     if (isApplyCamera)
                     {
                         GameObject.Find("Main Camera").transform.position = pos;
@@ -280,35 +294,53 @@ namespace CameraOperator.Tool
                     }
                 }
 
-                PositionsPlayer.Play(ref tempKnots, ref easingMode, ref progressLength,ref targetKnotIndex, ref targetBezierIndex, true);
-                RotationsPlayer.Play(ref tempKnots, ref easingMode, ref progressLength,ref targetKnotIndex, ref targetBezierIndex, false);
-                Debug.Log("progressLength:"  + progressLength + " targetKnotIndex:"+targetKnotIndex+" targetBezierIndex:"+targetBezierIndex);
-                
+                PositionsPlayer.Play(ref tempKnots, ref easingMode, ref progressLength, ref targetKnotIndex, ref targetBezierIndex, true);
+                // RotationsPlayer.Play(ref tempKnots, ref easingMode, ref progressLength,ref targetKnotIndex, ref targetBezierIndex, false);
+
                 // 停止時間が設定されている場合、指定秒数間処理を待機
                 if (tempKnots[targetKnotIndex].delay != 0f) yield return new WaitForSeconds(tempKnots[targetKnotIndex].delay);
 
                 if (targetBezierIndex == Positions.SegmentCount) break;
 
-                //TODO easingの計算がおかしい
                 //float easing = Easing.GetEasing(mode, progressLength / PositionBetweenRange);
-                 float easing = progressLength / PositionsPlayer.PositionBetweenRange;
-                Debug.Log("easing:"+ easing+ " progressLength:" + progressLength + " PositionBetweenRange:"+ PositionBetweenRange + "progressLength / PositionBetweenRange = "+ progressLength / PositionBetweenRange);
-                t = Positions.GetT(targetBezierIndex, easing);
-                Debug.Log(t);
-                DebugDifCalculation(t);
+                //Debug.Log("easing:"+ easing+ " progressLength:" + progressLength + " PositionBetweenRange:"+ PositionBetweenRange + "progressLength / PositionBetweenRange = "+ progressLength / PositionBetweenRange);
+                mode = (EasingMode)((byte)easingMode[targetKnotIndex + 1] | ((byte)easingMode[targetKnotIndex] << 1));
+               // Debug.Log(mode.ToString());
 
+                if (targetBezierIndex == 0 || targetBezierIndex % 2 == 1)
+                {
+                    float easing = progressLength;
+
+                    t = Positions.GetT(targetBezierIndex, easing);
+                }
+                else
+                {
+                    float easing = progressLength - Positions.Length(targetBezierIndex - 1);
+
+                    t = Positions.GetT(targetBezierIndex, easing);
+                }
+
+                DebugDifCalculation(t);
+                // Debug.Log("t:" + t + " progress:" + progressLength + " bet:" + PositionsPlayer.PositionBetweenRange + " p/p=" + progressLength / PositionsPlayer.PositionBetweenRange + " targetKnotIndex:" + targetKnotIndex + " targetBezierIndex:" + targetBezierIndex);
 
                 float dt = UnityEngine.Time.deltaTime;
+                currentTime += dt;
 
-                progressLength += baseSpeed * dt;
+                float ea = Easing.GetEasing(mode, progressLength / PositionsPlayer.PositionBetweenRange);
+                if (IsAutoTimeSetting)
+                {
+                    if(times != null)
+                    {
+                        progressLength += dt / times[targetKnotIndex] * PositionsPlayer.PositionBetweenRange;
+                    }
+                }
+                else
+                {
+                    progressLength += dt / tempKnots[targetKnotIndex].time * PositionsPlayer.PositionBetweenRange;
+
+                }
                 yield return null;
             }
-
-            if (IsCameraShake)
-            {
-               // CameraShake.enabled = false;
-            }
-
 
             if (isApplyCamera)
             {
@@ -339,10 +371,55 @@ namespace CameraOperator.Tool
             }
         }
 
+        /// <summary>
+        /// Knot間の時間を長さをもとに計算する
+        /// Calculate the time between Knot based on the length
+        /// </summary>
+        private float[] AutoTimeSetting(){
+            float[] times = new float[KnotsCount];
+            for(int i = 0; i < KnotsCount-1 ; i++)
+            {
+                times[i] = GetBetweenRange(i)/ Positions.TotalLength * Time; 
+            }
+
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < times.Length; i++)
+            {
+                sb.Append(times[i]);
+                if (i != times.Length) sb.Append(", ");
+            }
+                
+            Debug.Log(sb.ToString());
+            return times;
+        }
+
+        /// <summary>
+        /// Knot間の長さを取得する
+        /// Get the length between Knots
+        /// </summary>
+        private float GetBetweenRange(int index)
+        {
+            float betweenRange = 0;
+
+            if (index == 0 || index == KnotsCount - 1)
+            {
+                betweenRange = Positions.Length(index);
+            }
+            else
+            {
+                for (ushort j = (ushort)(2 * index - 1); j < Positions.SegmentCount && j <= 2 * index; j++)
+                {
+                    betweenRange += Positions.Length(j);
+                }
+            }
+            return betweenRange;
+        }
+
         private Vector3 CalcPosition(int bezierIndex, float t)
         {
             return BezierUtil.Position(Positions[bezierIndex, 0], Positions[bezierIndex, 1], Positions[bezierIndex, 2], t % 1);
         }
+
         private Vector3 CalcRot(int bezierIndex, float t)
         {
             return BezierUtil.Position(Rotations[bezierIndex, 0], Rotations[bezierIndex, 1], Rotations[bezierIndex, 2], t % 1);
@@ -448,13 +525,10 @@ namespace CameraOperator.Tool
             Vector3[] dividedPoints = new Vector3[IsLoop ? dividedSegmentCount * 2 + 4 : dividedSegmentCount * 2 + 1];
 
             ushort segCnt = (ushort)(IsLoop ? Rotations.SegmentCount : Rotations.SegmentCount - 1);
-            // Debug.Log("segCnt" + segCnt);
-
-            //var tss = Beziers.Ts.Select((num, index) => (num, index));
-            //foreach (var param in tss) Debug.Log(param.index+"," + param.num);
 
             ushort index = 0;
             int i = IsLoop ? 0 : 1;
+
             for (; i < segCnt; i++)
             {
                 // Debug.Log("i=" + i +","+ Beziers[i, 0] +","+ Beziers[i, 1] + "," + Beziers[i, 2] + "," + (float)Beziers.Ts[i]);
@@ -465,10 +539,10 @@ namespace CameraOperator.Tool
                     //  Debug.Log("dividedPoints" + dividedPoints.Length+" index:"+index + ", "+result[j]);
                     dividedPoints[index] = result[j];
                 }
-
             }
+
             if (!IsLoop) dividedPoints[dividedPoints.Length - 1] = Rotations[segCnt, 0];
-            //Debug.Log(dividedPoints.Length - 1 + ", " + dividedPoints[dividedPoints.Length - 1]);
+
             return dividedPoints;
         }
 
@@ -574,17 +648,20 @@ namespace CameraOperator.Tool
             this.LookAts.Add(new CameraConfig(position, rotation, fov));
             SetBezierFromKnots();
         }
+
         public void AddLookAt(CameraConfig cp, float? t = null)
         {
             //TODO tを指定した場合の処理を追記する
             this.LookAts.Add(cp);
             SetBezierFromKnots();
         }
+
         public void RemoveLookAt()
         {
             this.LookAts.RemoveAt(Knots.Count - 1);
             SetBezierFromKnots();
         }
+
         private float MaxSpeed(int time)
         {
             if (!Positions.IsCalcTotalLength) {
@@ -593,12 +670,14 @@ namespace CameraOperator.Tool
 
             return Positions.TotalLength / time;
         }
+
         public float findClosest(Vector3 cursor)
         {
             int step = 5;
             int index = 5;
             var output = Output(5, IsLoop);
             float distance = float.MaxValue;
+
             foreach (var v in output.Select((p, i) => new { p, i }))
             {
                 dist = Vector3.Distance(v.p, cursor);
@@ -608,8 +687,10 @@ namespace CameraOperator.Tool
                     index = v.i;
                 }
             }
+
             float t = (float)index / step;
             distance = float.MaxValue;
+
             for ( float j = 1; j > 0.01; j /= 2 )
             {
                 if (distance < 0.01) break;
@@ -624,6 +705,7 @@ namespace CameraOperator.Tool
                     }
                 }
             }
+
             Debug.Log(t);
             render.moveCameraCube.transform.position = CalcPosition((int)Math.Floor(t), t % 1);
 

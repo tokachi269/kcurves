@@ -24,7 +24,7 @@ namespace CameraOperator.Tool
 
 		[DefaultValue(45f)]
 		public float fov;
-
+		public float time = 2f;
 		public ApplyItems applyItems = new ApplyItems(true, true, true);
 
 		[DefaultValue(EasingMode.Auto)]

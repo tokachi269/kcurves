@@ -58,8 +58,8 @@ namespace CameraOperator.Tool
                     t = EaseInSine(rate);
                     break;
                 case EasingMode.AutoAuto:
-                    //t = rate;
-                    t = EaseInOutSine(rate);
+                    t = rate;
+                   // t = EaseInOutSine(rate);
                     break;
                 case EasingMode.AutoEaseInOut:
                     t = EaseInOutSine(rate);

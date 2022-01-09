@@ -56,10 +56,10 @@
     <Analyzer Include="C:\Program Files (x86)\Microsoft Visual Studio Tools for Unity\16.0\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Tests\NewTestScript.cs" />
+    <Compile Include="Assets\Tests\Tests\NewTestScript.cs" />
   </ItemGroup>
   <ItemGroup>
-     <None Include="Assets\Tests\Tests.asmdef" />
+     <None Include="Assets\Tests\Tests\Tests.asmdef" />
     <Reference Include="UnityEngine">
       <HintPath>C:\Program Files\Unity\Hub\Editor\2021.1.2f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>

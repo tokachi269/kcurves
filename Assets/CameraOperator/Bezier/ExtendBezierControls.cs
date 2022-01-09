@@ -30,7 +30,7 @@ namespace CameraOperator.Tool
 
         internal float GetT(int bezierIndex, float inputL)
         {
-            int index = Mathf.Clamp((int)Math.Floor(inputL * (ArcLengthWithTStep - 1)),0, ArcLengthWithTStep - 1);
+            int index = Mathf.Clamp((int)Math.Floor(inputL / Lengths[bezierIndex, ArcLengthWithTStep - 1] * (ArcLengthWithTStep - 1)), 0, ArcLengthWithTStep - 1);
 
             for (int i = 0; i < ArcLengthWithTStep - 1; i++)
             {
@@ -46,7 +46,7 @@ namespace CameraOperator.Tool
             //Debug.Log("  inputL:" + inputL+ "  indexL:" + Lengths[bezierIndex, index]+ "  index:" + index);
             float resultL = 1+index - ((Lengths[bezierIndex, index] - inputL) / (Lengths[bezierIndex, index] - (index <= 0 ? 0 : Lengths[bezierIndex, index - 1])));
             float resultT = (float)(resultL / ArcLengthWithTStep);
-
+            //Debug.Log("L:" + resultL + "T:" + resultL);
             return resultT;
         }
 
