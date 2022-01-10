@@ -12,7 +12,7 @@ namespace CameraOperator.Tool
         public void PathCalculatingTest()
         {
             var go = new GameObject("Hoge");
-            Path path = go.gameObject.AddComponent<Path>();
+            PathTool path = go.gameObject.AddComponent<PathTool>();
 
             path.AddKnot(new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 1), 60);
             path.AddKnot(new Vector3(1, 2, 1), new Quaternion(0, 0.5f, 0, 1), 60);
@@ -34,7 +34,7 @@ namespace CameraOperator.Tool
         public void RemoveKnotsTest()
         {
             var go = new GameObject("Hoge");
-            Path path = go.gameObject.AddComponent<Path>();
+            PathTool path = go.gameObject.AddComponent<PathTool>();
 
             path.AddKnot(new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 1), 60);
             path.AddKnot(new Vector3(1, 2, 1), new Quaternion(0, 0.5f, 0, 1), 60);
