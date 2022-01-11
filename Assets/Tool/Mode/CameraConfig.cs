@@ -1,59 +1,61 @@
-﻿
-using UnityEngine;
+﻿using UnityEngine;
 using System.ComponentModel;
 
 namespace CameraOperator.Tool
 {
-	public class CameraConfig : MonoBehaviour
+	public class CameraConfig
 	{
-		public Vector3 position;
+		public int ListIndex = -1;
 
-		public Quaternion rotation;
+		//カメラの座標
+		public Vector3 Position;
 
+		//向き
+		public Quaternion Rotation;
+
+		//ユーザー制御点間の長さ
 		public float Length;
 
-		public float size;
+		public float Size;
 
-		public float height;
+		public float Height;
+
 
 		[DefaultValue(2f)]
-		public float duration = 2f;
+		public float Duration= 2f;
 
+		//一時停止時間
 		[DefaultValue(0f)]
-		public float delay;
+		public float Delay;
 
+		//画角
 		[DefaultValue(45f)]
-		public float fov;
-		public float time = 2f;
-		public ApplyItems applyItems = new ApplyItems(true, true, true);
+		public float Fov;
 
+		[DefaultValue(2f)]
+		public float Time = 2f;
+
+		//座標、向き、画角の適用設定
+		public ApplyItems ApplyItems = new ApplyItems(true, true, true);
+
+		//Easing設定
 		[DefaultValue(EasingMode.Auto)]
-		public EasingMode easingMode;
-		public bool isLookAt;
+		public EasingMode EasingMode;
 
-		public CameraConfig(Vector3 position, Quaternion rotation, float fov ,bool? isLookAt = null)
+		//カメラの注視設定
+		public bool IsLookAt;
+
+		public CameraConfig(Vector3 position, Quaternion rotation, float fov, bool? isLookAt = null)
 		{
-			this.position = position;
-			this.rotation = rotation;
-			this.fov = fov;
+			this.Position = position;
+			this.Rotation = rotation;
+			this.Fov = fov;
 			//this.CaptureCamera();
-			this.easingMode = EasingMode.Auto;
-			delay = 0f;
-			this.isLookAt = isLookAt != null && (bool)isLookAt;
+			this.EasingMode = EasingMode.Auto;
+			Delay = 0f;
+			this.IsLookAt = isLookAt != null && (bool)isLookAt;
 		}
 
-		//public void CaptureCamera()
-		//{
-		//	this.position = ToolController.cameraController.m_currentPosition;
-		//	this.size = ToolController.cameraController.m_currentSize;
-		//	this.height = ToolController.cameraController.m_currentHeight;
-		//	this.fov = ToolController.camera.fieldOfView;
-		//	float num = this.size * (1f - this.height / ToolController.cameraController.m_maxDistance) / Mathf.Tan(0.017453292f * this.fov);
-		//	Vector2 currentAngle = ToolController.cameraController.m_currentAngle;
-		//	this.rotation = Quaternion.AngleAxis(currentAngle.x, Vector3.up) * Quaternion.AngleAxis(currentAngle.y, Vector3.right);
-		//	Vector3 worldPos = this.position + this.rotation * new Vector3(0f, 0f, -num);
-		//	this.position.y = this.position.y + Knot.CalculateCameraHeightOffset(worldPos, num);
-		//}
 
 	}
 }

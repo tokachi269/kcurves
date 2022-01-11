@@ -92,7 +92,7 @@ namespace CameraOperator.Tool
         {
             render =gameObject.AddComponent<Render>();
             serializer = gameObject.AddComponent <Serializer>();
-            CameraShake = gameObject.AddComponent<PerlinCameraShake>();
+            //CameraShake = gameObject.AddComponent<PerlinCameraShake>();
             CameraShake.enabled = true;
         }
 
@@ -113,7 +113,7 @@ namespace CameraOperator.Tool
         /// </summary>
         public void SetBezierFromKnots()
         {
-            Positions = KCurves.CalcBeziers(Knots.Where(data => data.applyItems.position == true).Select(data => data.position).ToArray(), Iteration, IsLoop) as ExtendBezierControls;
+            Positions = KCurves.CalcBeziers(Knots.Where(data => data.ApplyItems.position == true).Select(data => data.Position).ToArray(), Iteration, IsLoop) as ExtendBezierControls;
             if (Positions.SegmentCount >= 3)
             {
                 int segment;
@@ -121,7 +121,7 @@ namespace CameraOperator.Tool
                 Positions = new ExtendBezierControls(segment, divPositions, IsLoop);
             }
 
-            Rotations = KCurves.CalcBeziers(Knots.Where(data => data.applyItems.position == true).Select(data => data.rotation.eulerAngles).ToArray(), Iteration, IsLoop) as ExtendBezierControls;
+            Rotations = KCurves.CalcBeziers(Knots.Where(data => data.ApplyItems.position == true).Select(data => data.Rotation.eulerAngles).ToArray(), Iteration, IsLoop) as ExtendBezierControls;
 
             if (Rotations.SegmentCount >= 3)
             {
@@ -246,7 +246,7 @@ namespace CameraOperator.Tool
         {
             List<CameraConfig> tempKnots = Knots;
             defaultCameraConfig = CameraUtil.CameraPosition();
-            float totalTime = tempKnots.Where(data => data.applyItems.position == true).Select(data => data.time).Sum();
+            float totalTime = tempKnots.Where(data => data.ApplyItems.position == true).Select(data => data.Time).Sum();
 
             Positions.CalcTotalLength(IsLoop);
             Rotations.CalcTotalLength(IsLoop);
@@ -270,7 +270,7 @@ namespace CameraOperator.Tool
 
             float t = 0;
             // 停止時間が設定されている場合、指定秒数間処理を待機
-            if (tempKnots[0].delay != 0f) yield return new WaitForSeconds(tempKnots[0].delay);
+            if (tempKnots[0].Delay != 0f) yield return new WaitForSeconds(tempKnots[0].Delay);
 
             EasingMode mode = (EasingMode)((byte)easingMode[1] | ((byte)easingMode[0] << 1));
 
@@ -304,7 +304,7 @@ namespace CameraOperator.Tool
                 // RotationsPlayer.Play(ref tempKnots, ref easingMode, ref progressLength,ref targetKnotIndex, ref targetBezierIndex, false);
 
                 // 停止時間が設定されている場合、指定秒数間処理を待機
-                if (tempKnots[targetKnotIndex].delay != 0f) yield return new WaitForSeconds(tempKnots[targetKnotIndex].delay);
+                if (tempKnots[targetKnotIndex].Delay != 0f) yield return new WaitForSeconds(tempKnots[targetKnotIndex].Delay);
 
                 if (targetBezierIndex == Positions.SegmentCount) break;
 
@@ -342,7 +342,7 @@ namespace CameraOperator.Tool
                 }
                 else
                 {
-                    progressLength += dt / tempKnots[targetKnotIndex].time * PositionsPlayer.PositionBetweenRange;
+                    progressLength += dt / tempKnots[targetKnotIndex].Time * PositionsPlayer.PositionBetweenRange;
 
                 }
                 yield return null;
@@ -350,13 +350,13 @@ namespace CameraOperator.Tool
 
             if (isApplyCamera)
             {
-                GameObject.Find("Main Camera").transform.position = defaultCameraConfig.position;
-                GameObject.Find("Main Camera").transform.rotation = defaultCameraConfig.rotation;
+                GameObject.Find("Main Camera").transform.position = defaultCameraConfig.Position;
+                GameObject.Find("Main Camera").transform.rotation = defaultCameraConfig.Rotation;
             }
             else
             {
-                render.moveCameraCube.transform.position = defaultCameraConfig.position;
-                render.moveCameraCube.transform.rotation = defaultCameraConfig.rotation;
+                render.moveCameraCube.transform.position = defaultCameraConfig.Position;
+                render.moveCameraCube.transform.rotation = defaultCameraConfig.Rotation;
             }
             yield break;
         }
@@ -437,7 +437,7 @@ namespace CameraOperator.Tool
 
             if (LookAts.Count != 0)
             {
-                if (Knots[knotIndex].isLookAt || Knots[knotIndex+1].isLookAt)
+                if (Knots[knotIndex].IsLookAt || Knots[knotIndex+1].IsLookAt)
                 {
                    // rotation = Vector3.Lerp(Knots[knotIndex].isLookAt ? (Quaternion.LookRotation(LookAts[0].position) * new Quaternion(1, -1, 1, 1)).eulerAngles : rotation,
                    //                        Knots[knotIndex+1].isLookAt ? (Quaternion.LookRotation(LookAts[0].position) * new Quaternion(1, -1, 1, 1)).eulerAngles : rotation, ratio);
@@ -451,7 +451,7 @@ namespace CameraOperator.Tool
 
         private EasingMode[] SetEasingMode()
         {
-            var list = Knots.Select(x => x.easingMode).ToArray();
+            var list = Knots.Select(x => x.EasingMode).ToArray();
             if (list[0] == EasingMode.Auto)
             {
                 list[0] = EasingMode.None;
@@ -581,7 +581,7 @@ namespace CameraOperator.Tool
             this.Knots.Add(new CameraConfig(position, rotation, fov));
             if (Knots.Count == 0)
             {
-                render.moveCameraCube.transform.position = Knots[0].position;
+                render.moveCameraCube.transform.position = Knots[0].Position;
             }
             SetBezierFromKnots();
         }
@@ -601,8 +601,8 @@ namespace CameraOperator.Tool
                 int knotIndex = bezierIndex % 2 == 0 ? (bezierIndex / 2) : (bezierIndex + 1) / 2;
                 Debug.Log("ft:" + ft + " " + bezierIndex + " " + knotIndex);
                 Vector3 position = CalcPosition((int)Math.Floor(ft), ft % 1);
-                Quaternion rotation = Quaternion.Lerp(Knots[knotIndex].rotation, Knots[knotIndex].rotation, bezierIndex % 2 == 0 ? ft % 1 : ft);
-                float fov = Mathf.Lerp(Knots[knotIndex].fov, Knots[knotIndex].fov, bezierIndex % 2 == 0 ? ft % 1 : ft);
+                Quaternion rotation = Quaternion.Lerp(Knots[knotIndex].Rotation, Knots[knotIndex].Rotation, bezierIndex % 2 == 0 ? ft % 1 : ft);
+                float fov = Mathf.Lerp(Knots[knotIndex].Fov, Knots[knotIndex].Fov, bezierIndex % 2 == 0 ? ft % 1 : ft);
 
                 this.Knots.Insert(knotIndex + 1, new CameraConfig(position, rotation, fov));
             }
@@ -611,7 +611,7 @@ namespace CameraOperator.Tool
                 this.Knots.Add(cp);
                 if (Knots.Count == 0)
                 {
-                    render.moveCameraCube.transform.position = Knots[0].position;
+                    render.moveCameraCube.transform.position = Knots[0].Position;
                 }
             }
 
@@ -738,14 +738,25 @@ namespace CameraOperator.Tool
 
             public PipeMeshGenerator LineMesh;
 
-            public void Awake()
+            private void Awake()
             {
+                LineRenderer = gameObject.AddComponent<LineRenderer>();
+                //コメント
+                LineRendererRotation = gameObject.AddComponent<LineRenderer>();
+
+                // CameraShake = Instance.AddComponent<PerlinCameraShake>();
+                // CameraShake.enabled = false;
+                moveCameraCube = new GameObject("moveCameraCube");
+                moveCameraCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                moveCameraCube.transform.localScale = new Vector3(0.2f, 0.2f, 0.5f);
+                moveCameraCube.GetComponent<Renderer>().material.color = Color.blue;
+                moveCameraCube.transform.parent = gameObject.transform;
+                moveCameraCube.layer = 2;
+                LineMesh = gameObject.AddComponent<PipeMeshGenerator>();
+                LineMesh.gameObject.layer = 2;
 
             }
-            public void Start()
-            {
 
-            }
 
             public void Display( List<CameraConfig> knot , ExtendBezierControls positions, Vector3[] output,int KnotCount, int SegmentCount)
             {
@@ -820,7 +831,7 @@ namespace CameraOperator.Tool
                     inputCube.Add(new GameObject("inputCube" + i));
 
                     inputCube[i] = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    inputCube[i].transform.position = knot[i].position;
+                    inputCube[i].transform.position = knot[i].Position;
                     inputCube[i].transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
                     inputCube[i].transform.parent = transform.parent;
                     inputCube[i].layer = 2;
@@ -832,7 +843,7 @@ namespace CameraOperator.Tool
                     inputCubeVector.Add(new GameObject("inputCube" + i));
 
                     inputCubeVector[i] = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    inputCubeVector[i].transform.position = knot[i].position;
+                    inputCubeVector[i].transform.position = knot[i].Position;
                     inputCubeVector[i].transform.localPosition = new Vector3(0, 0, 1f);
                     inputCubeVector[i].transform.localScale = new Vector3(0.05f,  0.05f, 1f);
                     inputCubeVector[i].transform.parent = transform.parent;
@@ -844,11 +855,11 @@ namespace CameraOperator.Tool
                 {
                     for (int i = 0; i < KnotCount - 1; i++)
                     {
-                        inputCube[i].transform.position = knot[i].position;
-                        inputCube[i].transform.rotation = knot[i].rotation;
+                        inputCube[i].transform.position = knot[i].Position;
+                        inputCube[i].transform.rotation = knot[i].Rotation;
 
-                        inputCubeVector[i].transform.position = knot[i].position;
-                        inputCubeVector[i].transform.rotation = knot[i].rotation;
+                        inputCubeVector[i].transform.position = knot[i].Position;
+                        inputCubeVector[i].transform.rotation = knot[i].Rotation;
                     }
                 }
                 if (KnotCount > inputCube.Count)
