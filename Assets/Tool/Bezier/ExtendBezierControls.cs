@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-namespace CameraOperator.Tool
+namespace CamOpr.Tool
 {
 
     public class ExtendBezierControls : BezierControls
@@ -55,7 +55,7 @@ namespace CameraOperator.Tool
             return Lengths[bezierIndex, ArcLengthWithTStep-1];
         }
 
-        public void CalcTotalLength(bool isLoop)
+        public void SetParameter(bool isLoop)
         {
             CalcArcLengthWithT(isLoop);
             TotalLength = Lengths.Cast<float>().Where((n, i) => ((i + 1) % ArcLengthWithTStep) == 0).Sum();

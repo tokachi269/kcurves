@@ -88,7 +88,7 @@
     <Compile Include="Assets\Monitor Components\Scripts\MonitorDebugLog.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Colors.cs" />
     <Compile Include="Assets\Monitor Components\Examples\Using API\UsingAPI.cs" />
-    <Compile Include="Assets\Tool\Mode\Path\PlayAnimation.cs" />
+    <Compile Include="Assets\Tool\Mode\Path\BezierTransition.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\MonitorRigidbody.cs" />
     <Compile Include="Assets\Tool\Constant.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorComponentEditor.cs" />

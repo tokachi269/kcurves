@@ -2,7 +2,7 @@
 using System;
 using UnityEngine;
 
-namespace CameraOperator.Tool
+namespace CamOpr.Tool
 {
     [Flags]
     public enum EasingMode : byte

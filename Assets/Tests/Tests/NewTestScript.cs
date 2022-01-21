@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.TestTools;
 using Assert = UnityEngine.Assertions.Assert;
 
-namespace CameraOperator.Tool
+namespace CamOpr.Tool
 {
     public class NewTestScript
     {
@@ -23,8 +23,8 @@ namespace CameraOperator.Tool
 
             path.Output(step:10, isLoop:false);
 
-            Assert.AreEqual(path.BeziersCount, 6);
-            Assert.AreEqual(path.BeziersPointsLength, 13);
+            Assert.AreEqual(path.PositionsCount, 6);
+            Assert.AreEqual(path.PositionsPointsCount, 13);
                 
             Assert.AreApproximatelyEqual(path.TotalLength, 2.66914f);
 
@@ -47,8 +47,8 @@ namespace CameraOperator.Tool
 
 
             path.RemoveKnot();
-            Assert.AreEqual(path.BeziersCount, 4);
-            Assert.AreEqual(path.BeziersPointsLength, 9);
+            Assert.AreEqual(path.PositionsCount, 4);
+            Assert.AreEqual(path.PositionsPointsCount, 9);
 
            // path.RemoveKnot();
            // Assert.AreEqual(path.Beziers.SegmentCount, 2);
