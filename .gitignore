@@ -4,3 +4,6 @@ Temp
 Temp
 Logs
 Library
+*.meta
+Assets/Plugins
+obj
