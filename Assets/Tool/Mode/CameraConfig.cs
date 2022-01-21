@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.ComponentModel;
 
-namespace CameraOperator.Tool
+namespace CamOpr.Tool
 {
 	public class CameraConfig
 	{

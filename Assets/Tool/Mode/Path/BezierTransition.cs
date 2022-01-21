@@ -1,40 +1,39 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace CameraOperator.Tool
+namespace CamOpr.Tool
 {
-    internal class PlayAnimation
+    internal class BezierTransition
     {
+        public float CurrentProgressLength;
+        public float KnotsBetweenLength = 0f;
+        public List<CameraConfig> tempKnots;
         private ExtendBezierControls Positions;
-        private int currentKnotIndex = 0;
-        private int currentBezierIndex = 0;
-        public float PositionBetweenRange = 0f;
-        private float MaxSpeed = 0;
-        private EasingMode mode;
+        public int currentKnotIndex = 0;
+        public int currentBezierIndex = 0;
 
-        public PlayAnimation(ExtendBezierControls positions, float maxSpeed)
+        public BezierTransition(List<CameraConfig> knots, ExtendBezierControls positions)
         {
+            this.tempKnots = knots;
             this.Positions = positions;
-            this.MaxSpeed = maxSpeed;
-            PositionBetweenRange = positions.Length(0);
+            this.KnotsBetweenLength = positions.Length(0);
         }
-        public void Play(ref List<CameraConfig> tempKnots, ref EasingMode[] easingMode, ref float progressLength,ref int targetKnotIndex,ref int targetBezierIndex, bool isReturn)
+        public void Play(ref float progressLength,int targetKnotIndex,int targetBezierIndex)
         {
-            Play(ref tempKnots, ref easingMode, ref progressLength, targetKnotIndex, targetBezierIndex);
-            if(isReturn)
-            {
-                targetKnotIndex = currentKnotIndex;
-                targetBezierIndex = currentBezierIndex;
-            }
+            Play(progressLength, targetKnotIndex, targetBezierIndex);
+
+            progressLength = CurrentProgressLength;
+            // targetKnotIndex = currentKnotIndex;
+            // targetBezierIndex = currentBezierIndex;
         }
 
-        private void Play(ref List<CameraConfig> tempKnots,ref EasingMode[] easingMode, ref float progressLength,int targetKnotIndex,int targetBezierIndex)
+        private void Play(float progressLength,int targetKnotIndex,int targetBezierIndex)
         {  
-            //次のセグメントに移動したか判定する
+            // 次のセグメントに移動したか判定する
             bool isSegChanged = false;
             if (targetBezierIndex == 0 || targetBezierIndex == Positions.SegmentCount)
             {
-                if (progressLength >= PositionBetweenRange)
+                if (progressLength >= KnotsBetweenLength)
                 {
                     isSegChanged = true;
                 }
@@ -59,27 +58,33 @@ namespace CameraOperator.Tool
             if (isSegChanged)
             {
                 targetBezierIndex++;
+                Debug.Log("targetBezierIndex++");
 
                 targetKnotIndex = targetBezierIndex % 2 == 0 ? (targetBezierIndex / 2) : (targetBezierIndex + 1) / 2;
-                if (targetBezierIndex == 1 || targetBezierIndex % 2 == 1)
+                if (targetBezierIndex % 2 == 1)
                 {
-                    progressLength -= PositionBetweenRange;
+                    Debug.Log("targetBezierIndex % 2 == 1");
+                    progressLength -= KnotsBetweenLength;
 
-                    PositionBetweenRange = 0;
+                    //Knot間の距離を求める
+                    KnotsBetweenLength = 0;
                     if (targetKnotIndex == tempKnots.Count - 1)
                     {
-                        PositionBetweenRange = Positions.Length(targetBezierIndex);
+                        KnotsBetweenLength = Positions.Length(targetBezierIndex);
                     }
                     else
                     {
                         for (ushort j = (ushort)(2 * targetKnotIndex - 1); j < Positions.SegmentCount && j <= 2 * targetKnotIndex; j++)
                         {
-                            PositionBetweenRange += Positions.Length(j);
+                            KnotsBetweenLength += Positions.Length(j);
                         }
                     }
                 }
+
+                Debug.Log("targetBezierIndex" + targetBezierIndex);
             }
 
+            CurrentProgressLength = progressLength;
             currentKnotIndex = targetKnotIndex;
             currentBezierIndex = targetBezierIndex ;
 

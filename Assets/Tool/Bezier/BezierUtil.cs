@@ -2,7 +2,7 @@
 
 using UnityEngine;
 
-namespace CameraOperator.Tool
+namespace CamOpr.Tool
 {
     static class BezierUtil
     {
