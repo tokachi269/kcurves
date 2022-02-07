@@ -116,15 +116,29 @@ namespace CamOpr.Tool
                 A[A.Length - 6] = 0;
             }
         }
+        //三角形の面積を求める関数
+        private static float TriArea(Vector3 a, Vector3 b, Vector3 p3)
+        {
+            a -= p3; b -= p3;
+            return Mathf.Sqrt(Mathf.Pow(a.x * b.y - a.y * b.x, 2) + Mathf.Pow(a.y * b.z - a.z * b.y, 2) + Mathf.Pow(a.z * b.x - a.x * b.z, 2)) / 2f;
+            //return Mathf.Abs(p1.x * p2.y - p2.x * p1.y) / 2f;
+        }
+        //三角形の面積を求める関数
+        private static float TriArea(Vector2 p1, Vector2 p2, Vector2 p3)
+        {
+            p1 -= p3; p2 -= p3;
+            return Mathf.Abs(p1.x * p2.y - p2.x * p1.y) / 2f;
+        }
+        //三角形の面積を求める関数
+        private static float TriArea(Quaternion p1, Quaternion p2, Quaternion p3)
+        {
+            var q1 = p1 * p3;
+            var q2 = p1 * p3;
+            return Quaternion.Dot(q1 ,q2) / 2f;
+        }
+
         static void Step1(BezierControls cs, float[] lambdas, bool isLoop)
         {
-            //三角形の面積を求める関数
-            float TriArea(Vector3 p1, Vector3 p2, Vector3 p3)
-            {
-                p1 -= p3; p2 -= p3;
-                return Mathf.Abs(p1.x * p2.y - p2.x * p1.y) / 2f;
-            }
-
             var n = lambdas.Length;
             int begin = isLoop ? 0 : 1;
             int end = isLoop ? n : n - 2;

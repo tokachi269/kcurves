@@ -17,8 +17,6 @@ namespace CamOpr.Tool
     public abstract class BaseCameraMode : MonoBehaviour
     {
         public abstract string Name { get; set; }
-        //ユーザー制御点
-        protected abstract List<CameraConfig> Knots { get; set; }
 
         public  int Time { get; set; }
 
