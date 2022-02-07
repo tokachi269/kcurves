@@ -77,7 +77,6 @@
     <Compile Include="Assets\Tool\Mode\CameraUtil.cs" />
     <Compile Include="Assets\Tool\Bezier\BezierControls.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorRigidbody2DEditor.cs" />
-    <Compile Include="Assets\Tool\Squad.cs" />
     <Compile Include="Assets\Tool\Bezier\ExtendBezierControls.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Monitor.cs" />
     <Compile Include="Assets\Tool\Mode\PerlinCameraShake.cs" />
@@ -97,6 +96,7 @@
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorAudioSourceEditor.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Monitors.cs" />
     <Compile Include="Assets\Monitor Components\Examples\JumperMan\JumperMan.cs" />
+    <Compile Include="Assets\Tool\CamOprTransformUtils.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\MyAssembly.asmdef" />

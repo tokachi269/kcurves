@@ -235,7 +235,7 @@ namespace CamOpr.Tool
 
             if (Physics.Raycast(ray, out hit))
             {
-                t = FindClosest(hit.point);
+                t = findClosest(hit.point);
             }
 
             render.LineMesh.gameObject.layer = 2;
@@ -512,7 +512,7 @@ namespace CamOpr.Tool
             int i = IsLoop ? 0 : 1;
             for (; i < segCnt; i++)
             {
-                Vector3[] result = BezierUtil.Divide(Positions[i, 0], Positions[i, 1], Positions[i, 2], (float)Positions.Ts[i]);
+                Vector3[] result = BezierUtil.Divide(positions[i, 0], positions[i, 1], positions[i, 2], (float)positions.Ts[i]);
                 int condition = (i == segCnt - 1 && IsLoop) ? 4 : 3;
                 for (int j = 0; j <= condition; j++, index++)
                 {
@@ -522,7 +522,7 @@ namespace CamOpr.Tool
 
             if (!IsLoop)
             {
-                dividedPoints[dividedPoints.Length - 1] = Positions[segCnt, 0];
+                dividedPoints[dividedPoints.Length - 1] = positions[segCnt, 0];
             }
             return dividedPoints;
         }
@@ -631,25 +631,25 @@ namespace CamOpr.Tool
 
         public void Display()
         {
-            render.Display(_knots, Positions, Output(Step, IsLoop), OutputRotations(Step, IsLoop), KnotsCount, Positions.SegmentCount);
+            render.Display( Knots, Positions, Output(Step, IsLoop), OutputRotations(Step, IsLoop), KnotsCount, Positions.SegmentCount);
         }
 
         public void AddLookAt(Vector3 position, Quaternion rotation, float fov)
         {
-            this._lookAts.Add(new CameraConfig(position, rotation, fov));
+            this.LookAts.Add(new CameraConfig(position, rotation, fov));
             SetBezierFromKnots();
         }
 
         public void AddLookAt(CameraConfig cp, float? t = null)
         {
             //TODO t‚ðŽw’è‚µ‚½ê‡‚Ìˆ—‚ð’Ç‹L‚·‚é
-            this._lookAts.Add(cp);
+            this.LookAts.Add(cp);
             SetBezierFromKnots();
         }
 
         public void RemoveLookAt()
         {
-            this._lookAts.RemoveAt(_knots.Count - 1);
+            this.LookAts.RemoveAt(Knots.Count - 1);
             SetBezierFromKnots();
         }
 
@@ -662,7 +662,7 @@ namespace CamOpr.Tool
             return Positions.TotalLength / time;
         }
 
-        public float FindClosest(Vector3 cursor)
+        public float findClosest(Vector3 cursor)
         {
             int step = 5;
             int index = 5;
@@ -682,12 +682,12 @@ namespace CamOpr.Tool
             float t = (float)index / step;
             distance = float.MaxValue;
 
-            for (float j = 1; j > 0.01; j /= 2)
+            for ( float j = 1; j > 0.01; j /= 2 )
             {
                 if (distance < 0.01) break;
-                for (float k = t - j; k <= t + j; k += j/2)
+                for (float k= t - j; k <= t + j; k += j/2)
                 {
-                    if (k < 0 || Positions.SegmentCount < k) continue;
+                    if (0> k || Positions.SegmentCount < k) continue;
                     dist = Vector3.Distance(CalcPosition((int)Math.Floor(k), k % 1), cursor);
                     if (dist < distance)
                     {

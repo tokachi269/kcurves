@@ -13,7 +13,7 @@ namespace CamOpr.Tool
         public override string Name { get; set; }
 
         //ユーザー制御点
-        protected override List<CameraConfig> Knots { get; set; } = new List<CameraConfig>();
+        protected List<CameraConfig> Knots { get; set; } = new List<CameraConfig>();
         [SerializeField]
         public float Time { get; set; }
         [SerializeField]
