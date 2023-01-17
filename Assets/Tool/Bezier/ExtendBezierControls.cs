@@ -14,7 +14,7 @@ namespace CamOpr.Tool
 
         public bool IsCalcTotalLength { get; private set; }
 
-        public ushort ArcLengthWithTStep { get; private set; } = 10;
+        public ushort ArcLengthWithTStep { get; private set; } = 6;
 
         public ExtendBezierControls(int n, bool isLoop) : base(n, isLoop)
         {
@@ -28,25 +28,89 @@ namespace CamOpr.Tool
             Lengths = new float[SegmentCount <= 1 ? 1 : SegmentCount, ArcLengthWithTStep];
         }
 
-        internal float GetT(int bezierIndex, float inputL)
+        internal float GetT(int bezierIndex, float progressLength,Vector3 befPosition, float befDistance)
         {
-            int index = Mathf.Clamp((int)Math.Floor(inputL / Lengths[bezierIndex, ArcLengthWithTStep - 1] * (ArcLengthWithTStep - 1)), 0, ArcLengthWithTStep - 1);
+            int index = Mathf.Clamp((int)Math.Floor(progressLength / Lengths[bezierIndex, ArcLengthWithTStep - 1] * (ArcLengthWithTStep - 1)), 0, ArcLengthWithTStep - 1);
 
             for (int i = 0; i < ArcLengthWithTStep - 1; i++)
             {
                 if ((index <= 0) || (index >= ArcLengthWithTStep - 1)) { break; }
 
-                if (inputL <= Lengths[bezierIndex, index]){
-                    if (Lengths[bezierIndex, index - 1] < inputL){ break; }
+                if (progressLength <= Lengths[bezierIndex, index]){
+                    if (Lengths[bezierIndex, index - 1] < progressLength){ break; }
                     else{index--; }
                 }
                 else{ index++; }
             }
+            
+            int[] array = BezierUtils.GetSplineIndex(ArcLengthWithTStep, index);
+            //Debug.Log(string.Join(", ", array));
+            float a = Lengths[bezierIndex, index] - progressLength;
+/*            float a = (float)BezierUtils.Spline(
+                (Lengths[bezierIndex, index] - progressLength) / (Lengths[bezierIndex, index] - (index == 0 ? 0 : Lengths[bezierIndex, index - 1])),
+                Lengths[bezierIndex, array[0]],
+                Lengths[bezierIndex, array[1]],
+                Lengths[bezierIndex, array[2]],
+                Lengths[bezierIndex, array[3]]
+                );*/
 
-            //Debug.Log("  inputL:" + inputL+ "  indexL:" + Lengths[bezierIndex, index]+ "  index:" + index);
-            float resultL = 1+index - ((Lengths[bezierIndex, index] - inputL) / (Lengths[bezierIndex, index] - (index <= 0 ? 0 : Lengths[bezierIndex, index - 1])));
+            if (a<0)
+            {
+                Debug.Log("マイナスだよ");
+                Debug.Log("Lengths[bezierIndex, index] - progressLength):"+ (Lengths[bezierIndex, index] - progressLength));
+
+            }
+            //float a =( Lengths[bezierIndex, index] - progressLength) / (Lengths[bezierIndex, index] - (index <= 0 ? 0 : Lengths[bezierIndex, index - 1]));
+            float resultL = 1 + index - a;
+            //float resultL = 1+index - ((Lengths[bezierIndex, index] - progressLength) / (Lengths[bezierIndex, index] - (index <= 0 ? 0 : Lengths[bezierIndex, index - 1])));
             float resultT = (float)(resultL / ArcLengthWithTStep);
-            //Debug.Log("L:" + resultL + "T:" + resultL);
+            float baseT = resultT;
+            //if (befDistance != -1) Debug.Log("resultT調整前：" + resultT);
+
+            if (false)
+            {
+                float conversion = 1f / ArcLengthWithTStep;
+                //Debug.Log(conversion);
+                for (int i = 2; i < 50; i++)
+                {
+                    //Debug.Log("resultT:" + resultT);
+                    var position = BezierUtils.Position(this[bezierIndex, 0], this[bezierIndex, 1], this[bezierIndex, 2], resultT);
+
+                    float currentDistance = Vector3.Distance(befPosition, position);
+
+                    //Debug.Log("差分:" + befDistance + "/" + currentDistance + "=" + befDistance / currentDistance);
+                    //if (befDistance / currentDistance > 0.99 && befDistance / currentDistance < 1.01)
+                    //{
+                    //    break;
+                    //}
+                    //Debug.Log("再計算:"+ conversion * Math.Sign(currentDistance)+ "Math.Sign(currentDistance)" + Math.Sign(currentDistance) );
+
+                    conversion /= 2;
+                    if (befDistance < currentDistance)
+                    {
+                         resultT = Mathf.Clamp(resultT - conversion * Math.Sign(currentDistance / befDistance), -100, 100);
+                    }
+                    else
+                    {
+                         resultT = Mathf.Clamp(resultT + conversion * Math.Sign(currentDistance / befDistance), -100, 100);
+                    }
+
+                }
+            }
+            //if (befDistance != -1) Debug.Log("resultL調整後：" + resultT);
+            if (befDistance != -1)
+            {
+                // Debug.Log(string.Join(", ", array));
+
+                Debug.Log("bezierIndex:" + bezierIndex + " index:" + index + " a:"+ a + " resultL:" + resultL + " baseT:" + baseT + " resultT:" + resultT);
+                if (resultT < (Lengths[bezierIndex, index] - progressLength) / (Lengths[bezierIndex, index] - (index <= 0 ? 0 : Lengths[bezierIndex, index - 1])))
+                {
+                    //TODO indexがArcLengthWithTStepを超えて0に戻ったときにprogressLengthが正しくない？
+                    Debug.Log(string.Join(", ", array));
+                    Debug.Log("逆転");
+                }
+            }
+
             return resultT;
         }
 
@@ -121,7 +185,7 @@ namespace CamOpr.Tool
                 {
                     t = j / (float)stepPerSegment;
 
-                    plots[offset + j] = BezierUtil.Position(this[i, 0], this[i, 1], this[i, 2], t);
+                    plots[offset + j] = BezierUtils.Position(this[i, 0], this[i, 1], this[i, 2], t);
                 }
             }
             if (isLoop) {
@@ -130,7 +194,7 @@ namespace CamOpr.Tool
             else
             {
                 var last = isLoop ? 0 : i - 1;
-                plots[plots.Length - 1] = BezierUtil.Position(this[last, 0], this[last, 1], this[last, 2], 1);
+                plots[plots.Length - 1] = BezierUtils.Position(this[last, 0], this[last, 1], this[last, 2], 1);
             }
             return plots;
         }

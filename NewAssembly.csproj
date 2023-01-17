@@ -68,13 +68,14 @@
     <Compile Include="Assets\Monitor Components\Scripts\TypeInspectors.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorRigidbodyEditor.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\MonitorInput.cs" />
+    <Compile Include="Assets\Tool\Debug\AnalyticsTransitionDataCollector.cs" />
     <Compile Include="Assets\CameraMover.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorTransformEditor.cs" />
     <Compile Include="Assets\Tool\Mode\BaseCameraMode.cs" />
     <Compile Include="Assets\Tool\Bezier\Bezier3D.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\MonitorRigidbody2D.cs" />
-    <Compile Include="Assets\Tool\Bezier\BezierUtil.cs" />
-    <Compile Include="Assets\Tool\Mode\CameraUtil.cs" />
+    <Compile Include="Assets\Tool\Bezier\BezierUtils.cs" />
+    <Compile Include="Assets\Tool\Mode\CameraUtils.cs" />
     <Compile Include="Assets\Tool\Bezier\BezierControls.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorRigidbody2DEditor.cs" />
     <Compile Include="Assets\Tool\Bezier\ExtendBezierControls.cs" />
@@ -86,6 +87,7 @@
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorDebugLogEditor.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\MonitorDebugLog.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Colors.cs" />
+    <Compile Include="Assets\Tool\CamOprTransformUtils.cs" />
     <Compile Include="Assets\Monitor Components\Examples\Using API\UsingAPI.cs" />
     <Compile Include="Assets\Tool\Mode\Path\BezierTransition.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\MonitorRigidbody.cs" />
@@ -96,7 +98,6 @@
     <Compile Include="Assets\Monitor Components\Scripts\Editor\MonitorAudioSourceEditor.cs" />
     <Compile Include="Assets\Monitor Components\Scripts\Monitors.cs" />
     <Compile Include="Assets\Monitor Components\Examples\JumperMan\JumperMan.cs" />
-    <Compile Include="Assets\Tool\CamOprTransformUtils.cs" />
   </ItemGroup>
   <ItemGroup>
      <None Include="Assets\MyAssembly.asmdef" />

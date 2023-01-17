@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace CamOpr.Tool
 {
-    internal class BezierTransition
+    public class BezierTransition
     {
         public float CurrentProgressLength;
         public float KnotsBetweenLength = 0f;
@@ -12,17 +12,29 @@ namespace CamOpr.Tool
         public int currentKnotIndex = 0;
         public int currentBezierIndex = 0;
 
+        public float diffProgressLength = 0;
+        private float befProgressLength = 0;
+
+        public float diffProgressT = 0;
+        private float befProgressT = 0;
+
+        public BezierTransition()
+        {
+
+        }
+
         public BezierTransition(List<CameraConfig> knots, ExtendBezierControls positions)
         {
             this.tempKnots = knots;
             this.Positions = positions;
             this.KnotsBetweenLength = positions.Length(0);
         }
-        public void Play(ref float progressLength,int targetKnotIndex,int targetBezierIndex)
+        public void Play(ref float progressLength,int targetKnotIndex,int targetBezierIndex,float t)
         {
             Play(progressLength, targetKnotIndex, targetBezierIndex);
 
             progressLength = CurrentProgressLength;
+            DebugDifCalculation(progressLength,t);
             // targetKnotIndex = currentKnotIndex;
             // targetBezierIndex = currentBezierIndex;
         }
@@ -58,12 +70,10 @@ namespace CamOpr.Tool
             if (isSegChanged)
             {
                 targetBezierIndex++;
-                Debug.Log("targetBezierIndex++");
 
                 targetKnotIndex = targetBezierIndex % 2 == 0 ? (targetBezierIndex / 2) : (targetBezierIndex + 1) / 2;
                 if (targetBezierIndex % 2 == 1)
                 {
-                    Debug.Log("targetBezierIndex % 2 == 1");
                     progressLength -= KnotsBetweenLength;
 
                     //Knot間の距離を求める
@@ -81,13 +91,22 @@ namespace CamOpr.Tool
                     }
                 }
 
-                Debug.Log("targetBezierIndex" + targetBezierIndex);
+                Debug.Log("targetBezierIndex: " + targetBezierIndex);
             }
 
             CurrentProgressLength = progressLength;
             currentKnotIndex = targetKnotIndex;
             currentBezierIndex = targetBezierIndex ;
 
+        }
+
+        private void DebugDifCalculation(float progressLength,float t)
+        {
+           diffProgressLength = progressLength - befProgressLength;
+           befProgressLength = progressLength;
+
+           diffProgressT = t - befProgressT;
+           befProgressT = t;
         }
     }
 }

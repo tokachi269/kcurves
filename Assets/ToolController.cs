@@ -66,7 +66,7 @@ namespace CamOpr.Tool
 
             if (Input.GetKeyDown("k"))
             {
-                path.AddKnot(CameraUtil.CameraPosition());
+                path.AddKnot(CameraUtils.CameraPosition());
                 Debug.Log("Add Knot Succeed");
                 path.Display();
             }

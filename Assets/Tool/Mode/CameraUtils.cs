@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace CamOpr.Tool
 {
-    public static class CameraUtil
+    public static class CameraUtils
     {
         public static CameraConfig CameraPosition()
         {
@@ -42,6 +42,13 @@ namespace CamOpr.Tool
                 point.z -= 360f;
             }
             return point;
+        }
+
+        internal static void SetCamera(CameraConfig cp)
+        {
+            Camera.main.transform.position = cp.Position;
+            Camera.main.transform.rotation = cp.Rotation;
+            Camera.main.fieldOfView = cp.Fov;
         }
     }
 }

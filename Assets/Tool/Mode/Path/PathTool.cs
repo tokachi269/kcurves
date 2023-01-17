@@ -64,22 +64,17 @@ namespace CamOpr.Tool
         public Render render;
         public Serializer serializer;
         public PerlinCameraShake CameraShake;
+        public AnalyticsTransitionDataCollector analyzer;
 
-        /* Debug用変数 **/
-        [SerializeField]
-        public float dist = 0;
-        [SerializeField]
-        public float distall = 0;
-        [SerializeField]
-        public float diffT = 0;
-        [SerializeField]
-        private Vector3 bef = Vector3.zero;
-        [SerializeField]
-        private float befT = 0;
+
+        public BezierTransition posTransition { get; private set; } = new BezierTransition();
+        public  BezierTransition rotTransition { get; private set; } = new BezierTransition();
         /* Debug用変数ここまで **/
 
         private Vector3 _nowMousePosi; // 現在のマウスのワールド座標
         IEnumerator enumPlay = null;
+        private Vector3 bef;
+
         void Update()
         {
             // diffTMonitor.Sample(diffT);
@@ -89,10 +84,16 @@ namespace CamOpr.Tool
 
         public void Awake()
         {
+
+
             render = gameObject.AddComponent<Render>();
             serializer = gameObject.AddComponent<Serializer>();
             //CameraShake = gameObject.AddComponent<PerlinCameraShake>();
             //CameraShake.enabled = true;
+            analyzer = gameObject.AddComponent<AnalyticsTransitionDataCollector>();
+        }
+        public void Start()
+        {
         }
 
         public void CoordinateControl()
@@ -107,8 +108,8 @@ namespace CamOpr.Tool
         }
 
         /// <summary>
-        /// ControlPointのリストからPathを算出する
-        /// Calculating a Instance from a list of ControlPoints
+        /// KnotsのリストからPathを算出する
+        /// Calculating a Instance from a list of Knots
         /// </summary>
         public void SetBezierFromKnots()
         {
@@ -123,12 +124,12 @@ namespace CamOpr.Tool
             foreach (var knot in Knots)
             {
                 var vec = new Vector3(knot.Rotation.normalized.x, knot.Rotation.normalized.y, knot.Rotation.normalized.z);
-                Debug.Log("変換前：" + knot.Rotation.eulerAngles);
-                Debug.Log("変換後：" + new Quaternion(vec.x, vec.y, vec.z, 1).eulerAngles);
-                Debug.Log("変換前：" + knot.Rotation);
-                Debug.Log("変換後：" + new Quaternion(vec.x, vec.y, vec.z, 1));
-                Debug.Log("log変換前：" + knot.Rotation.eulerAngles);
-                Debug.Log("log変換後：" + CamOprTransformUtils.ConvertLogQuaternion(CamOprTransformUtils.LogQuaternion(knot.Rotation)).eulerAngles);
+                // Debug.Log("変換前：" + knot.Rotation.eulerAngles);
+                // Debug.Log("変換後：" + new Quaternion(vec.x, vec.y, vec.z, 1).eulerAngles);
+                // Debug.Log("変換前：" + knot.Rotation);
+                // Debug.Log("変換後：" + new Quaternion(vec.x, vec.y, vec.z, 1));
+                // Debug.Log("log変換前：" + knot.Rotation.eulerAngles);
+                // Debug.Log("log変換後：" + CamOprTransformUtils.ConvertLogQuaternion(CamOprTransformUtils.LogQuaternion(knot.Rotation)).eulerAngles);
             }
 
             Rotations = KCurves.CalcBeziers(_knots.Where(data => data.ApplyItems.position == true).Select(data => CamOprTransformUtils.LogQuaternion(data.Rotation)).ToArray(), Iteration, IsLoop) as ExtendBezierControls;
@@ -254,17 +255,18 @@ namespace CamOpr.Tool
         /// </summary>
         public IEnumerator Play()
         {
+            bool hasError = false;
             List<CameraConfig> tempKnots = _knots;
-            defaultCameraConfig = CameraUtil.CameraPosition();
+            defaultCameraConfig = CameraUtils.CameraPosition();
             float totalTime = _knots.Where(data => data.ApplyItems.position == true).Select(data => data.Time).Sum();
 
             Positions.SetParameter(IsLoop);
             Rotations.SetParameter(IsLoop);
 
-            float baseSpeed = MaxSpeed(Time);
-
-            var posTransition = new BezierTransition(_knots, Positions);
-            var rotTransition = new BezierTransition(_knots, Rotations);
+            float baseSpeed = MaxSpeed(Time) * 0.01f;
+            Debug.Log("baseSpeed" + baseSpeed);
+            posTransition = new BezierTransition(_knots, Positions);
+            rotTransition = new BezierTransition(_knots, Rotations);
 
             float[] times = IsAutoTimeSetting ? AutoTimeSetting() : null;
 
@@ -283,114 +285,148 @@ namespace CamOpr.Tool
                 if (posT <= Positions.SegmentCount)
                 {
                     Vector3 pos = CalcPosition(posTransition.currentBezierIndex, posT);
-                    float _rotT = progressLength / posTransition.KnotsBetweenLength;
-                    //Quaternion rot = ConvertLogQuaternion(Vector3.Lerp(LogQuaternion(Knots[posTransition.currentKnotIndex].Rotation), LogQuaternion(Knots[posTransition.currentKnotIndex+1].Rotation), _rotT));
-                    Quaternion rot = CamOprTransformUtils.SplineQuaternion(ref tempKnots, posTransition.currentKnotIndex, _rotT);
-                    //Quaternion rot = ConvertLogQuaternion(CalcRot(rotTransition.currentBezierIndex, rotT));
+                    float easedRotT = Easing.GetEasing(EasingMode.EaseInOut, progressLength / posTransition.KnotsBetweenLength);
+                    CameraConfig cp = GetCurrentCameraConfig(ref tempKnots, posTransition, rotTransition, posT, easedRotT);
+                    //DebugDifCalculation(posTransition.currentBezierIndex, posT, rotTransition.currentBezierIndex, easedRotT);
 
                     if (IsCameraShake)
                     {
-                        CameraShake.ShakeJob(ref pos, ref rot);
+                        CameraShake.ShakeJob(ref cp.Position, ref cp.Rotation);
                     }
 
                     if (IsApplyCamera)
                     {
-                        Camera.main.transform.position = pos;
-                        Camera.main.transform.rotation = rot;
+                        CameraUtils.SetCamera(cp);
                     }
                     else
                     {
-                        render.moveCameraCube.transform.position = pos;
-                        render.moveCameraCube.transform.rotation = rot;
+                        render.moveCameraCube.transform.position = cp.Position;
+                        render.moveCameraCube.transform.rotation = cp.Rotation;
                     }
+
                 }
 
-                posTransition.Play(ref progressLength, posTransition.currentKnotIndex, posTransition.currentBezierIndex);
-                rotTransition.Play(ref progressRotLength, rotTransition.currentKnotIndex, rotTransition.currentBezierIndex);
-
                 // 停止時間が設定されている場合、指定秒数間処理を待機
-                if (tempKnots[posTransition.currentKnotIndex].Delay != 0f) yield return new WaitForSeconds(tempKnots[posTransition.currentKnotIndex].Delay);
-
-                if (posTransition.currentBezierIndex == Positions.SegmentCount) break;
-
-                Debug.Log("[Positions] "+" progressLength:" + progressLength + " KnotsBetweenLength:" + posTransition.KnotsBetweenLength + "progressLength / KnotsBetweenLength = " + progressLength / posTransition.KnotsBetweenLength);
-                Debug.Log("[Rotations] "+" progressLength:" + progressRotLength + " KnotsBetweenLength:" + rotTransition.KnotsBetweenLength + "progressLength / KnotsBetweenLength = " + progressRotLength / rotTransition.KnotsBetweenLength);
-
-                currentMode = (EasingMode)((byte)easingModes[posTransition.currentKnotIndex + 1] | ((byte)easingModes[posTransition.currentKnotIndex] << 1));
-
-                posT = GetT(posTransition.currentBezierIndex, progressLength, Positions);
-
-                rotT = GetT(posTransition.currentBezierIndex, progressRotLength, Rotations);
-
-                DebugDifCalculation(posTransition.currentBezierIndex, rotT);
-                Mathf.Clamp(rotT, 0f, 1f);
-
-                float dt = UnityEngine.Time.deltaTime;
-                currentTime += dt;
-
-                float ea = Easing.GetEasing(currentMode, progressLength / posTransition.KnotsBetweenLength);
-
-                if (IsAutoTimeSetting)
+                if (tempKnots[posTransition.currentKnotIndex].Delay != 0f)
                 {
-                    if(times != null)
+                    yield return new WaitForSeconds(tempKnots[posTransition.currentKnotIndex].Delay);
+                }
+
+                try
+                {
+                    currentMode = (EasingMode)((byte)easingModes[posTransition.currentKnotIndex + 1] | ((byte)easingModes[posTransition.currentKnotIndex] << 1));
+
+                    posT = GetT(posTransition.currentBezierIndex, progressLength, Positions, bef, baseSpeed);
+
+                    rotT = GetT(posTransition.currentBezierIndex, progressRotLength, Rotations, Vector3.zero, -1);
+
+                    posTransition.Play(ref progressLength, posTransition.currentKnotIndex, posTransition.currentBezierIndex,posT);
+                    rotTransition.Play(ref progressRotLength, rotTransition.currentKnotIndex, rotTransition.currentBezierIndex,rotT);
+
+                    if (posTransition.currentBezierIndex == Positions.SegmentCount)
                     {
-                        progressLength += dt / times[posTransition.currentKnotIndex] * posTransition.KnotsBetweenLength;
+                        break;
                     }
+
+                    // Debug.Log("[Positions] "+" progressLength:" + progressLength + " KnotsBetweenLength:" + posTransition.KnotsBetweenLength + "progressLength / KnotsBetweenLength = " + progressLength / posTransition.KnotsBetweenLength);
+                    // Debug.Log("[Rotations] "+" progressLength:" + progressRotLength + " KnotsBetweenLength:" + rotTransition.KnotsBetweenLength + "progressLength / KnotsBetweenLength = " + progressRotLength / rotTransition.KnotsBetweenLength);
+
+
+                    Mathf.Clamp(rotT, 0f, 1f);
+
+                    float dt = UnityEngine.Time.deltaTime;
+                    dt = 0.01f;
+
+                    currentTime += dt;
+
+                    float ea = Easing.GetEasing(currentMode, progressLength / posTransition.KnotsBetweenLength);
+
+                    if (IsAutoTimeSetting)
+                    {
+                        if (times != null)
+                        {
+                            progressLength += dt / times[posTransition.currentKnotIndex] * posTransition.KnotsBetweenLength;
+                        }
+                    }
+                    else
+                    {
+                        progressLength += dt / tempKnots[posTransition.currentKnotIndex].Time * posTransition.KnotsBetweenLength;
+                    }
+
+                    progressRotLength = Mathf.Clamp(progressLength / posTransition.KnotsBetweenLength, 0f, 1f) * rotTransition.KnotsBetweenLength;
+                }
+                catch
+                {
+                    hasError = true;
+                }
+
+                if (hasError)
+                {
+                    yield break;
                 }
                 else
                 {
-                    progressLength += dt / tempKnots[posTransition.currentKnotIndex].Time * posTransition.KnotsBetweenLength;
+                   // CameraUtils.SetFreeCamera(true);
+
+                    yield return null;
                 }
-
-                progressRotLength = Mathf.Clamp(progressLength / posTransition.KnotsBetweenLength, 0f, 1f) * rotTransition.KnotsBetweenLength;
-
-                yield return null;
             }
 
             if (IsApplyCamera)
             {
-                Camera.main.transform.position = defaultCameraConfig.Position;
-                Camera.main.transform.rotation = defaultCameraConfig.Rotation;
+                CameraUtils.SetCamera(defaultCameraConfig);
+
             }
             else
             {
-                render.moveCameraCube.transform.position = defaultCameraConfig.Position;
-                render.moveCameraCube.transform.rotation = defaultCameraConfig.Rotation;
+                CameraUtils.SetCamera(defaultCameraConfig);
             }
+
+            posTransition = null;
+            rotTransition = null;
 
             yield break;
         }
 
-        private static float GetT(int targetBezierIndex,float progressLength, ExtendBezierControls bezierList)
+        private static float GetT(int targetBezierIndex,float progressLength, ExtendBezierControls bezierList, Vector3 bef, float dist)
         {
             if (targetBezierIndex == 0 || targetBezierIndex % 2 == 1)
             {
                 float easing = progressLength;
 
-                return bezierList.GetT(targetBezierIndex, easing);
+                return bezierList.GetT(targetBezierIndex, easing, bef, dist);
             }
             else
             {
                 float easing = progressLength - bezierList.Length(targetBezierIndex - 1);
 
-                return bezierList.GetT(targetBezierIndex, easing);
+                return bezierList.GetT(targetBezierIndex, easing, bef, dist);
             }
         }
 
-        private void DebugDifCalculation(int targetBezierIndex,float t)
+/*        private void DebugDifCalculation(int positionBezierIndex,float t, int rotationBezierIndex, float rotT)
         {
             {
                 //debug用変数
                 diffT = t - befT;
                 //Debug.Log("param:" + diffT);
                 befT = t;
-                Vector3 now = CalcPosition(targetBezierIndex, t);
+                Vector3 now = CalcPosition(positionBezierIndex, t);
 
                 distall += dist;
                 dist = Vector3.Distance(bef, now);
                 bef = now;
                 //Debug.Log("dist:" + dist);
             }
+        }*/
+
+        private CameraConfig GetCurrentCameraConfig(ref List<CameraConfig> knots, BezierTransition posTransition, BezierTransition rotTransition, float t, float r)
+        {
+            Vector3 pos = CalcPosition(posTransition.currentBezierIndex, t);
+            Quaternion rot = (Quaternion)BezierUtils.SplineKnots<Quaternion>(ref knots, nameof(CameraConfig.Rotation), posTransition.currentKnotIndex, r);
+            float fov = (float)BezierUtils.SplineKnots<float>(ref knots, nameof(CameraConfig.Fov), posTransition.currentKnotIndex, r);
+            CameraConfig cp = new CameraConfig(pos, rot, fov);
+            return cp;
         }
 
         /// <summary>
@@ -442,17 +478,17 @@ namespace CamOpr.Tool
 
         private Vector3 CalcPosition(int bezierIndex, float t)
         {
-            return BezierUtil.Position(Positions[bezierIndex, 0], Positions[bezierIndex, 1], Positions[bezierIndex, 2], t % 1);
+            return BezierUtils.Position(Positions[bezierIndex, 0], Positions[bezierIndex, 1], Positions[bezierIndex, 2], t % 1);
         }
 
         private Vector3 CalcRot(int bezierIndex, float t)
         {
-            return BezierUtil.Position(Rotations[bezierIndex, 0], Rotations[bezierIndex, 1], Rotations[bezierIndex, 2], t % 1);
+            return BezierUtils.Position(Rotations[bezierIndex, 0], Rotations[bezierIndex, 1], Rotations[bezierIndex, 2], t % 1);
         }
 
         private Quaternion CalcRotation(ref List<CameraConfig> Knots,int knotIndex, float ratio)
         {
-            Quaternion rotation = CamOprTransformUtils.SplineQuaternion(ref Knots, knotIndex, ratio);
+            Quaternion rotation = BezierUtils.SplineQuaternion(ref Knots, knotIndex, ratio);
 
             if (_lookAts.Count != 0)
             {
@@ -512,7 +548,7 @@ namespace CamOpr.Tool
             int i = IsLoop ? 0 : 1;
             for (; i < segCnt; i++)
             {
-                Vector3[] result = BezierUtil.Divide(Positions[i, 0], Positions[i, 1], Positions[i, 2], (float)Positions.Ts[i]);
+                Vector3[] result = BezierUtils.Divide(Positions[i, 0], Positions[i, 1], Positions[i, 2], (float)Positions.Ts[i]);
                 int condition = (i == segCnt - 1 && IsLoop) ? 4 : 3;
                 for (int j = 0; j <= condition; j++, index++)
                 {
@@ -621,7 +657,7 @@ namespace CamOpr.Tool
             render.LineMesh.gameObject.layer = 0;
 
             float t = GetCursorPositionPath();
-            AddKnot(CameraUtil.CameraPosition(), t);
+            AddKnot(CameraUtils.CameraPosition(), t);
             Debug.Log("Insert Knot Succeed");
             Display();
 
@@ -668,7 +704,7 @@ namespace CamOpr.Tool
             int index = 5;
             var output = Output(5, IsLoop);
             float distance = float.MaxValue;
-
+            float dist;
             foreach (var v in output.Select((p, i) => new { p, i }))
             {
                 dist = Vector3.Distance(v.p, cursor);
@@ -768,7 +804,7 @@ namespace CamOpr.Tool
                     LineRenderer.endColor = Color.black;
                     for (int i = 0; i < output.Length; i++)
                     {
-                        Debug.Log(outputRot[i]);
+                        //Debug.Log(outputRot[i]);
 
                         LineRenderer.SetPosition(i, output[i]);
                     }
@@ -785,7 +821,7 @@ namespace CamOpr.Tool
                     LineRendererRotation.endColor = Color.black;
                     for (int i = 0; i < outputRot.Length; i++)
                     {
-                        Debug.Log(outputRot[i]);
+                        //Debug.Log(outputRot[i]);
                         var vec = outputRot[i];
                         var vec2 = new Vector3(vec.x, vec.y, vec.z);
                         LineRendererRotation.SetPosition(i, vec2);

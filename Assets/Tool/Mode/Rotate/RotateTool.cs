@@ -39,7 +39,7 @@ namespace CamOpr.Tool
 
         public IEnumerator Play()
         {
-            DefaultPosition = CameraUtil.CameraPosition();
+            DefaultPosition = CameraUtils.CameraPosition();
 
             if (IsCameraShake)
             {
